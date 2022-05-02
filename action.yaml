@@ -1,0 +1,13 @@
+name: 'Split Locator'
+description: 'Locate Split feature flags by name, filename, and line number in your repository'
+inputs:
+  sample-input: 
+    description: 'sample input'
+    required: false
+    default: 'foo'
+outputs:
+  splits: 
+    description: 'splits found'
+runs:
+  using: 'node16'
+  main: 'find-split.js'

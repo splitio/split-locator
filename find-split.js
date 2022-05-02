@@ -65,7 +65,7 @@ async function run() {
 			core.setOutput('splits', s);
 		} else {
 			console.log('no splits found');
-			core.setOutput('splits', fileCount + ' files found; no splits found');
+			core.setOutput('splits', fileCount + ' files found; no splits found. cwd: ' + window.location.pathname);
 		}
 	} catch (error) {
 		core.setFailed(error.message);

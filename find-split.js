@@ -62,6 +62,7 @@ async function run() {
 			core.setOutput('splits', s);
 		} else {
 			console.log('no splits found');
+			core.setOutput('splits', 'no splits found');
 		}
 	} catch (error) {
 		core.setFailed(error.message);

@@ -13,7 +13,7 @@ async function run() {
 		const regex = new RegExp(splitMatch);
 
 		// assumes a getTreatment method with the first parameter as split name
-		const patterns = ['../../**/*.html', '../../**/*.js']
+		const patterns = ['**/*.html', '**/*.js']
 		const globber = await glob.create(patterns.join('\n'))
 
 		const splits = [];

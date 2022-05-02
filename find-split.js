@@ -5,8 +5,7 @@ import * as fs from 'fs';
 
 async function run() {
 	try {
-		// not using this yet
-		const sampleInput = core.getInput('sample-input');
+		const srcDir = core.getInput('srcDir');
 
 		const splitMatch = 'getTreatment';
 		const regex = new RegExp(splitMatch);
@@ -17,7 +16,7 @@ async function run() {
 
 		const splits = [];
 		for await (const file of globber.globGenerator()) {
-	  		// console.log(file)
+	  		console.log(file)
 
 	  		let lineNo = 0;
 			fs.readFile(file, (err, fi) => {

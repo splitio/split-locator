@@ -18,7 +18,7 @@ async function run() {
 
 		const splits = [];
 		for await (const file of globber.globGenerator()) {
-	  		console.log(file)
+	  		// console.log(file)
 	  		fileCount++;
 
 	  		let lineNo = 0;
@@ -62,7 +62,7 @@ async function run() {
 			for(const s of splits) {
 				console.log(s.name + ':' + s.file + ':' + s.lineNo);
 			}
-			core.setOutput('splits', s);
+			core.setOutput('splits', splits);
 		} else {
 			console.log('no splits found');
 			core.setOutput('splits', fileCount + ' files found; no splits found. cwd: ' + process.cwd());

@@ -44,22 +44,26 @@ async function run() {
 			  });
 			});
 		}
-		function compare( a, b ) {
-		  if ( a.name < b.name ){
-		    return -1;
-		  }
-		  if ( a.name > b.name ){
-		    return 1;
-		  }
-		  return 0;
-		}
+		if(splits.length > 0) {
+			function compare( a, b ) {
+			  if ( a.name < b.name ){
+			    return -1;
+			  }
+			  if ( a.name > b.name ){
+			    return 1;
+			  }
+			  return 0;
+			}
 
-		splits.sort( compare );	
+			splits.sort( compare );	
 
-		for(const s of splits) {
-			console.log(s.name + ':' + s.file + ':' + s.lineNo);
+			for(const s of splits) {
+				console.log(s.name + ':' + s.file + ':' + s.lineNo);
+			}
+			core.setOutput('splits', s);
+		} else {
+			console.log('no splits found');
 		}
-		core.setOutput('splits', s);
 	} catch (error) {
 		core.setFailed(error.message);
 	}

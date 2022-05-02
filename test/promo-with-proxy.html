@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script>
+        window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+        ga('create', 'UA-128478641-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+    <script async src='https://www.google-analytics.com/analytics.js'></script>
+
+    <style>
+    body {
+        color: white;
+    }
+
+    div.cta {
+        font-family: Impact, Charcoal, sans-serif;
+        font-size: 80px;
+        color: black;
+        text-align: center;
+        background-color: #f2f2f2;
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+
+    div.discount {
+        font-size: 80px;
+        color: blue;
+        text-align: center;
+    }
+
+    div.cta-image {
+        text-align: center;
+    }
+
+    img {
+        width: 100%;
+    }
+    </style>
+
+    <script src="http://cdn.split.io/sdk/split-10.14.2.min.js"></script>
+    <script>
+        function getCookie(cname) {
+          var name = cname + "=";
+          var decodedCookie = decodeURIComponent(document.cookie);
+          var ca = decodedCookie.split(';');
+          for(var i = 0; i <ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+              c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+              return c.substring(name.length, c.length);
+            }
+          }
+          return "";
+        }
+
+        var user_id = getCookie("username");
+        // var user_id = 'dmartin';
+        
+        var factory = splitio({
+            core: {
+                authorizationKey: 'ku60jampgeh7jtrrgrnrm7in1nb9csl7keg8',
+                // authorizationKey: 'dmartin123',
+                key: user_id,
+                labelsEnabled: true,
+                trafficType: 'user'
+            },
+            scheduler: {
+                featuresRefreshRate: 1,
+                eventsPushRate: 5
+            },
+            integrations: [{
+                type: 'GOOGLE_ANALYTICS_TO_SPLIT',
+                events: true
+            }],
+            // urls: {
+            //     sdk: 'http://127.0.0.1:3000/api',
+            //     events: 'http://127.0.0.1:3000/api',
+            //     auth: 'http://127.0.0.1:3000/api'
+            // },
+            streamingEnabled: true,
+            debug: true
+        });
+
+        var client = factory.client();
+
+        ga('require', 'splitTracker');
+        ga('set', 'page', 'ga_promo_page');
+        ga('send', 'pageview', 'ga_promo_page');
+
+        client.on(client.Event.SDK_READY, function() {
+            draw();
+        });
+
+        client.on(client.Event.SDK_UPDATE, function() {
+            draw();
+        })
+
+    function createPopup(message, value) {
+        return function() {
+            if (message != null && value != null) {
+                alert(message + value);
+            }
+        };
+    }
+
+    var flower = "not a flower";
+
+    function draw() {
+        console.log("draw!");
+
+        var result = client.getTreatmentWithConfig("ga_promo");
+        console.log(result);
+
+        var configs = JSON.parse(result.config);
+        console.log(configs);
+
+        document.getElementById("cta-text").innerHTML = configs.text;
+        flower = configs.text;
+
+        var img = document.getElementById("cta-image");
+        img.src = configs.image;
+        img.style.width = '100%';
+
+        document.getElementById("discount-text").innerHTML = configs.discount + "% OFF";
+    }
+
+    function clickHandler() {
+        console.log("clickHandler!");
+        ga('send', {
+          hitType: 'event',
+          eventCategory: 'purchase',
+          eventAction: 'purchase-' + flower,
+          eventLabel: flower
+        });
+        
+    }
+    </script>
+
+    <title>JS GA Demo</title>
+</head>
+
+<body>
+    <div id="cta-text" class="cta">Call to Action</div>
+    <div class="cta"><img id="cta-image" alt="bulb"/></div>
+    <div id="discount-text" class="discount" onclick="clickHandler()" >20% OFF!</div>
+</body>
+
+</html>

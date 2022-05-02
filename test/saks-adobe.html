@@ -1,0 +1,26 @@
+var factory = splitio({
+  core: {
+    authorizationKey: '69haia9b9pf3b0rs951bj8kuufr4ke2987op',
+    key: _satellite.getVisitorId()._fields.MCMID
+  }
+});
+
+var client = factory.client();
+
+var attributes = {
+  tracking_code : 'tracking_code_value'
+}
+
+client.on(client.Event.SDK_READY, function() {
+  var treatment = client.getTreatment('new_onboarding',
+                                   attributes);
+
+  if (treatment === 'on') {
+      // insert on code here
+  }   else   if (treatment === 'off') {
+      // insert off code here
+  }   else {
+      // insert control code here
+  }
+
+});

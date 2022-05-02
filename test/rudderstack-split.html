@@ -1,0 +1,170 @@
+<!-- 
+
+    author:     david.martin@split.io
+    purpose:    demonstrate rudderstack/split integration at a source
+
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<script> 
+rudderanalytics=window.rudderanalytics=[];for(var methods=["load","page","track","identify","alias","group","ready","reset","getAnonymousId","setAnonymousId"],i=0;i<methods.length;i++){var method=methods[i];rudderanalytics[method]=function(a){return function(){rudderanalytics.push([a].concat(Array.prototype.slice.call(arguments)))}}(method)}rudderanalytics.load('1pULj3c54Vd0nNkEWYb6vsbdQUM','https://splitdaviytqz.dataplane.rudderstack.com'),rudderanalytics.page();
+</script>
+
+<script src="https://cdn.rudderlabs.com/rudder-analytics.min.js"></script>
+<script src="http://cdn.split.io/sdk/split-10.15.0.min.js"></script>
+<script type="text/javascript">
+    function uuidv4() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+    }
+    var client;
+    var splitResult;
+	var user_id = uuidv4();
+	console.log("user_id: " + user_id);
+	console.log(user_id);
+	var factory = splitio({
+	    core: {
+    		authorizationKey: 'ku60jampgeh7jtrrgrnrm7in1nb9csl7keg8',
+    		key: user_id,
+	    },
+	    scheduler: {
+    		impressionsRefreshRate: 5
+	    },
+	    impressionListener: {
+    		logImpression: logImpression
+	    },
+	    streamingEnabled: true,
+	    debug: false
+	});
+
+	// starts initialization; SDK_READY means finished
+	client = factory.client();
+	client.on(client.Event.SDK_READY, function() {
+        console.log("SDK_READY");
+        splitResult = client.getTreatmentWithConfig("multivariant_demo");
+        draw();
+    });
+
+    client.on(client.Event.SDK_UPDATE, function() {
+        console.log("SDK_UPDATE");
+        splitResult = client.getTreatmentWithConfig("multivariant_demo");
+        draw();
+    });
+
+    function logImpression(impressionData) {
+        console.log(impressionData);
+        rudderanalytics.track(
+          "split impression",
+            impressionData, 
+          () => {console.log("in log impression call");}
+        );   
+    }
+
+    rudderanalytics.identify(
+      user_id,
+      { email: "david.martin@split.io" },
+      {
+        page: {
+          path: "/foo/path",
+          referrer: "/foo/referrer",
+          search: "foosearch",
+          title: "Foo",
+          url: "http://split.io",
+        }
+      },
+      () => {
+        console.log("in identify call");
+      }
+    );
+    </script>
+
+    <style>
+    body {
+        color: white;
+    }
+
+    div.cta {
+        font-family: Impact, Charcoal, sans-serif;
+        font-size: 80px;
+        color: black;
+        text-align: center;
+        background-color: #f2f2f2;
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+
+    div.discount {
+        font-size: 80px;
+        color: blue;
+        text-align: center;
+    }
+
+    div.cta-image {
+        text-align: center;
+    }
+
+    img {
+        width: 100%;
+    }
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+    $(document).ready( function() {
+        // nothing to do?
+    });
+
+    function createPopup(message, value) {
+        return function() {
+            if (message != null && value != null) {
+                alert(message + value);
+            }
+        };
+    }
+
+    var flower = "not a flower";
+
+    function draw() {
+        result = splitResult;
+
+        var configs = JSON.parse(result.config);
+        //console.log(configs);
+
+        document.getElementById("cta-text").innerHTML = configs.text;
+        flower = configs.text;
+
+        var img = document.getElementById("cta-image");
+        img.src = configs.image;
+        img.style.width = '100%';
+
+        document.getElementById("discount-text").innerHTML = "20% OFF";
+    }
+
+    function clickHandler() {
+        console.log("clickHandler!");
+        rudderanalytics.track(
+          "split track event",
+          {
+            revenue:  42,
+            currency:  'USD' ,
+            user_actual_id:  user_id
+          }, 
+          () => {console.log("in track call");}
+        );        
+    }
+    </script>
+
+    <title>Rudderstack-Split Attributes Demo</title>
+</head>
+
+<body>
+    <div id="cta-text" class="cta">Call to Action</div>
+    <div class="cta"><img id="cta-image" alt="bulb"/></div>
+    <div id="discount-text" class="discount" onclick="clickHandler()" >20% OFF!</div>
+</body>
+
+</html>

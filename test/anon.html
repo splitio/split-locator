@@ -1,0 +1,104 @@
+<html>
+<head>
+	<title>Basic HTML Page</title>
+<style>
+	.body {
+		color: 'white';
+  	}
+  	.foo {
+  		display: flex;
+		justify-content: center;
+		align-content: center;
+		flex-direction: column;
+		text-align: center;
+
+		font-size: 50;
+		background-color: rgba(64, 128, 0); 
+		color: rgb(200, 200, 200);
+		width: 800; 
+		height: 600; 
+  	}
+</style>
+<script src="//cdn.split.io/sdk/split-10.16.1.min.js"></script>
+<script>
+	function uuidv4() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+    }
+
+    const wallet = {
+    	user_id: 'dmartin',
+    	anonymous_id: uuidv4()
+    }
+
+	var factory = splitio({
+	  core: {
+	    authorizationKey: '69haia9b9pf3b0rs951bj8kuufr4ke2987op',
+	    key: 'placeholder'
+	  }
+	});
+
+	const manager = factory.manager();
+	manager.once(manager.Event.SDK_READY, function() {
+		let splitViews = [
+			manager.split('anonymous_split'),
+			manager.split('user_split')
+		];
+
+		let anonSplits = [];
+		let userSplits = [];
+		for(const view of splitViews) {
+			if(view.trafficType === 'anonymous') {
+				anonSplits.push(view.name);
+			} else if (view.trafficType === 'user') {
+				userSplits.push(view.name);
+			} else {
+				// unexpected traffic type
+			}
+		}
+
+		const anonClient = factory.client(wallet.anonymous_id);
+		anonClient.on(anonClient.Event.SDK_READY, function() {
+			for(const split of anonSplits) {
+				console.log('anonymous = ' + split + ':' + anonClient.getTreatment(split));
+			}			
+		});
+
+		const userClient = factory.client(wallet.user_id);
+		userClient.on(userClient.Event.SDK_READY, function() {
+			for(const split of userSplits) {
+				console.log('user = ' + split + ':' + userClient.getTreatment(split));
+			}			
+		});	
+	});
+</script>
+<script>
+	function donateHandler() {
+		alert('donate!');
+	}
+	function adoptHandler() {
+		alert('adopt!');
+	}
+</script>
+</head>
+<body>
+	<div>
+		<div id="mainDiv" class="foo">
+			<img id="banner" src="http://www.cortazar-split.com/dog_origin.jpeg"/>
+			<p id="call2Action">Adopt a Dog</p>
+		</div>
+		<div style="text-align: center; padding: 25px">
+			<button onClick="donateHandler()">DONATE</button>
+			<button onClick="adoptHandler()">ADOPT</button>
+		</div>
+	</div>
+</body>
+</html>
+<!--
+http://www.cortazar-split.com/dog_origin.jpeg
+http://www.cortazar-split.com/dog_by_the_door.jpeg
+http://www.cortazar-split.com/dog_on_the_couch.jpeg
+http://www.cortazar-split.com/dog_melancholy.jpeg
+-->

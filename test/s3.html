@@ -1,0 +1,32 @@
+<html>
+<head>
+<script src="//cdn.split.io/sdk/split-10.15.9.min.js"></script>
+<script>
+
+var factory = splitio({
+  core: {
+    authorizationKey: '69haia9b9pf3b0rs951bj8kuufr4ke2987op',
+    key: 'user_id' // unique identifier for your user
+  }
+});
+
+var client = factory.client();
+
+client.on(client.Event.SDK_READY, function() {
+  var treatment = client.getTreatment('s3_integration');
+
+  if (treatment === 'on') {
+      document.body.style.backgroundColor="white";
+  }   else   if (treatment === 'off') {
+      document.body.style.backgroundColor = "black";
+  }   else {
+      // insert control code here
+  }
+
+});
+</script>
+</head>
+<body>
+Hello Split World!
+</body>
+</html>

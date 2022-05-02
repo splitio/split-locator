@@ -1,0 +1,550 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+	<title>UHD Super Streaming in India</title>
+
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+	
+</head>
+<style>
+	body {
+		background-image: url("http://www.cortazar-split.com/oceana.png");
+	}
+   body {
+        padding: 0;
+        margin: 0;
+    }
+    html, body, #mapid {
+        height: 100%;
+        width: 100%;
+    }	
+</style>
+<body>
+	<div id="mapid"/>
+
+	<script>
+
+	// North_Yorkshire: [53.958332,-1.080278],
+	var city_coords = {
+		Delhi: [28.6600,77.2300],
+		Mumbai: [18.9667,72.8333],
+		Kolkāta: [22.5411,88.3378],
+		Bangalore: [12.9699,77.5980],
+		Chennai: [13.0825,80.2750],
+		Hyderābād: [17.3667,78.4667],
+		Pune: [18.5196,73.8553],
+		Ahmedabad: [23.0300,72.5800],
+		Sūrat: [21.1700,72.8300],
+		Lucknow: [26.8470,80.9470],
+		Jaipur: [26.9167,75.8667],
+		Cawnpore: [26.4725,80.3311],
+		Mirzāpur: [25.1500,82.5800],
+		Nāgpur: [21.1539,79.0831],
+		Ghāziābād: [28.6667,77.4167],
+		Indore: [22.7206,75.8472],
+		Vadodara: [22.3000,73.2000],
+		Vishākhapatnam: [17.7333,83.3167],
+		Bhopāl: [23.2500,77.4167],
+		Chinchvad: [18.6278,73.8131],
+		Patna: [25.6100,85.1414],
+		Ludhiāna: [30.9083,75.8486],
+		Āgra: [27.1800,78.0200],
+		Kalyān: [19.2502,73.1602],
+		Madurai: [9.9197,78.1194],
+		Jamshedpur: [22.8000,86.1833],
+		Nāsik: [20.0000,73.7833],
+		Farīdābād: [28.4333,77.3167],
+		Aurangābād: [19.8800,75.3200],
+		Rājkot: [22.2969,70.7984],
+		Meerut: [28.9900,77.7000],
+		Jabalpur: [23.1667,79.9333],
+		Thāne: [19.1800,72.9633],
+		Dhanbād: [23.7928,86.4350],
+		Allahābād: [25.4550,81.8400],
+		Vārānasi: [25.3189,83.0128],
+		Srīnagar: [34.0911,74.8061],
+		Amritsar: [31.6167,74.8500],
+		Alīgarh: [27.8800,78.0800],
+		Bhiwandi: [19.3000,73.0667],
+		Gwalior: [26.2150,78.1931],
+		Bhilai: [21.2167,81.4333],
+		Hāora: [22.5900,88.3100],
+		Rānchi: [23.3556,85.3347],
+		Bezwāda: [16.5167,80.6167],
+		Chandīgarh: [30.7353,76.7911],
+		Mysore: [12.3086,76.6531],
+		Raipur: [21.2379,81.6337],
+		Kota: [25.1800,75.8300],
+		Bareilly: [28.3640,79.4150],
+		Jodhpur: [26.2918,73.0168],
+		Coimbatore: [11.0000,76.9667],
+		Dispur: [26.1500,91.7700],
+		Guwāhāti: [26.1667,91.7667],
+		Solāpur: [17.6833,75.9167],
+		Trichinopoly: [10.8269,78.6928],
+		Hubli: [15.3600,75.1250],
+		Jalandhar: [31.3256,75.5792],
+		Bhubaneshwar: [20.2644,85.8281],
+		Bhayandar: [19.3000,72.8500],
+		Morādābād: [28.8418,78.7568],
+		Kolhāpur: [16.7000,74.2333],
+		Thiruvananthapuram: [8.5000,76.8997],
+		Sahāranpur: [29.9640,77.5460],
+		Warangal: [17.9756,79.6011],
+		Salem: [11.6500,78.1667],
+		Mālegaon: [20.5500,74.5500],
+		Kochi: [9.9667,76.2833],
+		Gorakhpur: [26.7611,83.3667],
+		Shimoga: [13.9304,75.5600],
+		Tiruppūr: [11.1075,77.3398],
+		Guntūr: [16.3000,80.4500],
+		Raurkela: [22.2492,84.8828],
+		Mangalore: [12.8703,74.8806],
+		Nānded: [19.1500,77.3333],
+		Cuttack: [20.4500,85.8667],
+		Chānda: [19.9500,79.3000],
+		DehraDūn: [30.3180,78.0290],
+		Durgāpur: [23.5500,87.3200],
+		Āsansol: [23.6833,86.9667],
+		Bhāvnagar: [21.7650,72.1369],
+		Amrāvati: [20.9333,77.7500],
+		Nellore: [14.4333,79.9667],
+		Ajmer: [26.4680,74.6390],
+		Tinnevelly: [8.7289,77.7081],
+		Bīkaner: [28.0181,73.3169],
+		Agartala: [23.8333,91.2667],
+		Ujjain: [23.1828,75.7772],
+		Jhānsi: [25.4486,78.5696],
+		Ulhāsnagar: [19.2167,73.1500],
+		Davangere: [14.4667,75.9167],
+		Jammu: [32.7333,74.8500],
+		Belgaum: [15.8667,74.5000],
+		Gulbarga: [17.3333,76.8333],
+		Jāmnagar: [22.4700,70.0700],
+		Dhūlia: [20.9000,74.7833],
+		Gaya: [24.7500,85.0167],
+		Jalgaon: [21.0167,75.5667],
+		Kurnool: [15.8222,78.0350],
+		Udaipur: [24.5833,73.6833],
+		Bellary: [15.1500,76.9150],
+		Sāngli: [16.8667,74.5667],
+		Tuticorin: [8.7833,78.1333],
+		Calicut: [11.2500,75.7667],
+		Akola: [20.7333,77.0000],
+		Bhāgalpur: [25.2500,87.0167],
+		Sīkar: [27.6119,75.1397],
+		Tumkūr: [13.3300,77.1000],
+		Quilon: [8.8853,76.5864],
+		Muzaffarnagar: [29.4708,77.7033],
+		Bhīlwāra: [25.3500,74.6333],
+		Nizāmābād: [18.6704,78.1000],
+		Bhātpāra: [22.8667,88.4167],
+		Kākināda: [16.9333,82.2167],
+		Parbhani: [19.2704,76.7600],
+		Pānihāti: [22.6900,88.3700],
+		Lātūr: [18.4004,76.5700],
+		Rohtak: [28.9000,76.5667],
+		Rājapālaiyam: [9.4204,77.5800],
+		Ahmadnagar: [19.0833,74.7333],
+		Cuddapah: [14.4667,78.8167],
+		Rājahmundry: [16.9833,81.7833],
+		Alwar: [27.5667,76.6167],
+		Muzaffarpur: [26.1200,85.3833],
+		Bilāspur: [22.1500,82.0167],
+		Mathura: [27.4833,77.6833],
+		Kāmārhāti: [22.6700,88.3700],
+		Patiāla: [30.3204,76.3850],
+		Saugor: [23.8504,78.7500],
+		Bijāpur: [16.8244,75.7154],
+		Brahmapur: [19.3200,84.8000],
+		Shāhjānpur: [27.8804,79.9050],
+		Trichūr: [10.5200,76.2100],
+		Barddhamān: [23.2500,87.8500],
+		Kulti: [23.7300,86.8500],
+		Sambalpur: [21.4704,83.9701],
+		Purnea: [25.7800,87.4700],
+		Hisar: [29.1489,75.7367],
+		Fīrozābād: [27.1500,78.3949],
+		Bīdar: [17.9229,77.5175],
+		Rāmpur: [28.8154,79.0250],
+		Shiliguri: [26.7200,88.4200],
+		Bāli: [22.6500,88.3400],
+		Pānīpat: [29.4004,76.9700],
+		Karīmnagar: [18.4333,79.1500],
+		Bhuj: [23.2504,69.8100],
+		Ichalkaranji: [16.7000,74.4700],
+		Tirupati: [13.6500,79.4200],
+		Hospet: [15.2667,76.4000],
+		Āīzawl: [23.7104,92.7200],
+		Sannai: [24.1600,80.8300],
+		Bārāsat: [22.2333,88.4500],
+		Ratlām: [23.3167,75.0667],
+		Handwāra: [34.4000,74.2800],
+		Drug: [21.1900,81.2800],
+		Imphāl: [24.8200,93.9500],
+		Anantapur: [14.6833,77.6000],
+		Etāwah: [26.7855,79.0150],
+		Rāichūr: [16.2104,77.3550],
+		Ongole: [15.5000,80.0500],
+		Bharatpur: [27.2172,77.4900],
+		Begusarai: [25.4200,86.1300],
+		Sonīpat: [28.9958,77.0114],
+		Rāmgundam: [18.8000,79.4500],
+		Hāpur: [28.7437,77.7628],
+		Uluberiya: [22.4700,88.1100],
+		Porbandar: [21.6425,69.6047],
+		Pāli: [25.7725,73.3233],
+		Vizianagaram: [18.1167,83.4167],
+		Puducherry: [11.9300,79.8300],
+		Karnāl: [29.6804,76.9700],
+		Nāgercoil: [8.1700,77.4300],
+		Tanjore: [10.8000,79.1500],
+		Sambhal: [28.5800,78.5500],
+		Naihāti: [22.9000,88.4200],
+		Secunderābād: [17.4500,78.5000],
+		Kharagpur: [22.3302,87.3237],
+		Dindigul: [10.3500,77.9500],
+		Shimla: [31.1033,77.1722],
+		IngrājBāzār: [25.0000,88.1500],
+		Ellore: [16.7000,81.1000],
+		Puri: [19.8000,85.8167],
+		Haldia: [22.0257,88.0583],
+		Nandyāl: [15.4800,78.4800],
+		Bulandshahr: [28.4104,77.8484],
+		Chakradharpur: [22.7000,85.6300],
+		Bhiwāni: [28.7833,76.1333],
+		Gurgaon: [28.4500,77.0200],
+		Burhānpur: [21.3004,76.1300],
+		Khammam: [17.2500,80.1500],
+		Madhyamgram: [22.7000,88.4500],
+		Ghāndīnagar: [23.2200,72.6800],
+		Baharampur: [24.1000,88.2500],
+		Mahbūbnagar: [16.7333,77.9833],
+		Mahesāna: [23.6000,72.4000],
+		Ādoni: [15.6300,77.2800],
+		Rāiganj: [25.6167,88.1167],
+		Bhusāval: [21.0200,75.8300],
+		Bahraigh: [27.6204,81.6699],
+		Shrīrāmpur: [22.7500,88.3400],
+		Tonk: [26.1505,75.7900],
+		Sirsa: [29.4904,75.0300],
+		Jaunpur: [25.7333,82.6833],
+		Madanapalle: [13.5500,78.5000],
+		Hugli: [22.9000,88.3900],
+		Vellore: [12.9204,79.1500],
+		Alleppey: [9.5004,76.3700],
+		Cuddalore: [11.7500,79.7500],
+		Deo: [24.6561,84.4356],
+		Chīrāla: [15.8200,80.3500],
+		Machilīpatnam: [16.1667,81.1333],
+		Medinīpur: [22.4333,87.3333],
+		Bāramūla: [34.2000,74.3400],
+		Chandannagar: [22.8667,88.3833],
+		Fatehpur: [25.8804,80.8000],
+		Udipi: [13.3322,74.7461],
+		Tenāli: [16.2430,80.6400],
+		Sitalpur: [27.6300,80.7500],
+		Conjeeveram: [12.8308,79.7078],
+		Proddatūr: [14.7300,78.5500],
+		Navsāri: [20.8504,72.9200],
+		Godhra: [22.7755,73.6149],
+		Budaun: [28.0300,79.0900],
+		Chittoor: [13.2000,79.1167],
+		Harīpur: [31.5200,75.9800],
+		Saharsa: [25.8800,86.6000],
+		Vidisha: [23.5239,77.8061],
+		Pathānkot: [32.2689,75.6497],
+		Nalgonda: [17.0500,79.2700],
+		Dibrugarh: [27.4833,95.0000],
+		Bālurghāt: [25.2167,88.7667],
+		Krishnanagar: [23.4000,88.5000],
+		Fyzābād: [26.7504,82.1700],
+		Silchar: [24.7904,92.7900],
+		Shāntipur: [23.2500,88.4300],
+		Hindupur: [13.8300,77.4900],
+		Erode: [11.3408,77.7172],
+		Jāmuria: [23.7000,87.0800],
+		Hābra: [22.8300,88.6300],
+		Ambāla: [30.3786,76.7725],
+		Mauli: [30.7194,76.7181],
+		Kolār: [13.1333,78.1333],
+		Shillong: [25.5744,91.8789],
+		Bhīmavaram: [16.5333,81.5333],
+		NewDelhi: [28.7000,77.2000],
+		Mandsaur: [24.0300,75.0800],
+		Kumbakonam: [10.9805,79.4000],
+		Tiruvannāmalai: [12.2604,79.1000],
+		Chicacole: [18.3000,83.9000],
+		Bānkura: [23.2500,87.0667],
+		Mandya: [12.5242,76.8958],
+		Hassan: [13.0050,76.1028],
+		Yavatmāl: [20.4000,78.1333],
+		Pīlibhīt: [28.6400,79.8100],
+		Pālghāt: [10.7792,76.6547],
+		Abohar: [30.1204,74.2900],
+		Pālakollu: [16.5333,81.7333],
+		Kānchrāpāra: [22.9700,88.4300],
+		PortBlair: [11.6667,92.7500],
+		AlīpurDuār: [26.4837,89.5667],
+		Hāthras: [27.6000,78.0500],
+		Guntakal: [15.1700,77.3800],
+		Navadwīp: [23.4088,88.3657],
+		Basīrhat: [22.6572,88.8942],
+		Hālīsahar: [22.9500,88.4200],
+		Rishra: [22.7100,88.3500],
+		Dharmavaram: [14.4142,77.7150],
+		Baidyabāti: [22.7900,88.3200],
+		Darjeeling: [27.0417,88.2631],
+		Sopur: [34.3000,74.4700],
+		Gudivāda: [16.4300,80.9900],
+		Adilābād: [19.6667,78.5333],
+		Titāgarh: [22.7400,88.3700],
+		Chittaurgarh: [24.8894,74.6239],
+		Narasaraopet: [16.2360,80.0540],
+		DamDam: [22.6200,88.4200],
+		Vālpārai: [10.3204,76.9700],
+		Osmānābād: [18.1667,76.0500],
+		Champdani: [22.8000,88.3700],
+		Bangaon: [23.0700,88.8200],
+		Khardah: [22.7200,88.3800],
+		Tādpatri: [14.9200,78.0200],
+		Jalpāiguri: [26.5167,88.7333],
+		Suriāpet: [17.1500,79.6167],
+		Tādepallegūdem: [16.8333,81.5000],
+		Bānsbāria: [22.9700,88.4000],
+		Negapatam: [10.7667,79.8333],
+		Bhadreswar: [22.8200,88.3500],
+		Chilakalūrupet: [16.0892,80.1672],
+		Kalyani: [22.9750,88.4344],
+		Gangtok: [27.3300,88.6200],
+		Kohīma: [25.6667,94.1194],
+		Khambhāt: [22.3131,72.6194],
+		Aurangābād: [24.7704,84.3800],
+		Emmiganūr: [15.7333,77.4833],
+		Rāyachoti: [14.0500,78.7500],
+		Kāvali: [14.9123,79.9944],
+		Mancherāl: [18.8679,79.4639],
+		Kadiri: [14.1200,78.1700],
+		Ootacamund: [11.4086,76.6939],
+		Anakāpalle: [17.6800,83.0200],
+		Sirsilla: [18.3800,78.8300],
+		Kāmāreddipet: [18.3167,78.3500],
+		Pāloncha: [17.5815,80.6765],
+		Kottagūdem: [17.5500,80.6300],
+		Tanuku: [16.7500,81.7000],
+		Bodhan: [18.6700,77.9000],
+		Karūr: [10.9504,78.0833],
+		Mangalagiri: [16.4300,80.5500],
+		Kairāna: [29.4000,77.2000],
+		Mārkāpur: [15.7350,79.2700],
+		Malaut: [30.1900,74.4990],
+		Bāpatla: [15.8889,80.4700],
+		Badvel: [14.7500,79.0500],
+		Jorhāt: [26.7500,94.2167],
+		Koratla: [18.8200,78.7200],
+		Pulivendla: [14.4167,78.2333],
+		Jaisalmer: [26.9167,70.9167],
+		Tādepalle: [16.4667,80.6000],
+		Armūr: [18.7900,78.2900],
+		Jatani: [20.1700,85.7000],
+		Gadwāl: [16.2300,77.8000],
+		Nagari: [13.3300,79.5800],
+		Wanparti: [16.3610,78.0627],
+		Ponnūru: [16.0667,80.5667],
+		Vinukonda: [16.0500,79.7500],
+		Itānagar: [27.1000,93.6200],
+		Tezpur: [26.6338,92.8000],
+		Narasapur: [16.4333,81.6833],
+		Kothāpet: [19.3333,79.4833],
+		Mācherla: [16.4800,79.4300],
+		Kandukūr: [15.2165,79.9042],
+		Sāmalkot: [17.0531,82.1695],
+		Bobbili: [18.5667,83.4167],
+		Sattenapalle: [16.3962,80.1497],
+		Vrindāvan: [27.5806,77.7006],
+		Mandapeta: [16.8700,81.9300],
+		Belampalli: [19.0558,79.4931],
+		Bhīmunipatnam: [17.8864,83.4471],
+		Nāndod: [21.8704,73.5026],
+		Pithāpuram: [17.1167,82.2667],
+		Punganūru: [13.3667,78.5833],
+		Puttūr: [13.4500,79.5500],
+		Jalor: [25.3500,72.6167],
+		Palmaner: [13.2000,78.7500],
+		Dholka: [22.7200,72.4700],
+		Jaggayyapeta: [16.8920,80.0976],
+		Tuni: [17.3500,82.5500],
+		Amalāpuram: [16.5833,82.0167],
+		Jagtiāl: [18.8000,78.9300],
+		Vikārābād: [17.3300,77.9000],
+		Venkatagiri: [13.9667,79.5833],
+		Sihor: [21.7000,71.9700],
+		Jangaon: [17.7200,79.1800],
+		Mandamāri: [18.9822,79.4811],
+		Metpalli: [18.8297,78.5878],
+		Repalle: [16.0200,80.8500],
+		Bhainsa: [19.1000,77.9667],
+		Jasdan: [22.0300,71.2000],
+		Jammalamadugu: [14.8500,78.3800],
+		Rāmeswaram: [9.2800,79.3000],
+		Addanki: [15.8110,79.9738],
+		Nidadavole: [16.9200,81.6700],
+		Bodupāl: [17.4139,78.5783],
+		Rājgīr: [25.0300,85.4200],
+		Rajaori: [33.3800,74.3000],
+		NainiTal: [29.3919,79.4542],
+		Channarāyapatna: [12.9000,76.3900],
+		Maihar: [24.2700,80.7500],
+		Panaji: [15.4800,73.8300],
+		Junnar: [19.2000,73.8800],
+		Amudālavalasa: [18.4167,83.9000],
+		Damān: [20.4170,72.8500],
+		Kovvūr: [17.0167,81.7333],
+		Solan: [30.9200,77.1200],
+		Dwārka: [22.2403,68.9686],
+		Pathanāmthitta: [9.2647,76.7872],
+		Kodaikānal: [10.2300,77.4800],
+		Udhampur: [32.9300,75.1300],
+		Giddalūr: [15.3784,78.9265],
+		Yellandu: [17.6000,80.3300],
+		Shrīrangapattana: [12.4181,76.6947],
+		Angamāli: [10.1960,76.3860],
+		Umaria: [23.5245,80.8365],
+		FatehpurSīkri: [27.0911,77.6611],
+		Mangūr: [17.9373,80.8185],
+		Pedana: [16.2667,81.1667],
+		Uran: [18.8900,72.9500],
+		Chimākurti: [15.5819,79.8680],
+		Devarkonda: [16.7000,78.9333],
+		Bandipura: [34.4225,74.6375],
+		Silvassa: [20.2666,73.0166],
+		Pāmidi: [14.9500,77.5833],
+		Narasannapeta: [18.4151,84.0447],
+		JaynagarMajilpur: [22.1772,88.4258],
+		KhedBrahma: [24.0299,73.0463],
+		Khajurāho: [24.8500,79.9333],
+		Koilkuntla: [15.2333,78.3167],
+		Diu: [20.7197,70.9904],
+		Kulgam: [33.6400,75.0200],
+		Gauripur: [26.0800,89.9700],
+		Abu: [24.5925,72.7083],
+		Curchorem: [15.2500,74.1000],
+		Kavaratti: [10.5626,72.6369],
+		Panchkula: [30.6915,76.8537],
+		Kagaznāgār: [19.3316,79.4661]
+	}
+
+	</script>
+   <script src="http://cdn.split.io/sdk/split-10.15.7.min.js"></script>
+
+    <script>
+    	const clientSideKey = "ku60jampgeh7jtrrgrnrm7in1nb9csl7keg8";
+
+    	var factory = splitio({
+    		startup: {
+    			readyTimeout: 5
+    		},
+    		core: {
+    			authorizationKey: clientSideKey,
+    			key: 'dmartin',
+    			trafficType: 'user',
+    			labelsEnabled: true
+    		},
+    		scheduler: {
+            featuresRefreshRate: 1, // 30 sec 
+            segmentsRefreshRate: 60, // 60 sec 
+            metricsRefreshRate: 60, // 60 sec
+            impressionsRefreshRate: 15, // 60 sec
+            eventsPushRate: 60, // 60 sec
+            eventsQueueSize: 500 // 500 items
+        },
+        // storage: {
+        //     type: 'LOCALSTORAGE',
+        //     prefix: 'PLANE'
+        // },
+        debug: false,
+        streamingEnabled: true
+    });
+
+	var mymap = L.map('mapid').setView([16, 77], 6);
+
+	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+		maxZoom: 18,
+		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+		'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+		id: 'mapbox/streets-v11',
+		tileSize: 512,
+		zoomOffset: -1
+	}).addTo(mymap);
+
+    var client = factory.client('Tokyo');
+
+    client.on(client.Event.SDK_READY, function() {
+    	console.log('DBM factory SDK_READY');
+    	drawMap();
+    });
+
+       client.on(client.Event.SDK_UPDATE, function() {
+    	console.log('DBM factory SDK_UPDATE');
+    	setTimeout(() => {  drawMap(); }, 1500);
+    });
+
+</script>
+
+	<script>
+	function drawMap() {
+
+		const cities = Object.keys(city_coords);
+
+		cities.forEach((city, index) => {
+			// console.log(`${city}: ${city_coords[city]}`);
+			coords = `${city_coords[city]}`.split(',');
+			var lat = coords[0];
+			var long = coords[1];
+			var radius = 7500;
+			$.ajax({
+                    url: 'https://split-evaluator.darkbloom.org/client/get-treatments-with-config?key=' + city +'&split-names=credit_card',
+                    type: 'GET',
+                    success: function(result) {
+                    	treatment = result.credit_card.treatment;
+                    	console.log(city + ': ' + treatment + ' lat: ' + lat + ' long: ' + long);
+                    	if(treatment === 'on') {
+                    		L.circle([lat, long], radius, {
+                    			color: 'rgb(0, 124, 156)',
+                    			//fillColor: '#30f',
+                    			//fillOpacity: 0.1
+                    		}).addTo(mymap).bindPopup(city);
+                    	} else if (treatment === 'off') {
+                    		L.circle([lat, long], radius, {
+                    			color: 'rgb(255, 70, 82)',
+                    			//fillColor: '#f03',
+                    			//fillOpacity: 0.1
+                    		}).addTo(mymap).bindPopup(city);
+                    	} else {
+                    		L.circle([lat, long], radius, {
+                    			color: 'black',
+                    			//fillColor: '#fff',
+                    			//fillOpacity: 0.1
+                    		}).addTo(mymap).bindPopup(city);
+                    	}                       
+                    },
+                    error: function(result) {
+                    	console.log("error! " + result);
+                    }
+                });
+		});
+	}
+	</script>
+
+</body>
+</html>
+

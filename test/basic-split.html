@@ -1,0 +1,108 @@
+<html>
+<head>
+	<title>Basic HTML Page</title>
+<style>
+	.body {
+		color: 'white';
+  	}
+  	.foo {
+  		display: flex;
+		width: 800; 
+		height: 600; 
+		background-color: rgba(64, 128, 0); 
+		color: rgb(200, 200, 200);
+		justify-content: center;
+		align-content: center;
+		flex-direction: column;
+		text-align: center;
+		font-size: 50;
+  	}
+</style>
+<script src="//cdn.split.io/sdk/split-10.16.0.min.js"></script>
+<script>
+	var factory = splitio({
+	  core: {
+	    authorizationKey: '69haia9b9pf3b0rs951bj8kuufr4ke2987op',
+	    key: 'user_id' // unique identifier for your user
+	  },
+	  debug: true
+	});
+
+	var client = factory.client();
+	let start = new Date().getTime();
+
+	client.on(client.Event.SDK_READY, function() {
+		console.log('SDK_READY');
+		console.log('got ready in ' + (new Date().getTime() - start) + 'ms');
+		draw();
+	});
+
+	client.on(client.Event.SDK_READY_FROM_CACHE, function() {
+		console.log('SDK_READY');
+		draw();
+	});
+
+	client.on(client.Event.SDK_UPDATE, function() {
+		console.log('SDK_UPDATE');
+		draw();
+	})
+
+	function draw() {
+	  var splitResult = client.getTreatmentWithConfig('basic');
+	  var configs = JSON.parse(splitResult.config);
+	  console.log(configs);
+	  var treatment = splitResult.treatment;
+	  let div = document.getElementById("mainDiv");
+	  div.style.fontSize = configs.fontSize;	
+	  div.style.backgroundColor = configs.backgroundColor;	
+	  let img = document.getElementById("banner");
+	  img.src = configs.src;
+	  let p = document.getElementById("call2Action");
+	  p.innerHTML = configs.text;
+	}
+
+	function donateHandler() {
+		alert('donate!');
+		if(client) {
+			const properties = {
+				tier: 'platinum',
+				department: 'furniture',
+				code: 57.3
+			}
+			console.log(client.track('user', 'click2Donate', 42.99, properties));
+		}
+	}
+
+	function adoptHandler() {
+		alert('adopt!');
+		if(client) {
+			const properties = {
+				tier: 'platinum',
+				department: 'furniture',
+				code: 57.3
+			}
+			console.log(client.track('user', 'click2Adopt', 42.99, properties));
+		}
+	}
+
+</script>
+</head>
+<body>
+	<div>
+		<div id="mainDiv" class="foo">
+			<img id="banner" src="http://www.cortazar-split.com/dog_origin.jpeg"/>
+			<p id="call2Action">Adopt a Dog</p>
+		</div>
+		<div style="text-align: center; padding: 25px">
+			<button onClick="donateHandler()">DONATE</button>
+			<button onClick="adoptHandler()">ADOPT</button>
+		</div>
+	</div>
+</body>
+</html>
+<!--
+http://www.cortazar-split.com/dog_origin.jpeg
+http://www.cortazar-split.com/dog_by_the_door.jpeg
+http://www.cortazar-split.com/dog_on_the_couch.jpeg
+http://www.cortazar-split.com/dog_melancholy.jpeg
+-->

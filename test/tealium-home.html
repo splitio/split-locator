@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <script>
+        function uuidv4() {
+          return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+          });
+        }
+
+        var user_id = uuidv4();
+    </script>
+    <style>
+    body {
+        color: white;
+    }
+
+    div.cta {
+        font-family: Impact, Charcoal, sans-serif;
+        font-size: 80px;
+        color: black;
+        text-align: center;
+        background-color: #f2f2f2;
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+
+    div.cta-image {
+        text-align: center;
+    }
+
+    img {
+        width: 100%;
+    }
+    </style>
+
+    <script src="http://cdn.split.io/sdk/split-10.15.0.min.js"></script>
+    <script>
+        var factory = splitio({
+            core: {
+                authorizationKey: 'ku60jampgeh7jtrrgrnrm7in1nb9csl7keg8',
+                key: user_id,
+                labelsEnabled: true,
+                trafficType: 'user'
+            },
+            scheduler: {
+                featuresRefreshRate: 3,
+                eventsPushRate: 5
+            },
+            streamingEnabled: true,
+            debug: true
+        });
+
+        var client = factory.client();
+
+        client.on(client.Event.SDK_READY, function() {
+            draw();
+        });
+
+        client.on(client.Event.SDK_UPDATE, function() {
+            draw();
+        })
+
+    function createPopup(message, value) {
+        return function() {
+            if (message != null && value != null) {
+                alert(message + value);
+            }
+        };
+    }
+
+    function draw() {
+        console.log("draw!");
+
+        var result = client.getTreatmentWithConfig("ga_home");
+        console.log(result);
+
+        var configs = JSON.parse(result.config);
+        console.log(configs);
+
+        document.getElementById("cta-text").innerHTML = configs.text;
+
+        var img = document.getElementById("cta-image");
+        img.src = configs.image;
+        img.style.width = '100%';
+    }
+
+    function clickHandler() {
+        console.log("clickHandler!");
+        // pass the user_id in a cookie
+        document.cookie = "username=" + user_id + "; path=/";
+        window.location.href="tealium.html";
+    }
+    </script>
+
+    <title>JS GA Home</title>
+</head>
+
+<body>
+    <div id="cta-text" class="cta">Call to Action</div>
+    <div class="cta"><img id="cta-image" alt="bulb" onclick="clickHandler()" /></div>
+</body>
+
+</html>

@@ -1,0 +1,22 @@
+		    var factory = splitio({
+		        core: {
+		            authorizationKey: 'ku60jampgeh7jtrrgrnrm7in1nb9csl7keg8',
+		            key: window.QuantumMetricAPI.getSessionID(), //'dmartin',
+		            trafficType: 'user',
+		            labelsEnabled: true
+		        },
+		        scheduler: {
+		            featuresRefreshRate: 1
+			},
+		        storage: {
+		        	type: 'LOCALSTORAGE',
+		        	prefix: 'WAVE'
+		        },
+		        impressionListener: {
+			    	logImpression: logImpression
+		  		},
+		        streamingEnabled: true,
+		        debug: false
+		    });
+
+			client = factory.client();

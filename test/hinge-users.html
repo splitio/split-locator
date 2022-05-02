@@ -1,0 +1,177 @@
+<html>
+<head>
+	<title>Spliting Singles</title>
+	<script src="//cdn.split.io/sdk/split-10.15.9.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.js"></script>	
+	<style>
+		.div {
+			display: inline-block;
+		}
+	</style>
+	<script>
+		const users =		
+			[{
+			    name: "angelina",
+			    img: "a-angelina.jpeg",
+			    location: "Boson"
+			}, {
+			    name: "melinda",
+			    img: "a-belinda.jpeg",
+			    location: "Nashville"
+			}, {
+			    name: "ben",
+			    img: "a-ben.jpeg",
+			    location: "London"
+			}, {
+			    name: "bill",
+			    img: "a-bill.jpeg",
+			    location: "Chicago"
+			}, {
+			    name: "brad",
+			    img: "a-brad.jpeg",
+			    location: "Seattle"
+			}, {
+			    name: "chris",
+			    img: "a-chris.jpeg",
+			    location: "Los Angeles"
+			}, {
+			    name: "gwyneth",
+			    img: "a-gwyneth.jpeg",
+			    location: "New York"
+			}, {
+			    name: "jennifer",
+			    img: "a-jennifer.jpeg",
+			    location: "Milan"
+			}, {
+			    name: "kanye",
+			    img: "a-kanye.jpeg",
+			    location: "Boson"
+			}, {
+			    name: "katie",
+			    img: "a-katie.jpeg",
+			    location: "Nashville"
+			}, {
+			    name: "kim",
+			    img: "a-kim.jpeg",
+			    location: "London"
+			}, {
+			    name: "liam",
+			    img: "a-liam.jpeg",
+			    location: "Chicago"
+			}, {
+			    name: "miley",
+			    img: "a-miley.jpeg",
+			    location: "Seattle"
+			}, {
+			    name: "miranda",
+			    img: "a-miranda.jpeg",
+			    location: "Los Angeles"
+			}, {
+			    name: "orlando",
+			    img: "a-orlando.jpeg",
+			    location: "New York"
+			}, {
+			    name: "ryan",
+			    img: "a-ryan.jpeg",
+			    location: "Milan"
+			}, {
+			    name: "scarlett",
+			    img: "a-scarlett.jpeg",
+			    location: "Boson"
+			}, {
+			    name: "tom",
+			    img: "a-tom.jpeg",
+			    location: "Nashville"
+			}]		
+;
+
+		const key = "ahufqod7k81e341bqvl954hksr9o8c4g28ap";
+
+		var factory = splitio({
+			startup: {
+				readyTimeout: 15
+			},
+			core: {
+				authorizationKey: key,
+				key: 'dmartin',
+				labelsEnabled: true
+			},
+			scheduler: {
+	            streamingEnabled: true
+	        }
+	    });
+
+		let start = new Date().getTime();
+		client = factory.client();   		
+
+		let cache_of_clients = new Map();
+		client.on(client.Event.SDK_READY, function() {
+			console.log('SDK_READY');
+			console.log('Split initialized in ' + (new Date().getTime() - start) + 'ms');
+			drawSinglesOnReady();
+		});
+
+		client.on(client.Event.SDK_UPDATE, function() {
+			console.log('SDK_UPDATE ' + new Date());
+			drawSingles();
+		})
+
+		function drawSinglesOnReady() {
+			for(const single of users) {
+				const c = factory.client(single.name)
+				cache_of_clients.set(single.name, c);
+				c.on(client.Event.SDK_READY, function() {
+					console.log(single.name + ' SDK_READY')
+					drawSingle(single);
+				})
+			}			
+		}
+
+		function drawSingles() {
+  			const root = document.getElementById("root");
+			while (root.firstChild) {
+			    root.removeChild(root.lastChild);
+  			}
+
+			for(const single of users) {
+				drawSingle(single);
+			}
+		}
+
+		function drawSingle(single) {
+			const img = document.createElement("img");
+			img.src = single.img;
+			img.title = single.name;
+			//img.style.borderRadius = '50%';
+			// Split fun
+		 	client = cache_of_clients.get(single.name);
+			const attributes = {
+				location: single.location
+			}
+	 		const TreatmentResult = client.getTreatmentWithConfig('singles', attributes);
+			const configs = JSON.parse(TreatmentResult.config);
+			const treatment = TreatmentResult.treatment;
+			console.log(single.name + ' - ' + treatment);
+
+			if(treatment === "off") {
+				img.style.opacity = '0.2';
+			}
+			const holder = document.createElement("div");
+			holder.appendChild(img);
+			const div = document.createElement("div");
+			div.innerHTML = single.name + ' [' + single.location + ']';
+			div.style.fontFamily = 'Verdana, sans-serif';
+			div.style.fontSize = '12';
+			div.style.color = 'rgb(150, 150, 150)';
+			holder.appendChild(div);
+			holder.style.display = 'inline-block';
+			root.appendChild(holder);
+		}
+	</script>
+</head>
+<body bgcolor="black">
+	<div id="root">
+	</div>
+	<img src="https://www.split.io/wp-content/uploads/2017/11/split-logo-light-background-transparent.png" width="30%"/>	
+</body>
+</html>

@@ -1,0 +1,237 @@
+<html>
+<head>
+	<title>mParticle and Split for McDonald's</title>
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Carter+One" />
+<style>
+	body {
+		background-color: #DA291C;
+	}
+
+	div.cta {
+		/* 
+		font-family: Times, Charcoal, serif; 
+		font-size: 80px;
+		*/
+		font-family: "Carter One"; 
+		font-size: 80px; 
+		font-style: normal; 
+		font-variant: normal; 
+		font-weight: 400; 
+		line-height: 80px;
+
+		color: #FFC72C;
+		text-align: center;
+		background-color: #DA291C;
+		padding-top: 50px;
+  		padding-bottom: 50px;
+	}
+
+	div.cta-image {
+		text-align: center;
+	}
+
+	div.buttons {
+		text-align: center;
+		padding-top: 25px;
+	}
+
+	img {
+		width: 100%;
+	}
+
+	.button {
+	  background-color: #FFC72C;
+	  border: none;
+	  color: #DA291C;
+	  padding: 15px 32px;
+	  text-align: center;
+	  text-decoration: none;
+	  display: inline-block;
+	  font-size: 16px;
+	}
+
+	.center {
+	  margin: 0;
+	  position: absolute;
+	  top: 50%;
+	  left: 50%;
+	  -ms-transform: translate(-50%, -50%);
+	  transform: translate(-50%, -50%);
+	}
+</style>
+<script src="http://cdn.split.io/sdk/split-10.12.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script>
+	var start = new Date().getTime();
+
+	function logImpression(impressionData) {
+		// LogRocket.identify('123456', {
+  // 			'split.' + impressionData.split : impressionData.treatment,
+		// });
+	}
+
+    var factory = splitio({
+        core: {
+            authorizationKey: 'ku60jampgeh7jtrrgrnrm7in1nb9csl7keg8',
+            key: 'dmartin',
+            trafficType: 'user',
+            labelsEnabled: true
+        },
+        scheduler: {
+            featuresRefreshRate: 1
+		},
+        storage: {
+        	type: 'LOCALSTORAGE',
+        	prefix: 'WAVE'
+        },
+        impressionListener: {
+	    	logImpression: logImpression
+  		},
+		sync: {
+		  splitFilters: [{
+		    type: 'byName',
+		    values: ['next_step', 'multivariant_demo']
+		  }],
+		  impressionsMode: 'OPTIMIZED'
+		},  		
+        streamingEnabled: true,
+        debug: false
+    });
+
+    const startTime = new Date().getTime();
+	var client = factory.client();
+	const response = client.getTreatment("some_feature_flag");
+
+
+	client.on(client.Event.SDK_READY, function() {
+		console.log('SDK ready in ' + (new Date().getTime() - startTime) + 'ms');		
+		drawUI();
+	});	
+
+	client.on(client.Event.SDK_READY_FROM_CACHE, function() {
+		console.log('SDK ready from cache in ' + (new Date().getTime() - startTime) + 'ms');		
+		drawUI();
+	});
+
+	client.on(client.Event.SDK_UPDATE, function() {
+		console.log("SDK update!");
+		drawUI();
+	});
+
+	function drawUI() {
+		$( document ).ready(function() {
+		var attributes = {
+ 			 now : new Date().getTime(), // any time as milliseconds since epoch
+  			region : 'region_value'
+		}
+		  var result = client.getTreatmentWithConfig("multivariant_mcd", attributes);
+		  // console.log(result);
+		  drawScreen(result);
+		  //result = client.getTreatment("next_step");
+		  drawButton();
+		});
+	}
+
+</script>
+<script>
+	function drawScreen(splitResult) {
+		console.log("drawScreen");
+		var configs = JSON.parse(splitResult.config);
+		// console.log(configs);
+		document.getElementById("call-to-action").innerHTML = configs.text;
+
+		var img = document.getElementById("banner-image");
+		img.src = configs.image;
+		img.style.width = configs.image_width;
+	}
+
+	function drawButton() {
+		console.log("drawButton");
+
+		var abutton = document.getElementById("actionButton");
+		abutton.innerHTML = "+";
+	}
+
+	function registerClick() {
+		var start = new Date().getTime();
+
+        var regions = [ "US", "EU", "JP"];
+        var status = [ "silver", "gold", "platinum"];
+        var n = Math.floor(Math.random() * 100);
+        var m = Math.floor(Math.random() * 100);
+        var properties = {
+            region : regions[n % regions.length], 
+            status : status[m % status.length],
+            type : 'donate',
+            timeInRegistrationMs : start - new Date().getTime() 
+        };
+        var queued = client.track ('click', 0, properties);
+        alert("tracking a click to split: " + queued);
+        //useWrapper();
+	}
+
+	function useWrapper() {
+        var w = new SplitPlusAttributeWrapper(client);
+        w.setAttribute('david', 'brooke');
+        var wrappedResult = w.getTreatmentWithAttributes('new_onboarding');
+        console.log("result: " + client.getTreatment('new_onboarding'));
+        console.log("wrappedResult: " + wrappedResult);
+	}
+
+	const prefix = 'DBM.SPLITPLUS.';
+	class SplitPlusAttributeWrapper {
+
+		constructor(splitClient) {
+			this.client = splitClient;
+			console.log("ctor result: " + this.client.getTreatment('new_onboarding'));
+			this.localStorage = window.localStorage;
+		}
+
+		setAttribute(key, value) {
+			this.localStorage.setItem(prefix + key, value);
+		}
+
+		getTreatmentWithAttributes(split) {
+			var attributes = {};
+
+			const keys = Object.keys(this.localStorage);
+			for (let key of keys) {
+				if(key.startsWith(prefix)) {
+					var attKey = key.substring(prefix.length);
+					console.log(attKey);
+					attributes[attKey] = this.localStorage.getItem(key);
+				}
+			}
+
+			console.log(attributes);
+			return this.client.getTreatment(split, attributes);
+		}
+
+		debug() {
+			const keys = Object.keys(this.localStorage);
+			for (let key of keys) {
+				if(key.startsWith(prefix))
+				    console.log(`${key}: ${this.localStorage.getItem(key)}`);
+			}			
+		}
+	}
+
+function registerAdopt() {
+	const startTime = new Date().getTime();
+	alert('adopt!');
+	const r = client.track('click2Adopt', new Date().getTime() - startTime, {name: 'dmartin', value: 42});
+}
+</script>
+</head>
+
+<body>
+	Multivariant Demo
+	<div id="call-to-action" class="cta">Adopt a Cute Dog</div>
+	<div class="cta-image"><img id="banner-image"/></div>
+	<div class="buttons" align="center">
+		<button class="button" id="actionButton" onclick="registerClick()">Click Here!</button>
+		<button class="button" onclick="registerAdopt()">CHECKOUT</button>
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,211 @@
+<html>
+<head><title>Persuader!</title>
+   <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+   <style>
+   input {
+   	 font-family: 'courier';
+   	 font-size: '40px';
+   }
+   td {
+   	 font-family: 'verdana';
+   	 font-size: '40px';
+   }
+</style>
+<script>
+	function handleResponse() {
+		let formData = {
+			email: document.getElementById("email").value,
+			password: document.getElementById("password").value,
+      mobile: document.getElementById("mobile").value,
+			workspace: {
+				name: document.getElementById("workspaceName").value
+			},
+			environment: {
+				name: document.getElementById("environmentName").value
+			},
+			segments: JSON.parse(document.getElementById("segments").value.replace(/[\n\r]+/g, '').replace(/\s{2,10}/g, ' ')),
+			splits: JSON.parse(document.getElementById("splits").value.replace(/[\n\r]+/g, '').replace(/\s{2,10}/g, ' ')),
+			metrics: JSON.parse(document.getElementById("metrics").value.replace(/[\n\r]+/g, '').replace(/\s{2,10}/g, ' ')),
+			events: JSON.parse(document.getElementById("events").value.replace(/[\n\r]+/g, '').replace(/\s{2,10}/g, ' '))
+		}
+		console.log(formData);
+		const s = JSON.stringify(formData);
+		console.log(s);
+    window.localStorage.setItem('persuader', s);
+
+		$.ajax({
+  			type: "POST",
+  			url: 'https://frgdr1sufi.execute-api.us-west-2.amazonaws.com/prod',
+  			data: s,
+  			headers:{'Content-Type': 'application/json'},
+  			success: function(response){
+          console.log(response);
+  				alert('statusCode: ' + response.statusCode + " message: " + response.body.result);
+  			},
+  			error: function(error) {
+  				alert('error: ' + error.statusCode);
+  			},
+  			dataType: "json",
+  			contentType : "application/json"
+		});
+	}
+
+	function cleanup() {
+		let formData = {
+			email: document.getElementById("email").value,
+			password: document.getElementById("password").value,
+			workspace: {
+				name: document.getElementById("workspaceName").value
+			}			
+		}
+		const s = JSON.stringify(formData);
+		console.log(s);
+		$.ajax({
+  			type: "POST",
+  			url: 'https://uvumorside.execute-api.us-west-2.amazonaws.com/prod',
+  			data: s,
+  			headers:{'Content-Type': 'application/json'},
+  			success: function(){
+  				alert('cleanup finished');
+  			},
+  			error: function(error) {
+  				alert(error);
+  			},
+  			dataType: "json",
+  			contentType : "application/json"
+		});
+	}
+</script>
+<script>
+    $( document ).ready(function() {
+      const s = window.localStorage.getItem('persuader');
+      if(s) {
+          const b = JSON.parse(s); 
+          document.getElementById("email").value = b.email;
+          document.getElementById("password").value = b.password;
+          document.getElementById("mobile").value = b.mobile;
+          document.getElementById("workspaceName").value = b.workspace.name;
+          document.getElementById("environmentName").value = b.environment.name;
+          document.getElementById("segments").innerHTML = JSON.stringify(b.segments, null, 2);
+          document.getElementById("splits").innerHTML = JSON.stringify(b.splits, null, 2);
+          document.getElementById("metrics").innerHTML = JSON.stringify(b.metrics, null, 2);
+          document.getElementById("events").innerHTML = JSON.stringify(b.events, null, 2);
+      }
+    });
+</script>
+</head>
+<body>
+	<h1>Persuader</h1>
+	<h3>Create a custom demo workspace!</h3>
+	<table border="0" cols="10">
+		<form>
+			  <tr>
+			  	<td cols="2">
+			  		<button onclick="this.disabled=true; this.innerHTML='Creating...'; handleResponse()">CREATE</button>
+			  		<button onclick="this.disabled=true; this.innerHTML='Deleting...'; cleanup()">CLEANUP</button>
+			  	</td>
+			  </tr>
+			  <tr><td cols="2">Workspace Name</td><td cols="4"><input id="workspaceName" value="zzz"/></td></tr>
+			  <tr><td cols="2">Email</td><td cols="8"><input id="email" size="60" value=""/></td></tr>
+			  <tr><td cols="2">Password</td><td cols="8"><input id="password" size="12" value=""/></td></tr>
+        <tr><td cols="2">Mobile</td><td cols="8"><input id="mobile" size="10" value="4157068607"/></td></tr>
+			  <tr><td cols="2">Environment Name</td><td cols="8"><input id="environmentName" value="demo"/></td></tr>
+			  <tr><td cols="2">Segments</td><td cols="8"><textarea id="segments" rows="10" cols="65" value="">
+[
+    {
+      "name": "employees",
+      "description": "internal list of employees"
+    },
+    {
+      "name": "beta_users",
+      "description": "users signed up for beta program"
+    }
+  ]
+				</textarea>
+			  </td></tr>
+			  <tr><td cols="2">Splits</td><td cols="8"><textarea id="splits" rows="50" cols="65" value="">
+[
+    {
+      "name": "persuader",
+      "description": "made by DBM",
+      "body": {
+        "treatments": [
+          {
+            "name": "on",
+            "configurations": "{\"color\":\"blue\"}"
+          },
+          {
+            "name": "off",
+            "configurations": "{\"color\":\"red\"}"
+          }
+        ],
+        "defaultTreatment": "off",
+        "baselineTreatment": "off",
+        "rules": [
+          {
+            "buckets": [
+              {
+                "treatment": "on",
+                "size": 50
+              },
+              {
+                "treatment": "off",
+                "size": 50
+              }
+            ],
+            "condition": {
+              "matchers": [
+                {
+                  "type": "IN_SEGMENT",
+                  "string": "employees"
+                }
+              ]
+            }
+          }
+        ],
+        "defaultRule": [
+          {
+            "treatment": "off",
+            "size": 100
+          }
+        ],
+        "comment": "dbm comments"
+      }
+    }
+  ]
+				</textarea>
+			  </td></tr>
+			  <tr><td cols="2">Metrics</td><td cols="8"><textarea id="metrics" rows="12" cols="65" value="">
+[
+  {
+    "name": "Seed One",
+    "description": "made by dbm",
+    "positive": true,
+    "baseEventTypeId": "seed",
+    "aggregation": "SUM",
+    "spread": "PER",
+    "baseEventPropertyFilters": []
+  }
+]
+				</textarea>
+			  </td></tr>
+			  <tr><td cols="2">Events</td><td cols="8"><textarea id="events" rows="12" cols="65" value="">
+[
+  {
+    "eventTypeId": "seed",
+    "trafficTypeName": "user",
+    "properties": 
+    {
+      "martin" : 21.565,
+      "vertical": "restaurant",
+      "GMV": true
+    }
+  }
+]
+				</textarea>
+			  </td></tr>
+
+		</form>
+	</table>
+</body
+</html>

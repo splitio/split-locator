@@ -1,0 +1,235 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+	<title>Prestige Credit in the UK</title>
+
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+	
+</head>
+<style>
+	body {
+		background-image: url("http://www.cortazar-split.com/oceana.png");
+	}
+   body {
+        padding: 0;
+        margin: 0;
+    }
+    html, body, #mapid {
+        height: 100%;
+        width: 100%;
+    }	
+</style>
+<body>
+	<div id="mapid"/>
+
+	<script>
+
+	var city_coords = {
+		North_Yorkshire: [53.958332,-1.080278],
+		Worcestershire: [52.192001,-2.220000],
+		Hampshire: [51.063202,-1.308000],
+		South_West_England: [51.209000,-2.647000],
+		West_Yorkshire: [53.680000,-1.490000],
+		Cornwall: [50.259998,-5.051000],
+		North_East: [54.906101,-1.381130],
+		South_Yorkshire: [53.383331,-1.466667],
+		North_West: [53.483002,-2.293100],
+		Wales: [51.882000,-5.269000],
+		Hertfordshire: [51.755001,-0.336000],
+		North_Yorkshire: [54.138000,-1.524000],
+		Hampshire: [50.805832,-1.087222],
+		Scotland: [56.396999,-3.437000],
+		Nottingham: [52.950001,-1.150000],
+		Northern_Ireland: [54.175999,-6.349000],
+		Newcastle_Upon_Tyne: [54.966667,-1.600000],
+		Merseyside: [53.400002,-2.983333],
+		Lincolnshire: [53.234444,-0.538611],
+		Staffordshire: [52.683498,-1.826530],
+		the_East_Midlands: [52.633331,-1.133333],
+		Lancashire: [54.047001,-2.801000],
+		Herefordshire: [52.056499,-2.716000],
+		Gloucestershire: [51.864445,-2.244444],
+		Glasgow: [55.860916,-4.251433],
+		Exeter: [50.716667,-3.533333],
+		Cambridgeshire: [52.398056,0.262222],
+		Durham: [54.776100,-1.573300],
+		Scotland: [56.462002,-2.970700],
+		Northern_Ireland: [54.995800,-7.307400],
+		Derbyshire: [52.916668,-1.466667],
+		West_Midlands: [52.408054,-1.510556],
+		West_Sussex: [50.836498,-0.779200],
+		Chesire: [53.189999,-2.890000],
+		Essex: [51.736099,0.479800],
+		North_West: [54.890999,-2.944000],
+		Kent: [51.279999,1.080000],
+		Cambridgeshire: [52.205276,0.119167],
+		East_Sussex: [50.827778,-0.152778],
+		West_Yorkshire: [53.799999,-1.750000],
+		Somerset: [51.380001,-2.360000],
+		Cambridgeshire: [52.573921,-0.250830],
+		Scotland: [57.653484,-3.335724],
+		Staffordshire: [53.002666,-2.179404],
+		Birmingham: [52.412811,-1.778197],
+		Wales: [51.481583,-3.179090],
+		East_Sussex: [50.768036,0.290472],
+		Oxford: [51.752022,-1.257677],
+		London: [51.509865,-0.118092],
+		Swindon: [51.568535,-1.772232],
+		Kent: [51.441883,0.370759],
+		Northamptonshire: [52.240479,-0.902656],
+		Warwickshire: [52.370876,-1.265032],
+		West_Midlands: [52.570385,-1.824042],
+		Essex: [51.772938,0.102310],
+		Aberdeen: [57.149651,-2.099075],
+		Swansea: [51.621441,-3.943646],
+		Derbyshire: [53.235046,-1.421629],
+		Ireland: [54.509720,-6.037400],
+		Derry: [55.006763,-7.318268],
+		Wiltshire: [51.068787,-1.794472],
+		Manchester: [53.483959,-2.244644],
+		Bristol: [51.454514,-2.587910],
+		West_Midlands: [52.591370,-2.110748],
+		Lancashire: [53.765762,-2.692337],
+		South_Ayrshire: [55.458565,-4.629179],
+		East_Sussex: [50.854259,0.573453],
+		Bedford: [52.136436,-0.460739],
+		Essex: [51.572376,0.470009],
+		Wiltshire: [51.458057,-2.116074],
+		West_Midlands: [52.489471,-1.898575],
+		Kent: [51.081398,1.169456],
+		Scotland: [55.953251,-3.188267],
+		Southampton: [50.909698,-1.404351],
+		Northern_Ireland: [54.607868,-5.926437],
+		East_Sussex: [50.967941,0.085831],
+		West_Sussex: [50.825024,-0.383835],
+		West_Yorkshire: [53.801277,-1.548567],
+		Cumbria: [54.328506,-2.743870],
+		Hull: [53.767750,-0.335827],
+		Plymouth: [50.376289,-4.143841],
+		Suffolk: [52.080875,0.444517],
+		Warwickshire: [52.328415,-1.377561],
+		Inverness: [57.477772,-4.224721],
+		Waterford: [52.2500, -7.1250],
+		Cork: [51.8985, -8.4756],
+		Limerick: [52.6638, -8.6267],
+		Galway: [53.2707, -9.0568],
+		Dublin: [53.3498, -6.26],
+		Inisheer: [53.0573, -9.5318]
+	}
+
+	</script>
+   <script src="http://cdn.split.io/sdk/split-10.15.7.min.js"></script>
+
+    <script>
+    	const clientSideKey = "ku60jampgeh7jtrrgrnrm7in1nb9csl7keg8";
+
+    	var factory = splitio({
+    		startup: {
+    			readyTimeout: 5
+    		},
+    		core: {
+    			authorizationKey: clientSideKey,
+    			key: 'dmartin',
+    			trafficType: 'user',
+    			labelsEnabled: true
+    		},
+    		scheduler: {
+            featuresRefreshRate: 1, // 30 sec 
+            segmentsRefreshRate: 60, // 60 sec 
+            metricsRefreshRate: 60, // 60 sec
+            impressionsRefreshRate: 15, // 60 sec
+            eventsPushRate: 60, // 60 sec
+            eventsQueueSize: 500 // 500 items
+        },
+        // storage: {
+        //     type: 'LOCALSTORAGE',
+        //     prefix: 'PLANE'
+        // },
+        debug: false,
+        streamingEnabled: true
+    });
+
+	// var mymap = L.map('mapid').setView([37.6897,136.6922], 6);
+	var mymap = L.map('mapid').setView([54.3781, -4.4360], 6);
+
+	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+		maxZoom: 18,
+		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+		'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+		id: 'mapbox/streets-v11',
+		tileSize: 512,
+		zoomOffset: -1
+	}).addTo(mymap);
+
+    var client = factory.client('Tokyo');
+
+    client.on(client.Event.SDK_READY, function() {
+    	console.log('DBM factory SDK_READY');
+    	drawMap();
+    });
+
+       client.on(client.Event.SDK_UPDATE, function() {
+    	console.log('DBM factory SDK_UPDATE');
+    	setTimeout(() => {  drawMap(); }, 1500);
+    });
+
+</script>
+
+	<script>
+	function drawMap() {
+
+		const cities = Object.keys(city_coords);
+
+		cities.forEach((city, index) => {
+			// console.log(`${city}: ${city_coords[city]}`);
+			coords = `${city_coords[city]}`.split(',');
+			var lat = coords[0];
+			var long = coords[1];
+			var radius = 7500;
+			$.ajax({
+                    url: 'https://split-evaluator.darkbloom.org/client/get-treatments-with-config?key=' + city +'&split-names=prestige_credit',
+                    type: 'GET',
+                    success: function(result) {
+                    	treatment = result.prestige_credit.treatment;
+                    	console.log(city + ': ' + treatment + ' lat: ' + lat + ' long: ' + long);
+                    	if(treatment === 'on') {
+                    		L.circle([lat, long], radius, {
+                    			color: 'rgb(0, 124, 156)',
+                    			//fillColor: '#30f',
+                    			//fillOpacity: 0.1
+                    		}).addTo(mymap).bindPopup(city);
+                    	} else if (treatment === 'off') {
+                    		L.circle([lat, long], radius, {
+                    			color: 'rgb(255, 70, 82)',
+                    			//fillColor: '#f03',
+                    			//fillOpacity: 0.1
+                    		}).addTo(mymap).bindPopup(city);
+                    	} else {
+                    		L.circle([lat, long], radius, {
+                    			color: 'black',
+                    			//fillColor: '#fff',
+                    			//fillOpacity: 0.1
+                    		}).addTo(mymap).bindPopup(city);
+                    	}                       
+                    },
+                    error: function(result) {
+                    	console.log("error! " + result);
+                    }
+                });
+		});
+		// setInterval(function() { console.log('redraw'); mymap.invalidateSize();}, 5000);
+	}
+	</script>
+
+</body>
+</html>
+

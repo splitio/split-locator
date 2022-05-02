@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+    body {
+        color: white;
+    }
+
+    div.cta {
+        font-family: Impact, Charcoal, sans-serif;
+        font-size: 80px;
+        color: black;
+        text-align: center;
+        background-color: #f2f2f2;
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+
+    div.discount {
+        font-size: 80px;
+        color: blue;
+        text-align: center;
+    }
+
+    div.cta-image {
+        text-align: center;
+    }
+
+    img {
+        width: 100%;
+    }
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="http://cdn.split.io/sdk/split-10.15.0.min.js"></script>
+    <script>
+        document.cookie="utagdb=false";
+        function getCookie(cname) {
+          var name = cname + "=";
+          var decodedCookie = decodeURIComponent(document.cookie);          
+          var ca = decodedCookie.split(';');
+          for(var i = 0; i <ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+              c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+              return c.substring(name.length, c.length);
+            }
+          }
+          return "";
+        }
+
+    function createPopup(message, value) {
+        return function() {
+            if (message != null && value != null) {
+                alert(message + value);
+            }
+        };
+    }
+
+    var flower = "not a flower";
+
+    function draw() {
+        var result = client.getTreatmentWithConfig("ga_promo");
+        //console.log(result);
+
+        var configs = JSON.parse(result.config);
+        //console.log(configs);
+
+        document.getElementById("cta-text").innerHTML = configs.text;
+        flower = configs.text;
+
+        var img = document.getElementById("cta-image");
+        img.src = configs.image;
+        img.style.width = '100%';
+
+        document.getElementById("discount-text").innerHTML = configs.discount + "% OFF";
+    }
+
+    function clickHandler() {
+        console.log("clickHandler!");
+        var f = document.getElementById("cta-text").innerHTML;
+        _paq.push(['trackEvent', f, 'discount']);
+    }
+    </script>
+
+    <title>JS Matomo Promo</title>
+
+<!-- Matomo -->
+<script type="text/javascript">
+  var _paq = window._paq = window._paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  _paq.push(['setUserId', getCookie("username")]);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="https://dbm.matomo.cloud/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '1']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.src='//cdn.matomo.cloud/dbm.matomo.cloud/matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Matomo Code -->
+
+</head>
+
+<body>
+
+    <script type="text/javascript">
+        var user_id = getCookie("username");
+        var factory = splitio({
+            core: {
+                authorizationKey: 'ku60jampgeh7jtrrgrnrm7in1nb9csl7keg8',
+                key: user_id,
+                labelsEnabled: true,
+                trafficType: 'user'
+            },
+            scheduler: {
+                featuresRefreshRate: 1,
+                eventsPushRate: 5,
+                segmentsRefreshRate: 1
+            },
+            streamingEnabled: false,
+            debug: false
+        });
+
+        var client = factory.client();
+
+        client.on(client.Event.SDK_READY, function() {
+            draw();
+        });
+
+        client.on(client.Event.SDK_UPDATE, function() {
+            draw();
+        })
+
+    </script>
+    <div id="cta-text" class="cta">Call to Action</div>
+    <div class="cta"><img id="cta-image" alt="bulb"/></div>
+    <div id="discount-text" class="discount" onclick="clickHandler()" >20% OFF!</div>
+</body>
+
+</html>

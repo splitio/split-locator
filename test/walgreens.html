@@ -1,0 +1,86 @@
+<html>
+<head>
+	<title>Basic HTML Page</title>
+<style>
+	.body {
+		color: 'white';
+  	}
+  	.foo {
+  		display: flex;
+		justify-content: center;
+		align-content: center;
+		flex-direction: column;
+		text-align: center;
+
+		font-size: 50;
+		background-color: rgba(250, 250, 250); 
+		color: rgb(100, 100, 100);
+		width: 800; 
+		height: 600; 
+  	}
+  	.img {
+  		width: 25%;
+  	}
+</style>
+<script src="http://cdn.split.io/sdk/split-10.17.1.min.js"></script>
+<script type="text/javascript">
+	var factory = splitio({
+	  core: {
+	    authorizationKey: '69haia9b9pf3b0rs951bj8kuufr4ke2987op',
+	    key: 'dmartin' // unique identifier for your user
+	  },
+	  debug: true
+	});
+
+	var client = factory.client();
+
+	client.on(client.Event.SDK_READY, function() {
+      console.log('SDK_READY ' + new Date());
+	  draw();
+	});	
+
+	client.on(client.Event.SDK_UPDATE, function() {
+      console.log('SDK_UPDATE ' + new Date());
+	  draw();
+	});
+
+	function draw(configs) {
+	  var splitResult = client.getTreatmentWithConfig('vaccines_and_testing');
+	  var configs = JSON.parse(splitResult.config);
+	  document.getElementById("headline").innerHTML = configs.text;
+	  document.getElementById("action").src = configs.image;
+	}
+
+	function start() {
+		alert('start!');
+		const properties = {
+			clinic: 123,
+			store: 456
+		};
+		const success = client.track('user', 'click_start', 1, properties);
+		alert(success);
+	}
+</script>
+</head>
+<body>
+	<div>
+		<div id="mainDiv" class="foo">
+			<div style="text-align: left;">
+				<img id="logo" style="width: 15%;" src="http://www.cortazar-split.com/images/walgreens_health_logo.png"/>
+				<img id="banner" style="width: 50%;" src="http://www.cortazar-split.com/images/walgreens_welcome.png"/>
+			</div>
+			<img id="action" style="width: 25%;" id="action-image" src="./img/walgreens_vaccine.png"/>
+			<p id="headline" style="color: rgb(43, 63, 121); text-align: left; font-size: 40;">Schedule a Vaccine</p>
+		</div>
+		<div style="text-align: center; padding: 25px">
+			<button style="background-color: white; border-radius: 8px; border: 2px solid rgb(205, 45, 47);color: rgb(205, 45, 47); font-size: 24px; box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);" onClick="start()">START</button>
+		</div>
+	</div>
+</body>
+</html>
+<!--
+http://www.cortazar-split.com/dog_origin.jpeg
+http://www.cortazar-split.com/dog_by_the_door.jpeg
+http://www.cortazar-split.com/dog_on_the_couch.jpeg
+http://www.cortazar-split.com/dog_melancholy.jpeg
+-->

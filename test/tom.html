@@ -1,0 +1,110 @@
+<html>
+<head>
+	<title>Single Page App - JIT Split</title>
+	<style>
+		.body {
+			color: 'white';
+		}
+		.foo {
+			display: flex;
+			justify-content: center;
+			align-content: center;
+			flex-direction: column;
+			text-align: center;
+
+			font-size: 50;
+			background-color: rgba(220, 32, 32); 
+			color: rgb(200, 200, 200);
+			width: 400; 
+			height: 400; 
+		}
+		.b {
+			background-color: white; 
+			border-radius: 8px; 
+			border: 2px solid rgb(205, 45, 47);
+			color: rgb(205, 45, 47); 
+			font-size: 24px; 
+			box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+		}
+	</style>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="//cdn.split.io/sdk/split-10.17.3.min.js"></script>
+	<script>
+		const factory = splitio({
+			core: {
+				authorizationKey: '69haia9b9pf3b0rs951bj8kuufr4ke2987op',
+			    key: 'placeholder' // unique identifier for your user
+			}
+		});
+		const client = factory.client();
+
+		let hasReviewedCart;
+
+		// INIT state
+		$( document ).ready(function() {
+			hasReviewedCart = false;
+
+			document.getElementById("shopButton").style.visibility = 'visible';
+			document.getElementById("keepShoppingButton").style.visibility = 'hidden';
+			document.getElementById("checkOutButton").style.visibility = 'hidden';
+
+			client.on(client.Event.SDK_READY, function() {
+				drawPromo();
+			});
+
+		});	
+
+		// SHOP state transition from INIT to YOUR CART CONTENTS
+		function shop() {
+			console.log('shop!');
+			document.getElementById("call2Action").innerHTML = "YOUR CART CONTENTS";
+			document.getElementById("mainDiv").style.backgroundColor = "rgb(32, 32, 220)";
+			document.getElementById("shopButton").style.visibility = 'hidden';
+			document.getElementById("keepShoppingButton").style.visibility = 'visible';
+			document.getElementById("checkOutButton").style.visibility = 'visible';	
+
+			// They are now looking at their cart
+			hasReviewedCart = true;
+		}
+
+		// KEEP SHOPPING transition from YOUR CART CONTENTS to INIT
+		function keepShopping() {
+			console.log('keepShopping');
+
+			document.getElementById("mainDiv").style.backgroundColor = "rgba(220, 32, 32)";
+			document.getElementById("shopButton").style.visibility = 'visible';
+			document.getElementById("keepShoppingButton").style.visibility = 'hidden';
+			document.getElementById("checkOutButton").style.visibility = 'hidden';
+
+			drawPromo(); // will now draw the promo ON!
+		}
+		function checkOut() {
+			alert("success!");
+		}
+
+	function drawPromo() {
+		var attributes = {
+			hasReviewedCart: hasReviewedCart
+		}
+
+		var splitResult = client.getTreatmentWithConfig('justInTime_promo', attributes);
+		var configs = JSON.parse(splitResult.config);
+		document.getElementById("call2Action").innerHTML = configs.discount + '% OFF';
+	}
+	</script>	
+</head>
+<body>
+	<div>
+		<div id="mainDiv" class="foo">
+			<p id="call2Action">20% OFF</p>
+		</div>
+		<div style="text-align: center; padding: 25px">
+			<button id="shopButton" class="b" onClick="shop()" type="button">SHOP NOW!</button>
+		</div>
+		<div style="text-align: center; padding: 25px">
+			<button id="keepShoppingButton" class="b" onClick="keepShopping()">keep shopping</button>
+			<button id="checkOutButton" class="b" onClick="checkOut()">check out</button>			
+		</div>		
+	</div>
+</body>
+</html>

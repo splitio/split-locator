@@ -1,0 +1,703 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+	<title>UHD Super Streaming US West</title>
+
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+	
+</head>
+<style>
+    body {
+        padding: 0;
+        margin: 0;
+        background-color: black;
+    }
+    html, body, #mapid {
+        height: 100%;
+        width: 100%;
+    }	
+    div {
+    	display: inline-block;
+    }
+</style>
+<!-- 	<div><img src="arcade-top.png"/></div>
+	<br/>
+	<div><img src="arcade-left.png"/></div>
+	<div style="height: 800px; width: 800px;" id="mapid"/>
+	<div><img src="arcade-right.png"/></div>
+	<div><img src="arcade-bottom.png"/></div>
+ -->	
+<body>
+ 	<table align="center">
+		<tr>
+			<td style="text-align: center; width: 100%" colspan="3"><img src="arcade-top.png"/></td>
+		</tr>
+		<tr>
+			<td style="width: 750px; height: 600px;" id="mapid"/></td>
+		</tr>
+		<tr>
+			<td style="text-align: center;" colspan="3"><img src="arcade-bottom.png"/></td>
+		</tr>
+	</table> 
+
+
+	<script>
+
+		const city_coords = {
+		    NewYork: [40.6943, -73.9249],
+		    LosAngeles: [34.1139, -118.4068],
+		    Chicago: [41.8373, -87.6862],
+		    Miami: [25.7839, -80.2102],
+		    Dallas: [32.7936, -96.7662],
+		    Philadelphia: [40.0077, -75.1339],
+		    Houston: [29.7863, -95.3889],
+		    Atlanta: [33.7627, -84.4224],
+		    Washington: [38.9047, -77.0163],
+		    Boston: [42.3188, -71.0846],
+		    Phoenix: [33.5722, -112.0891],
+		    Seattle: [47.6211, -122.3244],
+		    SanFrancisco: [37.7562, -122.4430],
+		    Detroit: [42.3834, -83.1024],
+		    SanDiego: [32.8312, -117.1225],
+		    Minneapolis: [44.9635, -93.2678],
+		    Tampa: [27.9942, -82.4451],
+		    Denver: [39.7621, -104.8759],
+		    Brooklyn: [40.6501, -73.9496],
+		    Queens: [40.7498, -73.7976],
+		    Riverside: [33.9381, -117.3948],
+		    Baltimore: [39.3051, -76.6144],
+		    LasVegas: [36.2333, -115.2654],
+		    Portland: [45.5372, -122.6500],
+		    SanAntonio: [29.4658, -98.5253],
+		    StLouis: [38.6358, -90.2451],
+		    Sacramento: [38.5667, -121.4683],
+		    Orlando: [28.4772, -81.3369],
+		    SanJose: [37.3019, -121.8486],
+		    Cleveland: [41.4767, -81.6804],
+		    Pittsburgh: [40.4396, -79.9762],
+		    Austin: [30.3004, -97.7522],
+		    Cincinnati: [39.1413, -84.5061],
+		    KansasCity: [39.1239, -94.5541],
+		    Manhattan: [40.7834, -73.9662],
+		    Indianapolis: [39.7771, -86.1458],
+		    Columbus: [39.9862, -82.9850],
+		    Charlotte: [35.2080, -80.8304],
+		    VirginiaBeach: [36.7335, -76.0435],
+		    Bronx: [40.8501, -73.8662],
+		    Milwaukee: [43.0642, -87.9673],
+		    Providence: [41.8230, -71.4187],
+		    Jacksonville: [30.3322, -81.6749],
+		    SaltLakeCity: [40.7777, -111.9306],
+		    Nashville: [36.1715, -86.7843],
+		    Richmond: [37.5295, -77.4756],
+		    Memphis: [35.1046, -89.9773],
+		    Raleigh: [35.8325, -78.6435],
+		    NewOrleans: [30.0687, -89.9288],
+		    Louisville: [38.1663, -85.6485],
+		    OklahomaCity: [35.4676, -97.5136],
+		    Bridgeport: [41.1918, -73.1953],
+		    Buffalo: [42.9016, -78.8487],
+		    FortWorth: [32.7811, -97.3473],
+		    Hartford: [41.7661, -72.6834],
+		    Tucson: [32.1545, -110.8782],
+		    Omaha: [41.2627, -96.0522],
+		    ElPaso: [31.8479, -106.4309],
+		    Honolulu: [21.3294, -157.8460],
+		    McAllen: [26.2273, -98.2471],
+		    Albuquerque: [35.1053, -106.6464],
+		    Birmingham: [33.5277, -86.7987],
+		    Sarasota: [27.3386, -82.5431],
+		    Dayton: [39.7797, -84.1998],
+		    Rochester: [43.1680, -77.6162],
+		    Fresno: [36.7831, -119.7941],
+		    Allentown: [40.5961, -75.4756],
+		    Tulsa: [36.1284, -95.9042],
+		    CapeCoral: [26.6446, -81.9956],
+		    Concord: [37.9722, -122.0016],
+		    ColoradoSprings: [38.8674, -104.7606],
+		    Charleston: [32.8153, -79.9628],
+		    Springfield: [42.1155, -72.5395],
+		    GrandRapids: [42.9620, -85.6562],
+		    MissionViejo: [33.6095, -117.6550],
+		    Albany: [42.6664, -73.7987],
+		    Knoxville: [35.9692, -83.9496],
+		    Bakersfield: [35.3529, -119.0359],
+		    Ogden: [41.2278, -111.9682],
+		    BatonRouge: [30.4418, -91.1310],
+		    Akron: [41.0798, -81.5219],
+		    NewHaven: [41.3112, -72.9246],
+		    Columbia: [34.0376, -80.9037],
+		    Mesa: [33.4017, -111.7180],
+		    PalmBay: [27.9550, -80.6627],
+		    Provo: [40.2457, -111.6457],
+		    Worcester: [42.2705, -71.8079],
+		    Murrieta: [33.5720, -117.1909],
+		    Greenville: [34.8353, -82.3647],
+		    Wichita: [37.6896, -97.3442],
+		    Toledo: [41.6639, -83.5822],
+		    StatenIsland: [40.5834, -74.1496],
+		    DesMoines: [41.5725, -93.6105],
+		    LongBeach: [33.7981, -118.1675],
+		    PortStLucie: [27.2796, -80.3883],
+		    Denton: [33.2176, -97.1419],
+		    Madison: [43.0826, -89.3931],
+		    Reno: [39.5497, -119.8483],
+		    Harrisburg: [40.2752, -76.8843],
+		    LittleRock: [34.7256, -92.3576],
+		    Oakland: [37.7903, -122.2165],
+		    Durham: [35.9794, -78.9031],
+		    WinstonSalem: [36.1029, -80.2611],
+		    BonitaSprings: [26.3559, -81.7861],
+		    Indio: [33.7346, -116.2346],
+		    PalmCoast: [29.5392, -81.2460],
+		    Chattanooga: [35.0657, -85.2488],
+		    Spokane: [47.6671, -117.4330],
+		    Syracuse: [43.0409, -76.1438],
+		    Lancaster: [40.0421, -76.3012],
+		    Arlington: [32.6998, -97.1250],
+		    Stockton: [37.9765, -121.3109],
+		    Poughkeepsie: [41.6949, -73.9210],
+		    Augusta: [33.3645, -82.0708],
+		    Boise: [43.6007, -116.2312],
+		    Oxnard: [34.1963, -119.1815],
+		    Scranton: [41.4044, -75.6649],
+		    Modesto: [37.6374, -121.0028],
+		    Kissimmee: [28.3042, -81.4164],
+		    Aurora: [39.7087, -104.7273],
+		    Youngstown: [41.0993, -80.6463],
+		    Fayetteville: [36.0713, -94.1660],
+		    Anaheim: [33.8390, -117.8572],
+		    Pensacola: [30.4427, -87.1886],
+		    Victorville: [34.5277, -117.3536],
+		    Lancaster: [34.6935, -118.1753],
+		    Greensboro: [36.0956, -79.8269],
+		    CorpusChristi: [27.7260, -97.3755],
+		    FortWayne: [41.0886, -85.1437],
+		    SantaAna: [33.7366, -117.8819],
+		    Flint: [43.0235, -83.6922],
+		    Fayetteville: [35.0846, -78.9776],
+		    Jackson: [32.3163, -90.2124],
+		    SantaRosa: [38.4458, -122.7067],
+		    Lansing: [42.7142, -84.5601],
+		    SanJuan: [18.4037, -66.0636],
+		    Lexington: [38.0423, -84.4587],
+		    AnnArbor: [42.2755, -83.7312],
+		    Henderson: [36.0133, -115.0380],
+		    Huntsville: [34.6988, -86.6412],
+		    Mobile: [30.6783, -88.1162],
+		    FortCollins: [40.5478, -105.0656],
+		    Asheville: [35.5704, -82.5536],
+		    SantaClarita: [34.4175, -118.4964],
+		    StPaul: [44.9477, -93.1040],
+		    Antioch: [37.9789, -121.7958],
+		    Lakeland: [28.0556, -81.9545],
+		    Trenton: [40.2236, -74.7641],
+		    Lincoln: [40.8090, -96.6788],
+		    Springfield: [37.1943, -93.2916],
+		    Anchorage: [61.1508, -149.1091],
+		    Plano: [33.0502, -96.7487],
+		    Irvine: [33.6772, -117.7738],
+		    Davenport: [41.5563, -90.6052],
+		    Rockford: [42.2597, -89.0641],
+		    Newark: [40.7245, -74.1725],
+		    SouthBend: [41.6767, -86.2696],
+		    Shreveport: [32.4656, -93.7956],
+		    RoundLakeBeach: [42.3790, -88.0811],
+		    Savannah: [32.0281, -81.1784],
+		    MyrtleBeach: [33.7096, -78.8843],
+		    ChulaVista: [32.6281, -117.0145],
+		    Eugene: [44.0563, -123.1173],
+		    Canton: [40.8075, -81.3677],
+		    Lubbock: [33.5659, -101.8878],
+		    Reading: [40.3400, -75.9267],
+		    WinterHaven: [28.0118, -81.7017],
+		    Salem: [44.9231, -123.0246],
+		    StPetersburg: [27.7931, -82.6652],
+		    Lafayette: [30.2084, -92.0323],
+		    Laredo: [27.5629, -99.4875],
+		    JerseyCity: [40.7161, -74.0682],
+		    Concord: [35.3933, -80.6366],
+		    Columbus: [32.5100, -84.8771],
+		    Chandler: [33.2826, -111.8516],
+		    McKinney: [33.2015, -96.6669],
+		    Scottsdale: [33.6872, -111.8651],
+		    Killeen: [31.0754, -97.7296],
+		    Tallahassee: [30.4551, -84.2526],
+		    Peoria: [40.7520, -89.6153],
+		    Wilmington: [34.2100, -77.8866],
+		    Montgomery: [32.3473, -86.2666],
+		    Gilbert: [33.3101, -111.7463],
+		    Glendale: [33.5791, -112.2311],
+		    NorthLasVegas: [36.2880, -115.0901],
+		    Chesapeake: [36.6778, -76.3024],
+		    Barnstable: [41.6722, -70.3599],
+		    Norfolk: [36.8945, -76.2590],
+		    Fremont: [37.5265, -121.9852],
+		    Kennewick: [46.1978, -119.1732],
+		    Garland: [32.9100, -96.6305],
+		    Irving: [32.8584, -96.9702],
+		    Visalia: [36.3276, -119.3269],
+		    AtlanticCity: [39.3797, -74.4527],
+		    Paradise: [36.0807, -115.1369],
+		    Nashua: [42.7491, -71.4910],
+		    Arlington: [38.8786, -77.1011],
+		    Hialeah: [25.8696, -80.3046],
+		    York: [39.9651, -76.7315],
+		    Evansville: [37.9881, -87.5341],
+		    Avondale: [33.3858, -112.3236],
+		    Brownsville: [25.9980, -97.4565],
+		    Gulfport: [30.4271, -89.0703],
+		    Appleton: [44.2779, -88.3891],
+		    Bremerton: [47.5436, -122.7122],
+		    Hickory: [35.7425, -81.3230],
+		    Tacoma: [47.2431, -122.4531],
+		    SanBernardino: [34.1417, -117.2946],
+		    CollegeStation: [30.5852, -96.2960],
+		    Kalamazoo: [42.2749, -85.5882],
+		    ThousandOaks: [34.1914, -118.8755],
+		    Roanoke: [37.2785, -79.9580],
+		    Fontana: [34.0968, -117.4599],
+		    MorenoValley: [33.9244, -117.2045],
+		    NorthPort: [27.0577, -82.1975],
+		    Fargo: [46.8652, -96.8292],
+		    GreenBay: [44.5150, -87.9896],
+		    SpringValley: [36.0987, -115.2619],
+		    Amarillo: [35.1988, -101.8311],
+		    Portland: [43.6773, -70.2715],
+		    SantaBarbara: [34.4285, -119.7202],
+		    Gainesville: [29.6804, -82.3458],
+		    Olympia: [47.0417, -122.8959],
+		    Frisco: [33.1555, -96.8215],
+		    Yonkers: [40.9466, -73.8674],
+		    Norwich: [41.5495, -72.0882],
+		    Glendale: [34.1818, -118.2468],
+		    HuntingtonBeach: [33.6960, -118.0025],
+		    Deltona: [28.9050, -81.2137],
+		    Aurora: [41.7637, -88.2901],
+		    Tempe: [33.3881, -111.9318],
+		    OverlandPark: [38.8870, -94.6870],
+		    GrandPrairie: [32.6872, -97.0209],
+		    SunriseManor: [36.1785, -115.0490],
+		    Waco: [31.5598, -97.1881],
+		    Salinas: [36.6884, -121.6317],
+		    Waterbury: [41.5583, -73.0361],
+		    Clarksville: [36.5695, -87.3420],
+		    CedarRapids: [41.9665, -91.6782],
+		    SiouxFalls: [43.5397, -96.7320],
+		    Huntington: [38.4109, -82.4344],
+		    Ontario: [34.0393, -117.6064],
+		    Hagerstown: [39.6401, -77.7217],
+		    Erie: [42.1168, -80.0733],
+		    Vancouver: [45.6366, -122.5967],
+		    Nampa: [43.5845, -116.5631],
+		    Spartanburg: [34.9437, -81.9257],
+		    Gastonia: [35.2494, -81.1853],
+		    FortLauderdale: [26.1412, -80.1464],
+		    Lorain: [41.4409, -82.1840],
+		    Murfreesboro: [35.8492, -86.4119],
+		    HighPoint: [35.9907, -79.9938],
+		    NewportNews: [37.1051, -76.5185],
+		    RanchoCucamonga: [34.1248, -117.5666],
+		    Hemet: [33.7341, -116.9969],
+		    SantaCruz: [36.9789, -122.0346],
+		    Danbury: [41.4016, -73.4710],
+		    Peoria: [33.7844, -112.2989],
+		    Oceanside: [33.2247, -117.3083],
+		    ElkGrove: [38.4160, -121.3842],
+		    PembrokePines: [26.0128, -80.3382],
+		    Vallejo: [38.1133, -122.2358],
+		    GardenGrove: [33.7787, -117.9601],
+		    Enterprise: [36.0164, -115.2208],
+		    Medford: [42.3372, -122.8537],
+		    Cary: [35.7820, -78.8191],
+		    Marysville: [48.0809, -122.1561],
+		    Corona: [33.8616, -117.5649],
+		    Ocala: [29.1780, -82.1511],
+		    Fredericksburg: [38.2992, -77.4872],
+		    Gainesville: [34.2903, -83.8301],
+		    Manchester: [42.9848, -71.4447],
+		    Bayamón: [18.3793, -66.1635],
+		    Champaign: [40.1144, -88.2735],
+		    Alexandria: [38.8185, -77.0861],
+		    Hayward: [37.6328, -122.0772],
+		    Springfield: [39.7710, -89.6538],
+		    Lakewood: [39.6977, -105.1168],
+		    Lafayette: [40.3990, -86.8594],
+		    Frederick: [39.4336, -77.4141],
+		    LakeCharles: [30.2012, -93.2122],
+		    Odessa: [31.8831, -102.3406],
+		    Tuscaloosa: [33.2348, -87.5267],
+		    WarnerRobins: [32.5970, -83.6529],
+		    Palmdale: [34.5944, -118.1057],
+		    Hollywood: [26.0294, -80.1679],
+		    Midland: [32.0249, -102.1137],
+		    Leesburg: [28.7657, -81.8996],
+		    PortArthur: [29.8554, -93.9264],
+		    Muskegon: [43.2281, -86.2563],
+		    Macon: [32.8065, -83.6974],
+		    KansasCity: [39.1234, -94.7443],
+		    Sunnyvale: [37.3836, -122.0256],
+		    Pomona: [34.0585, -117.7626],
+		    Escondido: [33.1347, -117.0722],
+		    Pasadena: [29.6583, -95.1499],
+		    NewBedford: [41.6697, -70.9428],
+		    Fairfield: [38.2592, -122.0324],
+		    Naperville: [41.7483, -88.1657],
+		    Bellevue: [47.5951, -122.1535],
+		    Binghamton: [42.1014, -75.9093],
+		    Elkhart: [41.6916, -85.9628],
+		    Topeka: [39.0346, -95.6955],
+		    Joliet: [41.5189, -88.1499],
+		    Beaumont: [30.0849, -94.1451],
+		    Paterson: [40.9147, -74.1624],
+		    Merced: [37.3057, -120.4778],
+		    Pueblo: [38.2705, -104.6112],
+		    Tyler: [32.3184, -95.3062],
+		    Torrance: [33.8346, -118.3417],
+		    Yuma: [32.5992, -114.5488],
+		    Metairie: [29.9977, -90.1780],
+		    Surprise: [33.6800, -112.4524],
+		    Columbia: [38.9478, -92.3256],
+		    Athens: [33.9508, -83.3689],
+		    Roseville: [38.7703, -121.3196],
+		    Thornton: [39.9197, -104.9438],
+		    Miramar: [25.9773, -80.3351],
+		    Pasadena: [34.1597, -118.1390],
+		    Mesquite: [32.7623, -96.5889],
+		    Olathe: [38.8832, -94.8198],
+		    SantaMaria: [34.9334, -120.4432],
+		    Houma: [29.5799, -90.7058],
+		    Carrollton: [32.9890, -96.8999],
+		    GrandJunction: [39.0876, -108.5673],
+		    Charleston: [38.3484, -81.6323],
+		    Orange: [33.8038, -117.8218],
+		    Fullerton: [33.8841, -117.9279],
+		    Greeley: [40.4151, -104.7706],
+		    Carolina: [18.4054, -65.9792],
+		    LasCruces: [32.3265, -106.7892],
+		    PanamaCity: [30.1995, -85.6004],
+		    Harlingen: [26.1917, -97.6976],
+		    WestValleyCity: [40.6889, -112.0115],
+		    Hampton: [37.0551, -76.3630],
+		    Warren: [42.4934, -83.0270],
+		    Mauldin: [34.7849, -82.3005],
+		    Bloomington: [40.4757, -88.9703],
+		    CoralSprings: [26.2702, -80.2591],
+		    RoundRock: [30.5254, -97.6660],
+		    Yakima: [46.5923, -120.5496],
+		    SterlingHeights: [42.5809, -83.0305],
+		    Kent: [47.3887, -122.2129],
+		    Burlington: [36.0758, -79.4686],
+		    Bellingham: [48.7543, -122.4687],
+		    SantaClara: [37.3645, -121.9680],
+		    Racine: [42.7274, -87.8135],
+		    Greenville: [35.5956, -77.3768],
+		    Stamford: [41.1035, -73.5583],
+		    Elizabeth: [40.6657, -74.1912],
+		    JohnsonCity: [36.3406, -82.3803],
+		    Lynchburg: [37.4003, -79.1909],
+		    SimiValley: [34.2663, -118.7490],
+		    FortSmith: [35.3493, -94.3695],
+		    Kenosha: [42.5864, -87.8765],
+		    Norman: [35.2335, -97.3471],
+		    SouthLyon: [42.4614, -83.6526],
+		    Boulder: [40.0249, -105.2523],
+		    Abilene: [32.4543, -99.7384],
+		    LehighAcres: [26.6120, -81.6388],
+		    Pearland: [29.5585, -95.3215],
+		    Berkeley: [37.8723, -122.2760],
+		    Richardson: [32.9717, -96.7093],
+		    Redding: [40.5698, -122.3650],
+		    Arvada: [39.8321, -105.1511],
+		    EastLosAngeles: [34.0326, -118.1691],
+		    StGeorge: [37.0770, -113.5770],
+		    Billings: [45.7891, -108.5524],
+		    YubaCity: [39.1357, -121.6381],
+		    Rochester: [44.0151, -92.4778],
+		    Leominster: [42.5209, -71.7717],
+		    Kingsport: [36.5224, -82.5453],
+		    Duluth: [46.7756, -92.1392],
+		    RockHill: [34.9416, -81.0244],
+		    Gilroy: [37.0047, -121.5855],
+		    Cambridge: [42.3759, -71.1185],
+		    SugarLand: [29.5935, -95.6357],
+		    TexasCity: [29.4128, -94.9658],
+		    IowaCity: [41.6559, -91.5303],
+		    Saginaw: [43.4199, -83.9501],
+		    Chico: [39.7575, -121.8152],
+		    Dover: [39.1610, -75.5203],
+		    Clearwater: [27.9789, -82.7622],
+		    CoeurdAlene: [47.7041, -116.7935],
+		    Seaside: [36.6224, -121.8191],
+		    Independence: [39.0871, -94.3501],
+		    WestJordan: [40.6024, -112.0008],
+		    Brandon: [27.9367, -82.3000],
+		    Bloomington: [39.1637, -86.5257],
+		    ElMonte: [34.0739, -118.0291],
+		    NorthCharleston: [32.9066, -80.0722],
+		    Carlsbad: [33.1247, -117.2837],
+		    StCloud: [45.5339, -94.1718],
+		    Temecula: [33.4928, -117.1315],
+		    Clovis: [36.8278, -119.6831],
+		    Meridian: [43.6112, -116.3968],
+		    TheWoodlands: [30.1738, -95.5134],
+		    Ponce: [18.0120, -66.6198],
+		    Westminster: [39.8837, -105.0624],
+		    CostaMesa: [33.6667, -117.9135],
+		    Monroe: [32.5183, -92.0774],
+		    Utica: [43.0961, -75.2260],
+		    PompanoBeach: [26.2428, -80.1312],
+		    WestPalmBeach: [26.7468, -80.1316],
+		    Waterloo: [42.4920, -92.3522],
+		    Everett: [47.9525, -122.1669],
+		    ElCentro: [32.7867, -115.5586],
+		    SantaFe: [35.6619, -105.9819],
+		    Downey: [33.9379, -118.1312],
+		    SpringHill: [28.4797, -82.5300],
+		    Lowell: [42.6389, -71.3217],
+		    Centennial: [39.5926, -104.8674],
+		    Elgin: [42.0385, -88.3229],
+		    Richmond: [37.9477, -122.3390],
+		    BrokenArrow: [36.0365, -95.7809],
+		    MiamiGardens: [25.9433, -80.2426],
+		    Bend: [44.0562, -121.3087],
+		    Burlington: [44.4877, -73.2314],
+		    JurupaValley: [34.0010, -117.4705],
+		    SandySprings: [33.9366, -84.3703],
+		    Gresham: [45.5023, -122.4413],
+		    Lewisville: [33.0452, -96.9823],
+		    Hillsboro: [45.5272, -122.9361],
+		    SanBuenaventura: [34.2741, -119.2314],
+		    Jacksonville: [34.7288, -77.3941],
+		    Pottstown: [40.2507, -75.6444],
+		    Inglewood: [33.9566, -118.3444],
+		    LeagueCity: [29.4873, -95.1087],
+		    EauClaire: [44.8199, -91.4949],
+		    Turlock: [37.5053, -120.8588],
+		    Temple: [31.1076, -97.3894],
+		    SiouxCity: [42.4959, -96.3901],
+		    Salisbury: [38.3756, -75.5867],
+		    Davie: [26.0789, -80.2870],
+		    DalyCity: [37.6862, -122.4685],
+		    HighlandsRanch: [39.5419, -104.9708],
+		    Allen: [33.1088, -96.6735],
+		    WestCovina: [34.0555, -117.9112],
+		    Sparks: [39.5729, -119.7157],
+		    WichitaFalls: [33.9072, -98.5291],
+		    SanMateo: [37.5521, -122.3122],
+		    Columbia: [39.2004, -76.8590],
+		    Norwalk: [33.9069, -118.0829],
+		    Rialto: [34.1174, -117.3894],
+		    Manteca: [37.7927, -121.2264],
+		    ArdenArcade: [38.6034, -121.3810],
+		    ElCajon: [32.8017, -116.9605],
+		    Burbank: [34.1879, -118.3235],
+		    Longmont: [40.1686, -105.1005],
+		    Renton: [47.4784, -122.1919],
+		    Vista: [33.1896, -117.2386],
+		    Logan: [41.7400, -111.8419],
+		    PrescottValley: [34.5983, -112.3176],
+		    Vacaville: [38.3590, -121.9680],
+		    Edinburg: [26.3197, -98.1596],
+		    Carmel: [39.9650, -86.1460],
+		    SpokaneValley: [47.6626, -117.2346],
+		    SanAngelo: [31.4424, -100.4506],
+		    LaCrosse: [43.8240, -91.2268],
+		    IdahoFalls: [43.4872, -112.0362],
+		    Holland: [42.7677, -86.0985],
+		    Charlottesville: [38.0375, -78.4855],
+		    Longview: [32.5193, -94.7621],
+		    Tracy: [37.7269, -121.4522],
+		    BocaRaton: [26.3752, -80.1080],
+		    Lafayette: [39.9949, -105.0997],
+		    LeesSummit: [38.9172, -94.3816],
+		    RioRancho: [35.2872, -106.6981],
+		    SouthFulton: [33.6269, -84.5802],
+		    Beaverton: [45.4779, -122.8168],
+		    Lawrence: [38.9597, -95.2641],
+		    Bismarck: [46.8144, -100.7694],
+		    Orem: [40.2983, -111.6992],
+		    Middletown: [39.5032, -84.3660],
+		    SanTanValley: [33.1879, -111.5472],
+		    SanMarcos: [33.1350, -117.1744],
+		    Sandy: [40.5710, -111.8505],
+		    FederalWay: [47.3091, -122.3358],
+		    Mandeville: [30.3751, -90.0904],
+		    Hesperia: [34.3975, -117.3147],
+		    Brockton: [42.0821, -71.0242],
+		    Compton: [33.8930, -118.2275],
+		    Riverview: [27.8227, -82.3023],
+		    Fishers: [39.9589, -85.9661],
+		    Sunrise: [26.1547, -80.2997],
+		    BowlingGreen: [36.9719, -86.4373],
+		    Roswell: [34.0391, -84.3513],
+		    Menifee: [33.6909, -117.1849],
+		    Plantation: [26.1260, -80.2617],
+		    Dover: [43.1887, -70.8845],
+		    Quincy: [42.2516, -71.0183],
+		    Portsmouth: [36.8468, -76.3540],
+		    Chino: [33.9836, -117.6654],
+		    Lynn: [42.4779, -70.9663],
+		    Edmond: [35.6689, -97.4159],
+		    Hanford: [36.3274, -119.6549],
+		    Dearborn: [42.3127, -83.2129],
+		    Livonia: [42.3972, -83.3733],
+		    SouthGate: [33.9448, -118.1926],
+		    Vineland: [39.4653, -74.9981]
+		}
+
+
+	</script>
+   <script src="http://cdn.split.io/sdk/split-10.15.7.min.js"></script>
+
+    <script>
+    	const clientSideKey = "ku60jampgeh7jtrrgrnrm7in1nb9csl7keg8";
+
+    	var factory = splitio({
+    		startup: {
+    			readyTimeout: 5
+    		},
+    		core: {
+    			authorizationKey: clientSideKey,
+    			key: 'dmartin',
+    			trafficType: 'user',
+    			labelsEnabled: true
+    		},
+    		scheduler: {
+            featuresRefreshRate: 1, // 30 sec 
+            segmentsRefreshRate: 60, // 60 sec 
+            metricsRefreshRate: 60, // 60 sec
+            impressionsRefreshRate: 15, // 60 sec
+            eventsPushRate: 60, // 60 sec
+            eventsQueueSize: 500 // 500 items
+        },
+        // storage: {
+        //     type: 'LOCALSTORAGE',
+        //     prefix: 'PLANE'
+        // },
+        debug: false,
+        streamingEnabled: true
+    });
+
+	var mymap = L.map('mapid').setView([39,-95], 4);
+
+	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+		maxZoom: 18,
+		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+		'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+		// id: 'mapbox/streets-v11',
+		id: 'mapbox/dark-v10',
+		tileSize: 512,
+		zoomOffset: -1
+	}).addTo(mymap);
+
+    var client = factory.client('Tokyo');
+
+    client.on(client.Event.SDK_READY, function() {
+    	console.log('DBM factory SDK_READY');
+    	drawMap();
+    });
+
+       client.on(client.Event.SDK_UPDATE, function() {
+    	console.log('DBM factory SDK_UPDATE');
+    	setTimeout(() => {  drawMap(); }, 1500);
+    });
+
+</script>
+
+	<script>
+
+	// SF  37.7562, -122.4430
+	// ATL 33.753746, -84.386330
+	// BOS 42.361145, -71.057083
+	function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+	  var R = 6371; // Radius of the earth in km
+	  var dLat = deg2rad(lat2-lat1);  // deg2rad below
+	  var dLon = deg2rad(lon2-lon1); 
+	  var a = 
+	    Math.sin(dLat/2) * Math.sin(dLat/2) +
+	    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+	    Math.sin(dLon/2) * Math.sin(dLon/2)
+	    ; 
+	  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+	  var d = R * c; // Distance in km
+	  return Math.round(d);
+	}
+
+	function deg2rad(deg) {
+	  return deg * (Math.PI/180)
+	}
+
+	function drawMap() {
+	   	const cities = Object.keys(city_coords);
+		cities.forEach((city, index) => {
+			//console.log(`${city}: ${city_coords[city]}`);
+			coords = `${city_coords[city]}`.split(',');
+			var lat = coords[0];
+			var long = coords[1];
+			var radius = 7500;
+			const r1 = getDistanceFromLatLonInKm(lat, long, 37.7562, -122.4430);
+			const r2 = getDistanceFromLatLonInKm(lat, long, 33.753746, -84.386330);
+			const r3 = getDistanceFromLatLonInKm(lat, long, 42.361145, -71.057083);
+			//console.log(r1 + ',' + r2 + ',' + r3);
+			$.ajax({
+                    url: 
+                    	'https://split-evaluator.darkbloom.org/client/get-treatments-with-config?key=' + city
+                    +   '&split-names=uhd_super_streaming'
+                    +	'&attributes=\{"radius1":' + r1 + ',"radius2":' + r2 + ',"radius3":' + r3 + '\}',
+                    type: 'GET',
+                    success: function(result) {
+                    	treatment = result.uhd_super_streaming.treatment;
+                    	console.log(treatment);
+                    	if(treatment === 'green') {
+                    		L.circle([lat, long], radius, {
+                    			color: 'rgb(39, 159, 0)',
+                    			//fillColor: '#30f',
+                    			//fillOpacity: 0.1
+                    		}).addTo(mymap).bindPopup(city);
+                    	} else if (treatment === 'red') {
+                    		L.circle([lat, long], radius, {
+                    			color: 'rgb(225, 6, 0)',
+                    			//fillColor: '#f03',
+                    			//fillOpacity: 0.1
+                    		}).addTo(mymap).bindPopup(city);
+                    	} else if (treatment === 'blue') {
+                    		L.circle([lat, long], radius, {
+                    			color: 'rgb(0, 80, 181)',
+                    			//fillColor: '#f03',
+                    			//fillOpacity: 0.1
+                    		}).addTo(mymap).bindPopup(city);
+                    	} else if (treatment === 'purple') {
+                    		L.circle([lat, long], radius, {
+                    			color: 'rgb(200, 0, 161)',
+                    			//fillColor: '#f03',
+                    			//fillOpacity: 0.1
+                    		}).addTo(mymap).bindPopup(city);
+                    	} else {
+                    		L.circle([lat, long], radius, {
+                    			color: 'black',
+                    			//fillColor: '#fff',
+                    			//fillOpacity: 0.1
+                    		}).addTo(mymap).bindPopup(city);
+                    	}                       
+                    },
+                    error: function(result) {
+                    	console.log("error! " + result);
+                    }
+                });
+		});
+		// setInterval(function() { console.log('redraw'); mymap.invalidateSize();}, 5000);
+	}
+	</script>
+</body>
+</html>
+

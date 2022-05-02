@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-128478641-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-128478641-1');
+</script>
+-->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-128478641-1', 'auto');
+ga('send', 'pageview');
+</script>
+<!--
+    <script>
+        window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+        ga('create', 'UA-128478641-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+    <script async src='https://www.google-analytics.com/analytics.js'></script>
+-->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PQQ0E41T90"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PQQ0E41T90');
+</script>
+-->
+<!--
+<script>
+  !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware"];analytics.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);t.unshift(e);analytics.push(t);return analytics}};for(var e=0;e<analytics.methods.length;e++){var key=analytics.methods[e];analytics[key]=analytics.factory(key)}analytics.load=function(key,e){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(t,n);analytics._loadOptions=e};analytics._writeKey="pUi5ufgiVlYFGpn9by1cCtvmN4bRU0hd";;analytics.SNIPPET_VERSION="4.15.3";
+  analytics.load("pUi5ufgiVlYFGpn9by1cCtvmN4bRU0hd");
+  analytics.page();
+  }}();
+</script>
+-->
+    <style>
+    body {
+        color: white;
+    }
+
+    div.cta {
+        font-family: Impact, Charcoal, sans-serif;
+        font-size: 80px;
+        color: black;
+        text-align: center;
+        background-color: #f2f2f2;
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+
+    div.discount {
+        font-size: 80px;
+        color: blue;
+        text-align: center;
+    }
+
+    div.cta-image {
+        text-align: center;
+    }
+
+    img {
+        width: 100%;
+    }
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="http://cdn.split.io/sdk/split-10.15.0.min.js"></script>
+    <script>
+        document.cookie="utagdb=false";
+        function getCookie(cname) {
+          var name = cname + "=";
+          var decodedCookie = decodeURIComponent(document.cookie);          
+          var ca = decodedCookie.split(';');
+          for(var i = 0; i <ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+              c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+              return c.substring(name.length, c.length);
+            }
+          }
+          return "";
+        }
+
+    function createPopup(message, value) {
+        return function() {
+            if (message != null && value != null) {
+                alert(message + value);
+            }
+        };
+    }
+
+    var flower = "not a flower";
+
+    function draw() {
+        var result = client.getTreatmentWithConfig("ga_promo");
+        //console.log(result);
+
+        var configs = JSON.parse(result.config);
+        //console.log(configs);
+
+        document.getElementById("cta-text").innerHTML = configs.text;
+        flower = configs.text;
+
+        var img = document.getElementById("cta-image");
+        img.src = configs.image;
+        img.style.width = '100%';
+
+        document.getElementById("discount-text").innerHTML = configs.discount + "% OFF";
+    }
+
+    function clickHandler() {
+        console.log("clickHandler!");
+        ga('send', {
+          hitType: 'event',
+          eventCategory: 'purchase',
+          eventAction: 'purchase',
+          eventLabel: flower
+        });
+    }
+    </script>
+
+    <title>JS GA Promo</title>
+</head>
+
+<body>
+
+    <script type="text/javascript">
+        //var user_id = getCookie("username");
+        // var user_id = 'dmartin';
+        let user_id = 'dbm' + new Date().getTime();
+        console.log("key -> " + user_id);
+        var factory = splitio({
+            core: {
+                authorizationKey: '69haia9b9pf3b0rs951bj8kuufr4ke2987op',
+                key: user_id,
+                labelsEnabled: true,
+                trafficType: 'user'
+            },
+            scheduler: {
+                featuresRefreshRate: 1,
+                eventsPushRate: 5,
+                segmentsRefreshRate: 1
+            },
+            integrations: [{
+                type: 'GOOGLE_ANALYTICS_TO_SPLIT',
+                events: true
+            }],
+            streamingEnabled: false,
+            debug: false
+        });
+
+        var client = factory.client();
+
+        ga('require', 'splitTracker');
+        ga('set', 'page', 'ga_promo_page');
+        ga('send', 'pageview', 'ga_promo_page');
+
+        client.on(client.Event.SDK_READY, function() {
+            draw();
+        });
+
+        client.on(client.Event.SDK_UPDATE, function() {
+            draw();
+        })
+
+    </script>
+    <div id="cta-text" class="cta">Call to Action</div>
+    <div class="cta"><img id="cta-image" alt="bulb"/></div>
+    <div id="discount-text" class="discount" onclick="clickHandler()" >20% OFF!</div>
+</body>
+
+</html>

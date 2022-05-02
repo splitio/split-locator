@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script>
+        window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+        ga('create', 'UA-128478641-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+    <script async src='https://www.google-analytics.com/analytics.js'></script>
+
+    <style>
+    body {
+        color: white;
+    }
+
+    div.cta {
+        font-family: Impact, Charcoal, sans-serif;
+        font-size: 80px;
+        color: black;
+        text-align: center;
+        background-color: #f2f2f2;
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+
+    div.cta-image {
+        text-align: center;
+    }
+
+    img {
+        width: 100%;
+    }
+    </style>
+
+    <script src="http://cdn.split.io/sdk/split-10.14.2.min.js"></script>
+    <script>
+        var factory = splitio({
+            core: {
+                authorizationKey: 'ku60jampgeh7jtrrgrnrm7in1nb9csl7keg8',
+                key: 'dmartin',
+                labelsEnabled: true,
+                trafficType: 'user'
+            },
+            scheduler: {
+                featuresRefreshRate: 3,
+                eventsPushRate: 5
+            },
+            integrations: [{
+                type: 'GOOGLE_ANALYTICS_TO_SPLIT',
+                events: true
+            }],
+            streamingEnabled: false,
+            debug: true
+        });
+
+        var client = factory.client();
+
+        ga('require', 'splitTracker');
+        ga('set', 'page', 'dbm_demo_page');
+        ga('send', 'pageview', 'dbm_demo_page');
+
+        client.on(client.Event.SDK_READY, function() {
+            draw();
+        });
+
+        client.on(client.Event.SDK_UPDATE, function() {
+            draw();
+        })
+
+    function createPopup(message, value) {
+        return function() {
+            if (message != null && value != null) {
+                alert(message + value);
+            }
+        };
+    }
+
+    function draw() {
+        console.log("draw!");
+
+        ga('send', {
+          hitType: 'event',
+          eventCategory: 'Draw',
+          eventAction: 'update',
+          eventLabel: 'demo screen'
+        });
+        console.log("GA event fired!");
+
+        var result = client.getTreatmentWithConfig("jsga_demo");
+        console.log(result);
+
+        var configs = JSON.parse(result.config);
+        console.log(configs);
+
+        document.getElementById("cta-text").innerHTML = configs.text;
+
+        var img = document.getElementById("cta-image");
+        img.src = configs.image;
+        img.style.width = '50%';
+    }
+
+    function clickHandler() {
+        console.log("clickHandler!");
+        ga('send', {
+          hitType: 'event',
+          eventCategory: 'JSLightBulb',
+          eventAction: 'click',
+          eventLabel: 'jslightbulb click'
+        });
+        //var queued = client.track('jsga_test_event', 0);
+    }
+    </script>
+
+    <title>JS GA Demo</title>
+</head>
+
+<body>
+    <div id="cta-text" class="cta">Call to Action</div>
+    <div class="cta"><img id="cta-image" alt="bulb" onclick="clickHandler()" /></div>
+</body>
+
+</html>

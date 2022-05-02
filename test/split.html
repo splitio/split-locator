@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Quantum Metric and Split Unite!</title>
+		<style>
+			.button {
+			  background-color: black;
+			  border: none;
+			  color: white;
+			  padding: 15px 32px;
+			  text-align: center;
+			  text-decoration: none;
+			  display: inline-block;
+			  font-size: 16px;
+			}
+		</style>
+		<script src="//cdn.split.io/sdk/split-10.15.9.min.js"></script>		
+		<script>
+			var factory = splitio({
+			  core: {
+			    authorizationKey: '69haia9b9pf3b0rs951bj8kuufr4ke2987op',
+			    key: 'user_id' // unique identifier for your user
+			  }
+			});
+
+			var client = factory.client();
+
+			client.on(client.Event.SDK_READY, function() {
+			  var treatment = client.getTreatment("volunteer_drive_foo", attrbutes, dfdaf , adsfsd);
+			  console.log(treatment);
+			  let donate_button = document.getElementById("donate_button_id");
+			  if (treatment === 'on') {
+			      donate_button.innerHTML = 'volunteer';
+			  }   else   if (treatment === 'off') {
+			      donate_button.innerHTML = 'donate';
+			  }   else {
+			      donate_button.innerHTML = 'donate';
+			  }
+
+			});		
+
+		function registerClick() {
+			console.log('click');
+	        var properties = {
+	            region : 'EU',
+	            status : 'platinum'
+	        };
+	        client.track ('user', 'click', 0, properties);
+		}	
+		</script>
+	</head>
+	<body>
+		<div>
+			<img width="100%" src="http://www.cortazar-split.com/dog_by_the_door.jpeg"/>
+			<div class="buttons" align="center">
+				<button id="donate_button_id" onclick="registerClick()"  class="button">DONATE</button>
+				<button id="adopt_button_id" class="button">ADOPT</button>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,96 @@
+<html>
+<head>
+	<title>Basic HTML Page</title>
+<style>
+	.body {
+		color: 'white';
+  	}
+  	.foo {
+  		display: flex;
+		justify-content: center;
+		align-content: center;
+		flex-direction: column;
+		text-align: center;
+
+		font-size: 50;
+		background-color: rgba(64, 128, 0); 
+		color: rgb(200, 200, 200);
+		width: 800; 
+		height: 600; 
+  	}
+</style>
+<script>
+	function donateHandler() {
+		mixpanel.track('Donate');		
+	}
+	function adoptHandler() {
+		mixpanel.track('Adopt');		
+	}
+</script>
+<script type="text/javascript">
+(function(f,b){if(!b.__SV){var e,g,i,h;window.mixpanel=b;b._i=[];b.init=function(e,f,c){function g(a,d){var b=d.split(".");2==b.length&&(a=a[b[0]],d=b[1]);a[d]=function(){a.push([d].concat(Array.prototype.slice.call(arguments,0)))}}var a=b;"undefined"!==typeof c?a=b[c]=[]:c="mixpanel";a.people=a.people||[];a.toString=function(a){var d="mixpanel";"mixpanel"!==c&&(d+="."+c);a||(d+=" (stub)");return d};a.people.toString=function(){return a.toString(1)+".people (stub)"};i="disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");
+for(h=0;h<i.length;h++)g(a,i[h]);var j="set set_once union unset remove delete".split(" ");a.get_group=function(){function b(c){d[c]=function(){call2_args=arguments;call2=[c].concat(Array.prototype.slice.call(call2_args,0));a.push([e,call2])}}for(var d={},e=["get_group"].concat(Array.prototype.slice.call(arguments,0)),c=0;c<j.length;c++)b(j[c]);return d};b._i.push([e,f,c])};b.__SV=1.2;e=f.createElement("script");e.type="text/javascript";e.async=!0;e.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?
+MIXPANEL_CUSTOM_LIB_URL:"file:"===f.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";g=f.getElementsByTagName("script")[0];g.parentNode.insertBefore(e,g)}})(document,window.mixpanel||[]);
+</script>
+<script src="//cdn.split.io/sdk/split-10.17.2.min.js"></script>
+<script>
+	function uuidv4() {
+	  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+	    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+	    return v.toString(16);
+	  });
+	}
+
+	mixpanel.init('224979a8fcc23c2624902681bf9c206e', {
+		loaded: function(mixpanel) {
+			console.log('mixpanel.get_distinct_id: ' + mixpanel.get_distinct_id());
+			const distinct_id = uuidv4();
+			console.log('setting distinct_id: ' + distinct_id);
+			mixpanel.identify(distinct_id);
+			splitInit(mixpanel);
+		}
+	}); 
+	mixpanel.register_once({
+		"source": "split"
+	});
+
+	function splitInit(mixpanel) {
+		var factory = splitio({
+		  core: {
+		    authorizationKey: '69haia9b9pf3b0rs951bj8kuufr4ke2987op',
+		    key: mixpanel.get_distinct_id()
+		  }
+		});
+
+		var client = factory.client();
+
+		client.on(client.Event.SDK_READY, function() {
+		  var splitResult = client.getTreatmentWithConfig('mixpanel_dog');
+		  var configs = JSON.parse(splitResult.config);
+
+		  document.getElementById("call2Action").innerHTML = configs.text;
+		  document.getElementById("banner").src = configs.image;
+		});
+	}
+
+</script>
+</head>
+<body>
+	<div>
+		<div id="mainDiv" class="foo">
+			<img id="banner" src="http://www.cortazar-split.com/dog_origin.jpeg"/>
+			<p id="call2Action">Adopt a Dog</p>
+		</div>
+		<div style="text-align: center; padding: 25px">
+			<button onClick="donateHandler()">DONATE</button>
+			<button onClick="adoptHandler()">ADOPT</button>
+		</div>
+	</div>
+</body>
+</html>
+<!--
+http://www.cortazar-split.com/dog_origin.jpeg
+http://www.cortazar-split.com/dog_by_the_door.jpeg
+http://www.cortazar-split.com/dog_on_the_couch.jpeg
+http://www.cortazar-split.com/dog_melancholy.jpeg
+-->

@@ -1,0 +1,177 @@
+<!-- 
+
+    author:     david.martin@split.io
+    purpose:    demonstrate rudderstack/split integration at a source
+
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+    function uuidv4() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+    }
+
+    var user_id = uuidv4();
+
+    (function(apiKey){
+        (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+        v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+            o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+            y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+            z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+
+            // Call this whenever information about your visitors becomes available
+            // Please use Strings, Numbers, or Bools for value types.
+            pendo.initialize({
+                visitor: {
+                    id:              user_id,   
+                    email:           'david.martin@split.io', 
+                    full_name:    'David Martin',
+                    role:         'Solutions Engineer',
+                    first_line:         'Let us go then, you and I', 
+                },
+
+                account: {
+                    id:           'splitio' // Highly recommended
+                    // name:         // Optional
+                    // is_paying:    // Recommended if using Pendo Feedback
+                    // monthly_value:// Recommended if using Pendo Feedback
+                    // planLevel:    // Optional
+                    // planPrice:    // Optional
+                    // creationDate: // Optional
+
+                    // You can add any additional account level key-values here,
+                    // as long as it's not one of the above reserved names.
+                }
+            });
+    })('bb29afad-b702-475a-5699-5cf57ecdc0a4');
+</script>
+
+<script src="http://cdn.split.io/sdk/split-10.15.0.min.js"></script>
+<script type="text/javascript">
+
+    var client;
+    var splitResult;
+	console.log("user_id: " + user_id);
+	console.log(user_id);
+	var factory = splitio({
+	    core: {
+    		authorizationKey: 'ku60jampgeh7jtrrgrnrm7in1nb9csl7keg8',
+    		key: user_id,
+	    },
+	    scheduler: {
+    		impressionsRefreshRate: 5
+	    },
+	    impressionListener: {
+    		logImpression: logImpression
+	    },
+	    streamingEnabled: true,
+	    debug: false
+	});
+
+	// starts initialization; SDK_READY means finished
+	client = factory.client();
+	client.on(client.Event.SDK_READY, function() {
+        console.log("SDK_READY");
+        splitResult = client.getTreatmentWithConfig("multivariant_demo");
+        draw();
+    });
+
+    client.on(client.Event.SDK_UPDATE, function() {
+        console.log("SDK_UPDATE");
+        splitResult = client.getTreatmentWithConfig("multivariant_demo");
+        draw();
+    });
+
+    function logImpression(impressionData) {
+        console.log(impressionData);
+    }
+
+    </script>
+
+    <style>
+    body {
+        color: white;
+    }
+
+    div.cta {
+        font-family: Impact, Charcoal, sans-serif;
+        font-size: 80px;
+        color: black;
+        text-align: center;
+        background-color: #f2f2f2;
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+
+    div.discount {
+        font-size: 80px;
+        color: blue;
+        text-align: center;
+    }
+
+    div.cta-image {
+        text-align: center;
+    }
+
+    img {
+        width: 100%;
+    }
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+    $(document).ready( function() {
+        // nothing to do?
+    });
+
+    function createPopup(message, value) {
+        return function() {
+            if (message != null && value != null) {
+                alert(message + value);
+            }
+        };
+    }
+
+    var flower = "not a flower";
+
+    function draw() {
+        result = splitResult;
+
+        var configs = JSON.parse(result.config);
+        //console.log(configs);
+
+        document.getElementById("cta-text").innerHTML = configs.text;
+        flower = configs.text;
+
+        var img = document.getElementById("cta-image");
+        img.src = configs.image;
+        img.style.width = '100%';
+
+        document.getElementById("discount-text").innerHTML = "20% OFF";
+    }
+
+    function clickHandler() {
+        console.log("calling pendo.track!");
+        pendo.track("flower_purchase", {
+            message: flower,
+            purchase: 42.00
+        });
+    }
+    </script>
+
+    <title>Pendo-Split Attributes Demo</title>
+</head>
+
+<body>
+    <div id="cta-text" class="cta">Call to Action</div>
+    <div class="cta"><img id="cta-image" alt="bulb"/></div>
+    <div id="discount-text" class="discount" onclick="clickHandler()" >20% OFF!</div>
+</body>
+
+</html>

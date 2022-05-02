@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+    body {
+        color: white;
+    }
+
+    div.cta {
+        font-family: Impact, Charcoal, sans-serif;
+        font-size: 80px;
+        color: black;
+        text-align: center;
+        background-color: #f2f2f2;
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+
+    div.discount {
+        font-size: 80px;
+        color: blue;
+        text-align: center;
+    }
+
+    div.cta-image {
+        text-align: center;
+    }
+
+    img {
+        width: 100%;
+    }
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="http://cdn.split.io/sdk/split-10.16.0.min.js"></script>
+
+<script>
+  !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware"];analytics.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);t.unshift(e);analytics.push(t);return analytics}};for(var e=0;e<analytics.methods.length;e++){var key=analytics.methods[e];analytics[key]=analytics.factory(key)}analytics.load=function(key,e){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(t,n);analytics._loadOptions=e};analytics._writeKey="pUi5ufgiVlYFGpn9by1cCtvmN4bRU0hd";;analytics.SNIPPET_VERSION="4.15.3";
+  analytics.load("pUi5ufgiVlYFGpn9by1cCtvmN4bRU0hd");
+  analytics.page();
+  }}();
+</script>
+
+    <script type="text/javascript">
+        analytics.ready(function() {
+            var factory = splitio({
+              core: {
+                authorizationKey: '69haia9b9pf3b0rs951bj8kuufr4ke2987op',
+                key: analytics.user().anonymousId()
+              }
+            });
+
+            var client = factory.client();
+
+            client.on(client.Event.SDK_READY, function() {
+              var splitResult = client.getTreatmentWithConfig('flower_promo');
+              var configs = JSON.parse(splitResult.config);
+              var treatment = splitResult.treatment;
+
+              document.getElementById("cta-text").innerHTML = configs.text;
+              document.getElementById("cta-image").src = configs.image;
+            });                    
+        });
+
+        function clickHandler() {
+            console.log("clickHandler!");
+
+            analytics.track("flower_purchase", {
+                userAgent: navigator.userAgent,
+                plan: "Pro Annual",
+                accountType: "Acme",
+                total: 50.00,
+                identityId: analytics.user().anonymousId()
+            });
+        }
+    </script>
+
+    <title>Flower Promotion</title>
+</head>
+
+<body>
+    </script>
+    <div id="cta-text" class="cta">Call to Action</div>
+    <div class="cta"><img id="cta-image" alt="bulb" src="hibiscus.jpg"/></div>
+    <div id="discount-text" class="discount" onclick="clickHandler()" >20% OFF!</div>
+</body>
+
+</html>
+
+<!-- 
+{"text":"Cherry Blossoms!","image":"http://www.cortazar-split.com/cb.jpg"} 
+{"text":"Birds of Paradise!","image":"http://www.cortazar-split.com/bop.jpg"}
+-->

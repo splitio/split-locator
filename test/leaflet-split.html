@@ -1,0 +1,245 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+	<title>UHD Super Streaming Japan</title>
+
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+	
+</head>
+<style>
+	body {
+		background-image: url("http://www.cortazar-split.com/oceana.png");
+	}
+   body {
+        padding: 0;
+        margin: 0;
+    }
+    html, body, #mapid {
+        height: 100%;
+        width: 100%;
+    }	
+</style>
+<body>
+	<div id="mapid"/>
+
+	<script>
+
+		var city_coords = {
+			Tokyo: 	[35.6897,139.6922],
+			Ōsaka: 	[34.6936,135.5019],
+			Nagoya: 	[35.1167,136.9333],
+			Yokohama: 	[35.4333,139.6333],
+			Fukuoka: 	[33.5903,130.4019],
+			Sapporo: 	[43.0621,141.3544],
+			Kyōto: 	[35.0111,135.7669],
+			Kōbe: 	[34.6913,135.1830],
+			Kawanakajima: 	[35.5300,139.7050],
+			Saitama: 	[35.8617,139.6453],
+			Hiroshima: 	[34.3853,132.4553],
+			Sendai: 	[38.2683,140.8694],
+			Kitaku: 	[33.8704,130.8200],
+			Chiba: 	[35.6000,140.1000],
+			Niigata: 	[37.9161,139.0364],
+			Hamamatsu: 	[34.7167,137.7333],
+			Kumamoto: 	[32.8031,130.7078],
+			Sagamihara: 	[35.5667,139.3667],
+			Okayama: 	[34.6500,133.9167],
+			Shizuoka: 	[34.9756,138.3825],
+			Honchō: 	[35.6947,139.9825],
+			Kawaguchi: 	[35.8078,139.7242],
+			Kagoshima: 	[31.5800,130.5281],
+			Hachiōji: 	[35.6667,139.3167],
+			Utsunomiya: 	[36.5500,139.8833],
+			Matsuyama: 	[33.8333,132.7667],
+			Ichikawa: 	[35.7219,139.9311],
+			Higashiōsaka: 	[34.6794,135.6008],
+			Matsudo: 	[35.7878,139.9031],
+			Nishinomiyahama: 	[34.7333,135.3333],
+			Ōita: 	[33.2333,131.6067],
+			Kanazawa: 	[36.5667,136.6500],
+			Fukuyama: 	[34.4858,133.3625],
+			Machida: 	[35.5486,139.4467],
+			Kashiwa: 	[35.8544,139.9689],
+			Toyota: 	[35.0833,137.1567],
+			Takamatsu: 	[34.3500,134.0500],
+			Toyama: 	[36.7000,137.2200],
+			Nagasaki: 	[32.7833,129.8667],
+			Gifu: 	[35.4167,136.7667],
+			Miyazaki: 	[31.9167,131.4167],
+			Minamisuita: 	[34.7667,135.5167],
+			Okazaki: 	[34.9500,137.1667],
+			Ichinomiya: 	[35.3039,136.8031],
+			Toyohashi: 	[34.7667,137.3833],
+			Nagano: 	[36.6486,138.1928],
+			Wakayama: 	[34.2333,135.1667],
+			Nara: 	[34.6833,135.7833],
+			Koshigaya: 	[35.8911,139.7908],
+			Tokorozawa: 	[35.7994,139.4689],
+			Ōtsu: 	[35.0167,135.8500],
+			Kawagoe: 	[35.9177,139.4911],
+			Tamuramachimoriyama: 	[37.4100,140.3800],
+			Iwaki: 	[37.0333,140.8833],
+			Asahikawa: 	[43.7706,142.3650],
+			Maebashi: 	[36.3833,139.0667],
+			Kōchi: 	[33.5667,133.5333],
+			Naha: 	[26.2122,127.6789],
+			Yokkaichi: 	[34.9667,136.6167],
+			Kasugai: 	[35.2500,136.9667],
+			Akita: 	[39.7197,140.1025],
+			Ōakashichō: 	[34.6431,134.9975],
+			Morioka: 	[39.6833,141.1500],
+			Fukushima: 	[37.7608,140.4733],
+			Aomori: 	[40.8222,140.7475],
+			Tsu: 	[34.7186,136.5056],
+			Fuchū: 	[35.6689,139.4778],
+			Ichihara: 	[35.4981,140.1156],
+			Mito: 	[36.3667,140.4667],
+			Yao: 	[34.6269,135.6008],
+			Kakogawachōhonmachi: 	[34.7569,134.8414],
+			Fukui: 	[36.0641,136.2196],
+			Hiratsuka: 	[35.3231,139.3422],
+			Sōka: 	[35.8256,139.8056],
+			Shinozaki: 	[33.9500,130.9333],
+			Hakodate: 	[41.7733,140.7261],
+			Tokushima: 	[34.0667,134.5500],
+			Chōfugaoka: 	[35.6506,139.5408],
+			Yamagata: 	[38.2500,140.3333],
+			Chigasaki: 	[35.3339,139.4047],
+			Yato: 	[35.4693,139.4616],
+			Fuji: 	[35.1614,138.6764],
+			Tsukubakenkyūgakuentoshi: 	[36.0333,140.0667],
+			Hachimanchō: 	[40.5100,141.5400],
+			Neya: 	[34.7661,135.6281],
+			Sato: 	[33.1631,129.7177],
+			Saga: 	[33.2667,130.3000],
+			Kasukabe: 	[35.9753,139.7525],
+			Ageoshimo: 	[35.9775,139.5933],
+			Sakurazuka: 	[34.8000,135.3603],
+			Atsugichō: 	[35.4333,139.3667],
+			Minamiōzuma: 	[36.2404,137.9700],
+			Kure: 	[34.2492,132.5658],
+			Itami: 	[34.7867,135.4056],
+			Kamirenjaku: 	[35.6833,139.5594],
+			Matsue: 	[35.4681,133.0486],
+			Yachiyo: 	[35.7225,140.0997],
+			Nagareyama: 	[35.8561,139.9025],
+			Ashino: 	[42.9750,144.3747],
+			Hino: 	[35.6714,139.3950]		
+		}
+
+	</script>
+   <script src="http://cdn.split.io/sdk/split-10.15.7.min.js"></script>
+
+    <script>
+    	const clientSideKey = "ku60jampgeh7jtrrgrnrm7in1nb9csl7keg8";
+
+    	var factory = splitio({
+    		startup: {
+    			readyTimeout: 5
+    		},
+    		core: {
+    			authorizationKey: clientSideKey,
+    			key: 'dmartin',
+    			trafficType: 'user',
+    			labelsEnabled: true
+    		},
+    		scheduler: {
+            featuresRefreshRate: 1, // 30 sec 
+            segmentsRefreshRate: 60, // 60 sec 
+            metricsRefreshRate: 60, // 60 sec
+            impressionsRefreshRate: 15, // 60 sec
+            eventsPushRate: 60, // 60 sec
+            eventsQueueSize: 500 // 500 items
+        },
+        // storage: {
+        //     type: 'LOCALSTORAGE',
+        //     prefix: 'PLANE'
+        // },
+        debug: false,
+        streamingEnabled: true
+    });
+
+	var mymap = L.map('mapid').setView([37.6897,136.6922], 6);
+
+	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+		maxZoom: 18,
+		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+		'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+		id: 'mapbox/streets-v11',
+		tileSize: 512,
+		zoomOffset: -1
+	}).addTo(mymap);
+
+    var client = factory.client('Tokyo');
+
+    client.on(client.Event.SDK_READY, function() {
+    	console.log('DBM factory SDK_READY');
+    	drawMap();
+    });
+
+       client.on(client.Event.SDK_UPDATE, function() {
+    	console.log('DBM factory SDK_UPDATE');
+    	setTimeout(() => {  drawMap(); }, 1500);
+    });
+
+</script>
+
+	<script>
+	function drawMap() {
+
+		const cities = Object.keys(city_coords);
+
+		cities.forEach((city, index) => {
+			// console.log(`${city}: ${city_coords[city]}`);
+			coords = `${city_coords[city]}`.split(',');
+			var lat = coords[0];
+			var long = coords[1];
+			var radius = 7500;
+			$.ajax({
+                    // url: 'http://localhost:3090/japan/' + city,
+                    url: 'https://split-evaluator.darkbloom.org/client/get-treatments-with-config?key=' + city +'&split-names=uhd_super_streaming',
+                    type: 'GET',
+                    success: function(result) {
+                    	treatment = result.uhd_super_streaming.treatment;
+                    	console.log(city + ': ' + treatment + ' lat: ' + lat + ' long: ' + long);
+                    	if(treatment === 'on') {
+                    		L.circle([lat, long], radius, {
+                    			color: 'rgb(0, 124, 156)',
+                    			//fillColor: '#30f',
+                    			//fillOpacity: 0.1
+                    		}).addTo(mymap).bindPopup(city);
+                    	} else if (treatment === 'off') {
+                    		L.circle([lat, long], radius, {
+                    			color: 'rgb(255, 70, 82)',
+                    			//fillColor: '#f03',
+                    			//fillOpacity: 0.1
+                    		}).addTo(mymap).bindPopup(city);
+                    	} else {
+                    		L.circle([lat, long], radius, {
+                    			color: 'black',
+                    			//fillColor: '#fff',
+                    			//fillOpacity: 0.1
+                    		}).addTo(mymap).bindPopup(city);
+                    	}                       
+                    },
+                    error: function(result) {
+                    	console.log("error! " + result);
+                    }
+                });
+		});
+		// setInterval(function() { console.log('redraw'); mymap.invalidateSize();}, 5000);
+	}
+	</script>
+
+</body>
+</html>
+

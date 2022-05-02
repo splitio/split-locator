@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+    body {
+        color: white;
+    }
+
+    div.cta {
+        font-family: Impact, Charcoal, sans-serif;
+        font-size: 80px;
+        color: black;
+        text-align: center;
+        background-color: #f2f2f2;
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+
+    div.discount {
+        font-size: 80px;
+        color: blue;
+        text-align: center;
+    }
+
+    div.cta-image {
+        text-align: center;
+    }
+
+    img {
+        width: 100%;
+    }
+    </style>
+
+    <script src="http://cdn.split.io/sdk/split-10.15.2.min.js"></script>
+
+    <script>
+        document.cookie="utagdb=false";
+        function getCookie(cname) {
+          var name = cname + "=";
+          var decodedCookie = decodeURIComponent(document.cookie);          
+          var ca = decodedCookie.split(';');
+          for(var i = 0; i <ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+              c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+              return c.substring(name.length, c.length);
+            }
+          }
+          return "";
+        }
+
+    function createPopup(message, value) {
+        return function() {
+            if (message != null && value != null) {
+                alert(message + value);
+            }
+        };
+    }
+
+    var flower = "not a flower";
+
+    function draw() {
+        var result = client.getTreatmentWithConfig("tealium_promo");
+        var configs = JSON.parse(result.config);
+       
+        document.getElementById("cta-text").innerHTML = configs.text;
+        flower = configs.text;
+
+        var img = document.getElementById("cta-image");
+        img.src = configs.image;
+        img.style.width = '100%';
+
+        document.getElementById("discount-text").innerHTML = configs.discount + "% OFF";
+    }
+
+    function clickHandler() {
+        console.log("clickHandler!");
+
+        utag.link({
+            "tealium_event"    : "product_view",
+            "product_id"       : ["12345"],
+            "product_name"     : [flower],
+            "product_quantity" : ["2"],
+            "product_unit_price"    : ["12.99"]
+        });          
+
+        console.log("onclick - visitor id - " + utag_data["cp.utag_main_v_id"]);
+    }
+    </script>
+
+    <title>Tealium Promo</title>
+</head>
+
+<body>
+    <script type="text/javascript">
+    var utag_data={
+      "customer_id"   : getCookie("username"),
+      "page_type"     : "promo",
+      "site_section"  : "flowers",
+      "page_name"     : "Flower Promotion",
+      "country_code"  : "US",
+      "currency_code" : "USD"};
+    </script>
+
+    <script type="text/javascript">
+
+        (function(a,b,c,d){
+        a='https://tags.tiqcdn.com/utag/sbx-split/main/prod/utag.js';
+        b=document;c='script';d=b.createElement(c);d.src=a;d.type='text/java'+c;d.async=true;
+        a=b.getElementsByTagName(c)[0];a.parentNode.insertBefore(d,a);
+        })();
+
+        let client;
+        function initializeSplit() {
+           console.log('WORKS? ' + utag_data['cp.utag_main_v_id']);
+           
+            var factory = splitio({
+                core: {
+                    authorizationKey: 'ku60jampgeh7jtrrgrnrm7in1nb9csl7keg8',
+                    key: utag_data['cp.utag_main_v_id'],
+                    labelsEnabled: true,
+                    trafficType: 'user'
+                },
+                scheduler: {
+                    featuresRefreshRate: 1,
+                    eventsPushRate: 5,
+                    segmentsRefreshRate: 1,
+                    impressionsRefreshRate: 5
+                },
+                streamingEnabled: true,
+                debug: false,
+                impressionListener: {
+                    logImpression: logImpression
+                }   
+            });
+
+            client = factory.client();
+
+            client.on(client.Event.SDK_READY, function() {
+                var v_id = utag_data["cp.utag_main_v_id"];
+                console.log("draw - visitor id - " + v_id);
+                //client = factory.client(v_id);
+
+                draw();
+            });
+
+            client.on(client.Event.SDK_UPDATE, function() {
+                draw();
+            })
+
+            function logImpression(impressionData) {
+              console.log(impressionData);
+            }
+        }
+        function visitorIdAvailable(callback) {
+            let timer;
+            function stop() {
+                clearInterval(timer);
+            }
+            function available(_cb) {
+                console.log('+');
+                if(utag_data['cp.utag_main_v_id'] != null) {
+                    stop();
+                    _cb();                    
+                }
+            }
+            timer = setInterval(available, 500, callback);
+        }
+        visitorIdAvailable(initializeSplit);
+
+        console.log("1 - visitor id - " + utag_data["cp.utag_main_v_id"]);
+
+    </script>
+
+    <div id="cta-text" class="cta">Call to Action</div>
+    <div class="cta"><img id="cta-image" alt="bulb"/></div>
+    <div id="discount-text" class="discount" onclick="clickHandler()" >20% OFF!</div>
+</body>
+
+</html>

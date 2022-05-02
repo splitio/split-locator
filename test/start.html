@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+    body {
+        color: white;
+    }
+
+    div.cta {
+        font-family: Impact, Charcoal, sans-serif;
+        font-size: 80px;
+        color: black;
+        text-align: center;
+        background-color: #f2f2f2;
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+
+    div.discount {
+        font-size: 80px;
+        color: blue;
+        text-align: center;
+    }
+
+    div.cta-image {
+        text-align: center;
+    }
+
+    img {
+        width: 100%;
+    }
+    </style>
+
+    <title>This is the Segment Promo Video</title>
+<script src="//cdn.split.io/sdk/split-10.16.0.min.js"></script>
+<script>
+    var factory = splitio({
+      core: {
+        authorizationKey: '69haia9b9pf3b0rs951bj8kuufr4ke2987op',
+        key: 'user_id' // unique identifier for your user
+      }
+    });
+
+    var client = factory.client();
+
+    client.on(client.Event.SDK_READY, function() {
+      var splitResult = client.getTreatmentWithConfig('segment_special');
+      var configs = JSON.parse(splitResult.config);
+      var treatment = splitResult.treatment;
+      console.log('treatment: ' + treatment);
+
+      document.getElementById("cta-text").innerHTML = configs.text;
+      document.getElementById("cta-image").src = configs.image;
+    });    
+</script>
+
+</head>
+
+<body>
+    <div id="cta-text" class="cta">Call to Action</div>
+    <div class="cta"><img id="cta-image" src="https://www.split.io/wp-content/uploads/2017/11/split-logo-light-background-transparent.png"/></div>
+    <div id="discount-text" class="discount" onclick="clickHandler()" >20% OFF!</div>
+</body>
+
+</html>
+<!--
+{"text":"Cherry Blossoms!","image":"http://www.cortazar-split.com/cb.jpg"}
+{"text":"Birds of Paradise!","image":"http://www.cortazar-split.com/bop.jpg"}
+-->    

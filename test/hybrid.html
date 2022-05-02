@@ -1,0 +1,143 @@
+<html>
+   <head>
+   <style>
+      html, body {
+         background: black;
+     		font-family: "Open Sans",sans-serif;
+      }
+      
+      .root {
+      }
+
+      .box {
+        height: 48px;
+        line-height: 48px;
+        width: 48px;
+        height: 48px;
+        text-align: center;
+        font-family: sans-serif;
+        font-size: 14;
+        color: white;
+        outline: solid 1px black;
+      }
+
+      ul {
+         padding: 0px;         
+   	}
+
+   	li {
+       	display: inline-block;
+       	vertical-align: top;
+   	}
+   </style>
+   <script src="//cdn.split.io/sdk/split-10.15.9.min.js"></script>
+   <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+   <script>
+
+	    const key = "69haia9b9pf3b0rs951bj8kuufr4ke2987op";
+
+	    var factory = splitio({
+	        startup: {
+	                    readyTimeout: 90
+	                },
+	                core: {
+	                    authorizationKey: key,
+	                    key: 'placeholder',
+	                    labelsEnabled: true
+	                },
+	                scheduler: {
+	                    featuresRefreshRate: 1, // 30 sec 
+	                    segmentsRefreshRate: 60, // 60 sec 
+	                    metricsRefreshRate: 60, // 60 sec
+	                    impressionsRefreshRate: 15, // 60 sec
+	                    eventsPushRate: 60, // 60 sec
+	                    eventsQueueSize: 500 // 500 items
+	                },
+	                debug: false,
+	                streamingEnabled: true
+	            });
+
+	    client = factory.client();   		
+
+	    client.on(client.Event.SDK_READY, function() {
+	        console.log('SDK_READY');
+	        drawTable(factory);
+	    });
+
+	    client.on(client.Event.SDK_UPDATE, function() {
+	        console.log('SDK_UPDATE ' + new Date());
+	        sleep(1000).then(function() {
+   		        drawTable(factory);
+	        });
+	    })
+		
+		function sleep(ms) {
+		  return new Promise(resolve => setTimeout(resolve, ms));
+		}
+
+      function removeAllChildNodes(parent) {
+          while (parent.firstChild) {
+              parent.removeChild(parent.firstChild);
+          }
+      }
+
+	  function drawTable(factory) {
+            console.log('drawTable');
+	   		$(document).ready(function(){
+               let ul = document.getElementById('user-list');
+               removeAllChildNodes(ul);
+
+               for(let i = 97; i < 123; i++) {
+                  for(let j = 0; j < 10; j++) {
+                     const key = String.fromCharCode(i) + j;
+
+                     li = document. createElement("li");
+                     let div = document.createElement("div");
+                     div.className = "box";
+
+                     const attributes = "{\"row\":\"" + String.fromCharCode(i) 
+                           + "\",\"col\":" + j + " + }";
+                     const url = 'https://split-evaluator.darkbloom.org/client/get-treatments-with-config?key=' + key +'&split-names=new_onboarding&attributes=' + attributes;
+
+                     div.appendChild(document.createTextNode(key));
+                     $.ajax({
+                                url: url,
+                                type: 'GET',
+                                success: function(result) {
+                                    treatment = result.new_onboarding.treatment;
+                                    if(treatment === 'on') {
+                                       div.style.backgroundColor = "rgb(0, 124, 156)";
+                                    } else if (treatment === 'off') {
+                                       div.style.backgroundColor = "rgb(255, 70, 82)";
+                                    } else if (treatment === 'default') {
+                                        div.style.backgroundColor = "rgb(173, 193, 116)";
+                                    } else if (treatment === 'fourth') {
+                                        div.style.backgroundColor = "rgb(168, 94, 132)";
+                                    } else if (treatment === 'fifth') {
+                                        div.style.backgroundColor = "rgb(232, 216, 117)";
+                                    } else {
+                                        console.log("unexpected treatment: " + treatment);
+                                        div.style.backgroundColor = "rgb(0, 0, 0)";
+                                    }
+                                },
+                                error: function(result) {
+                                    console.log("error! " + result);
+                                }
+                            });                 
+                     li.appendChild(div);
+                     ul.appendChild(li);
+                  }
+               }
+         });
+      }
+            
+         
+   </script>
+   </head>
+   <body>
+      <div class="root">
+         <ul id="user-list">
+         </ul>
+      </div>
+   </body>
+</html>

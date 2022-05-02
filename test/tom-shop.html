@@ -1,0 +1,48 @@
+<html>
+<head>
+	<title>Basic HTML Page</title>
+<style>
+	.body {
+		color: 'white';
+  	}
+  	.foo {
+  		display: flex;
+		justify-content: center;
+		align-content: center;
+		flex-direction: column;
+		text-align: center;
+
+		font-size: 50;
+		background-color: rgba(32, 32, 220); 
+		color: rgb(200, 200, 200);
+		width: 400; 
+		height: 400; 
+  	}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+	function keepShopping() {
+		console.log('shop!');
+		window.location.href = "tom.html";		
+	}
+	function checkOut() {
+		alert("success!");
+	}
+	$( document ).ready(function() {
+		document.cookie = "hasReviewedCart=true; path=/";	
+	});	
+
+</script>
+</head>
+<body>
+	<div>
+		<div id="mainDiv" class="foo">
+			<p id="call2Action">YOUR CART CONTENTS</p>
+		</div>
+		<div style="text-align: center; padding: 25px">
+			<button style="background-color: white; border-radius: 8px; border: 2px solid rgb(205, 45, 47);color: rgb(205, 45, 47); font-size: 24px; box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);" onClick="keepShopping()">keep shopping</button>
+			<button style="background-color: white; border-radius: 8px; border: 2px solid rgb(205, 45, 47);color: rgb(205, 45, 47); font-size: 24px; box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);" onClick="checkOut()">check out</button>			
+		</div>
+	</div>
+</body>
+</html>

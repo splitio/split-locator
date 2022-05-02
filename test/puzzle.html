@@ -1,0 +1,165 @@
+<html>
+<head>
+	
+   <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+	<script>
+		 let grid = [];
+		 for(let i = 0; i < 7; i++) {
+		     let row = [];
+		     for (let j = 0; j < 7; j++) {
+		         row.push({
+		             torch: false,
+		             lit: false
+		         });
+		     }
+		     grid.push(row);
+		 }
+
+		grid[0][3].torch = true;
+		grid[3][0].torch = true;
+		grid[3][6].torch = true;
+		grid[6][2].torch = true;
+		grid[6][4].torch = true;
+
+	   	$(document).ready(function(){
+			paintTorches();
+		});
+
+		function switchTorches(i, j) {
+			console.log('switch torches - ' + i + ',' + j);
+			grid[i][j].lit = grid[i][j].lit ? false : true;
+			if(i == 0 && j == 3) {
+				console.log('torch 0');
+				grid[6][2].lit = grid[6][2].lit ? false : true;
+				grid[6][4].lit = grid[6][4].lit ? false : true;
+			} else if (i == 3 && j == 0) {
+				console.log('torch 4');
+				grid[3][6].lit = grid[3][6].lit ? false : true;
+				grid[6][4].lit = grid[6][4].lit ? false : true;
+				console.log('grid[3][6].lit: ' + grid[3][6].lit);
+				console.log('grid[6][4].lit: ' + grid[6][4].lit);
+			} else if (i == 3 && j == 6) {
+				console.log('torch 1');
+				grid[3][0].lit = grid[3][0].lit ? false : true;;
+				grid[6][2].lit = grid[6][2].lit ? false : true;;
+			} else if (i == 6 && j == 2) {
+				console.log('torch 3');
+				grid[0][3].lit = grid[0][3].lit ? false : true;;
+				grid[3][6].lit = grid[3][6].lit ? false : true;;
+			} else if (i == 6 && j == 4) {
+				console.log('torch 2');
+				grid[3][0].lit = grid[3][0].lit ? false : true;;
+				grid[0][3].lit = grid[0][3].lit ? false : true;;
+			}
+			paintTorches();
+		}
+
+		function paintTorches() {
+			let table = document.getElementById("torches-table");
+			if(table) {
+				table.remove();
+			}
+			table = document.createElement("table");
+			table.id="torches-table";
+			table.style.border = '1px solid black';
+			for(let i = 0; i < 7; i++) {
+				let row = document.createElement("tr");
+				// row.onclick = function() {console.log('row click!')};
+				for(let j = 0; j < 7; j++) {
+					let td = document.createElement("td");
+					if(grid[i][j].torch) {
+						if(grid[i][j].lit) {
+							let img = document.createElement("img");
+							img.src = "img/lit.png";
+							img.style.width=75;
+							img.style.height=150;
+							td.appendChild(img);
+						} else {
+							let img = document.createElement("img");
+							img.src = "img/unlit.png";
+							img.style.width=75;
+							img.style.height=150;
+							td.appendChild(img);							
+						}
+	
+						td.onclick = function() { switchTorches(i, j) };			
+					} else {
+						//td.innerHTML = '.';
+					}
+					row.appendChild(td);
+				}
+				table.appendChild(row);
+			}
+			let torches = document.getElementById("torches");
+			torches.appendChild(table);
+		}           
+   </script>
+   <script>
+   	function solve() {
+   		console.log('solve!');
+   		let solved = false;
+   		while(!solved) {
+   			const torch0 = grid[0][3].lit;
+			const torch4 = grid[3][0].lit;
+			const torch1 = grid[3][6].lit;
+			const torch3 = grid[6][2].lit;
+			const torch2 = grid[6][4].lit;
+
+		 	let move = Math.floor(Math.random() * 5);
+			let move1 = Math.floor(Math.random() * 5);
+			let move2 = Math.floor(Math.random() * 5);
+			let move3 = Math.floor(Math.random() * 5);
+			let move4 = Math.floor(Math.random() * 5);
+			let move5 = Math.floor(Math.random() * 5);
+			let move6 = Math.floor(Math.random() * 5);
+			let move7 = Math.floor(Math.random() * 5);
+			let move8 = Math.floor(Math.random() * 5);
+			let move9 = Math.floor(Math.random() * 5);  
+			let moves = [move, move1, move2, move3, move4, move5, move6, move7, move8, move9];
+	
+			console.log(moves);
+
+			for(const move of moves) {
+				if(move == 0) {
+					switchTorches(0,3);
+				} else if (move == 1) {
+					switchTorches(3,6);
+				} else if (move == 2) {
+					switchTorches(6,4);
+				} else if (move == 3) {
+					switchTorches(6,2);
+				} else if (move == 4) {
+					switchTorches(3,0);
+				}
+
+				if(allLit()) {
+					solved = true;
+					break;
+				}	
+			}
+
+			if(!solved)	{
+				// reset
+	   			grid[0][3].lit = torch0;
+				grid[3][0].lit = torch4;
+				grid[3][6].lit = torch1;
+				grid[6][2].lit = torch3;
+				grid[6][4].lit = torch2;		
+			}	
+		}
+   	}
+
+   	function allLit() {
+		return grid[0][3].lit
+		&& grid[3][0].lit
+		&& grid[3][6].lit
+		&& grid[6][2].lit
+		&& grid[6][4].lit;
+   	}
+   </script>
+   </head>
+   <body>
+   	<div id="torches"/>
+   	<button onclick="solve()">SOLVE</button>
+   </body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script>
+    !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t,e){var n=document.createElement("script");n.type="text/javascript";n.async=!0;n.src="https://cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(n,a);analytics._loadOptions=e};analytics.SNIPPET_VERSION="4.1.0";
+analytics.load("fJNuk5pkOjWcrBSY8viMMWfTFCMVIU6b");
+analytics.page("split promo");
+}}();
+
+    </script>
+
+    <style>
+    body {
+        color: white;
+    }
+
+    div.cta {
+        font-family: Impact, Charcoal, sans-serif;
+        font-size: 80px;
+        color: black;
+        text-align: center;
+        background-color: #f2f2f2;
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+
+    div.discount {
+        font-size: 80px;
+        color: blue;
+        text-align: center;
+    }
+
+    div.cta-image {
+        text-align: center;
+    }
+
+    img {
+        width: 100%;
+    }
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="http://cdn.split.io/sdk/split-10.16.0.min.js"></script>
+
+    <title>JS GA Promo</title>
+</head>
+
+<body>
+
+    <script type="text/javascript">
+        analytics.ready(function() {
+            let user_id = analytics.user().anonymousId();
+            console.log("key -> " + user_id);
+            var factory = splitio({
+                core: {
+                    authorizationKey: '69haia9b9pf3b0rs951bj8kuufr4ke2987op',
+                    key: user_id,
+                    labelsEnabled: true,
+                    trafficType: 'user'
+                },
+                scheduler: {
+                    featuresRefreshRate: 1,
+                    eventsPushRate: 5,
+                    segmentsRefreshRate: 1
+                },
+                streamingEnabled: true,
+                debug: false
+            });
+            const client = factory.client();
+
+            client.on(client.Event.SDK_READY, function() {
+                draw(client);
+            });
+
+            client.on(client.Event.SDK_UPDATE, function() {
+                draw(client);
+            })
+
+        })
+
+        function draw(client) {
+            var result = client.getTreatmentWithConfig("segment_promo");
+            var configs = JSON.parse(result.config);
+
+            document.getElementById("cta-text").innerHTML = configs.text;
+            document.getElementById("cta-image").src = configs.image;
+        }
+
+        function clickHandler() {
+            console.log("clickHandler!");
+
+            analytics.track("flower_purchase", {
+                userAgent: navigator.userAgent,
+                plan: "Pro Annual",
+                accountType: "Acme",
+                total: 50.00,
+                identityId: analytics.user().anonymousId()
+            });
+        }
+    </script>
+    <div id="cta-text" class="cta">Call to Action</div>
+    <div class="cta"><img id="cta-image" alt="bulb"/></div>
+    <div id="discount-text" class="discount" onclick="clickHandler()" >20% OFF!</div>
+</body>
+
+</html>

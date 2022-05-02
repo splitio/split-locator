@@ -1,0 +1,66 @@
+<html>
+<head>
+	<script src="//cdn.split.io/sdk/split-10.15.9.min.js"></script>
+<script>
+	var factory = splitio({
+	  core: {
+	    authorizationKey: '69haia9b9pf3b0rs951bj8kuufr4ke2987op',
+	    key: 'dmartin', // unique identifier for your user
+		trafficType: 'user'
+	  }, storage: {
+        	type: 'LOCALSTORAGE',
+        	prefix: 'WAVE'
+      }, impressionListener: {
+	    	logImpression: logImpression
+  		}
+	});
+
+	function logImpression(impression) {
+		console.log(impression);
+		//splunk.track(impression);
+	}
+
+	var client = factory.client();
+
+	client.on(client.Event.SDK_READY, function() {
+		console.log('SDK_READY');
+		drawScreen();
+	});	
+
+	client.on(client.Event.SDK_UPDATE, function() {
+		console.log('SDK_UPDATE');
+		drawScreen();
+	});
+
+	client.on(client.Event.SDK_READY_FROM_CACHE, function() {
+		console.log('SDK_READY_FROM_CACHE');
+		drawScreen();
+	});
+
+	function drawScreen() {
+		var splitResult = client.getTreatmentWithConfig('telia');
+		var treatment = splitResult.treatment;
+	  	var configs = JSON.parse(splitResult.config);
+
+	  	document.body.style.backgroundColor = configs.backgroundColor;		
+	}
+
+	function clickHandler() {
+		console.log('click!');
+
+        var properties = {
+            region : 'SE', 
+            status : 'platinum',
+            type : 'click me',
+            timeInRegistrationMs : 5 
+        };
+
+		var isQueued = client.track('telia_click', 5, properties);
+		console.log('event queued? ' + isQueued);
+	}
+</script>
+</head>
+<body bgcolor="black">
+<button id="telia-button" onclick="clickHandler()" name="click me">CLICK ME</button>
+</body>
+</html>

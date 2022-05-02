@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <script>
+        function uuidv4() {
+          return 'split-xxxxxxyxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+          });
+        }
+
+        var user_id = uuidv4();
+    </script>
+
+<script src="https://cdn.split.io/rum-agent/rum-agent-0.2.1.min.js"></script>
+<script>
+  window.SPLIT_RUM.init('69haia9b9pf3b0rs951bj8kuufr4ke2987op')
+    .identities([
+      { key: uuidv4(), trafficType: 'user' }
+    ]);
+</script>
+
+
+    <script>
+        window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+        ga('create', 'UA-128478641-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+    <script async src='https://www.google-analytics.com/analytics.js'></script>
+<!--     
+    <script src="jquery-3.5.1.min.js"></script>
+    <script>
+        $.get('https://www.cloudflare.com/cdn-cgi/trace', function(data) {
+            console.log(data)
+        });
+    </script>
+ -->
+    <style>
+    body {
+        color: white;
+    }
+
+    div.cta {
+        font-family: Impact, Charcoal, sans-serif;
+        font-size: 80px;
+        color: black;
+        text-align: center;
+        background-color: #f2f2f2;
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+
+    div.cta-image {
+        text-align: center;
+    }
+
+    img {
+        width: 100%;
+    }
+    </style>
+
+    <script src="http://cdn.split.io/sdk/split-10.15.0.min.js"></script>
+    <script>
+        var factory = splitio({
+            core: {
+                authorizationKey: '69haia9b9pf3b0rs951bj8kuufr4ke2987op',
+                key: user_id,
+                labelsEnabled: true,
+                trafficType: 'user'
+            },
+            scheduler: {
+                featuresRefreshRate: 3,
+                eventsPushRate: 5
+            },
+            sync: {
+                impressionsMode: 'DEBUG'
+            },
+            integrations: [{
+                type: 'GOOGLE_ANALYTICS_TO_SPLIT',
+                events: true
+            }],
+            streamingEnabled: true,
+            debug: true
+        });
+
+        var client = factory.client();
+
+        ga('require', 'splitTracker');
+        ga('set', 'page', 'ga_home_page');
+        ga('send', 'pageview', 'ga_home_page');
+
+        client.on(client.Event.SDK_READY, function() {
+            console.log("SDK_READY");
+            draw();
+        });
+
+        client.on(client.Event.SDK_UPDATE, function() {
+            console.log("SDK_UPDATE");
+            draw();
+        })
+
+    function createPopup(message, value) {
+        return function() {
+            if (message != null && value != null) {
+                alert(message + value);
+            }
+        };
+    }
+
+    function draw() {
+        console.log("draw!");
+
+        var result = client.getTreatmentWithConfig("ga_home");
+        console.log(result);
+
+        var configs = JSON.parse(result.config);
+        console.log(configs);
+
+        document.getElementById("cta-text").innerHTML = configs.text;
+
+        var img = document.getElementById("cta-image");
+        img.src = configs.image;
+        img.style.width = '100%';
+    }
+
+    function clickHandler() {
+        console.log("clickHandler!");
+        ga('send', {
+          hitType: 'event',
+          eventCategory: 'home',
+          eventAction: 'login',
+          eventLabel: 'floral park'
+        });
+        // pass the user_id in a cookie
+        console.log('set cookie: ' + user_id);
+        document.cookie = "username=" + user_id + "; path=/";
+        window.location.href="promo.html";
+    }
+    </script>
+
+    <title>JS GA Home</title>
+</head>
+
+<body>
+    <div id="cta-text" class="cta">Call to Action</div>
+    <div class="cta"><img id="cta-image" alt="bulb" onclick="clickHandler()" /></div>
+</body>
+
+</html>

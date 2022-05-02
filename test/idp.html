@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<!--[if IE 7]><html lang="en" class="lt-ie10 lt-ie9 lt-ie8"><![endif]-->
+<!--[if IE 8]><html lang="en" class="lt-ie10 lt-ie9"> <![endif]-->
+<!--[if IE 9]><html lang="en" class="lt-ie10"><![endif]-->
+<!--[if gt IE 9]><html lang="en"><![endif]-->
+<!--[if !IE]><!--><html lang="en"><!--<![endif]-->
+<head>
+    <meta charset="UTF-8">
+
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+    <title>Split Software, Inc. - Sign In</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="none" />
+    <script src="https://ok6static.oktacdn.com/assets/js/sdk/okta-signin-widget/5.11.0/js/okta-sign-in.min.js" type="text/javascript"></script>
+    <link href="https://ok6static.oktacdn.com/assets/js/sdk/okta-signin-widget/5.11.0/css/okta-sign-in.min.css" type="text/css" rel="stylesheet"/>
+    <link href="https://ok6static.oktacdn.com/assets/loginpage/css/loginpage-theme.fe35d60e3e7ac95814eda9241d23b189.css" type="text/css" rel="stylesheet"/><script>
+        var okta = {
+            locale: 'en',
+            deployEnv: 'PROD'
+        };
+    </script>
+    <script>window.okta || (window.okta = {}); okta.cdnUrlHostname = "//ok6static.oktacdn.com"; okta.cdnPerformCheck = false;</script><script>if (window.module) module = window.module;</script>
+
+</head>
+<body class="auth okta-container">
+
+<!--[if gte IE 8]>
+  <![if lte IE 10]>
+
+    <style>
+    .unsupported-browser-banner-wrap {
+      padding: 20px;
+      border: 1px solid #ddd;
+      background-color: #f3fbff;
+    }
+    .unsupported-browser-banner-inner {
+      position: relative;
+      width: 735px;
+      margin: 0 auto;
+      text-align: left;
+    }
+    .unsupported-browser-banner-inner .icon {
+      vertical-align: top;
+      margin-right: 20px;
+      display: inline-block;
+      position: static !important;
+    }
+    .unsupported-browser-banner-inner a {
+      text-decoration: underline;
+    }
+    </style>
+
+    <div class="unsupported-browser-banner-wrap">
+      <div class="unsupported-browser-banner-inner">
+        <span class="icon icon-16 icon-only warning-16-yellow"></span>You are using an unsupported browser. For the best experience, update to <a href="https://support.okta.com/help/s/article/Okta-Browser-and-OS-Support-Policy">a supported browser</a>.</div>
+    </div>
+
+  <![endif]>
+<![endif]-->
+<!--[if IE 8]> <div id="login-bg-image-ie8" class="login-bg-image" style="background-image: none" data-se="login-bg-image"></div> <![endif]-->
+<!--[if (gt IE 8)|!(IE)]><!--> <div id="login-bg-image" class="login-bg-image" style="background-image: none" data-se="login-bg-image"></div> <!--<![endif]-->
+
+<!-- hidden form for reposting fromURI for X509 auth -->
+<form action="/login/cert" method="post" id="x509_login" name="x509_login" style="display:none;">
+    <input type="hidden" class="hide" name="_xsrfToken" value="null"/><input type="hidden" id="fromURI" name="fromURI" class="hidden" value="&#x2f;app&#x2f;splitsoftwareinc_splitappprod_1&#x2f;exk42xlkbfaSswvsv2p7&#x2f;sso&#x2f;saml&#x3f;SigAlg&#x3d;http&#x25;3A&#x25;2F&#x25;2Fwww.w3.org&#x25;2F2000&#x25;2F09&#x25;2Fxmldsig&#x25;23rsa-sha1&amp;SAMLRequest&#x3d;rVJNj9owFPwrke&#x25;2FGSUj4sACJLv1AooA2bA&#x25;2B9IGO&#x25;2FdC0SO&#x25;2FVzgP33NUmrbg&#x25;2B7p17nzYzH894MRV01fNn6Z&#x25;2FMIP1tAH93qyiDvBnPSOsOtQI3ciBqQe8mL5dcNTwcxb5z1VtqKvJK8rxCI4Ly2hkTr1Zzsth83u8&#x25;2Fr7XEkYwApTlTkY0UzlUg6HUJCpcpGucpjSNMJib6Bw6Cdk2AVDBBbWBv0wvgAxWlC4ylNp4c05nnCk&#x25;2FF3Eu2dvWgFbhuSzEnRVNpHhS39VTgg0Sr8VhvhO89n7xvkjOGdNLBnLwbS1kw0TQ&#x25;2Fhb5k28tgBYRIKUMeEwe2cpbfqfCpFgdcLXtJmzBAtuxfShehq&#x25;2BqCN0ubH&#x25;2Bw2dehLyL4fDnu53xYFEyz&#x25;2BtPViDbQ2uAHfREp4eN39zhziDPru2TBsPzogqoJpdki4IExLZKBnmJWQnmgsZ06wcn&#x25;2Bi0nCiqRpNhNs7iaQpAFrM7n3cFu8X&#x25;2Ff2DGXvvP&#x25;2BhO8r2i92ttKy5fok3W18G83lQySDtGKlh2VQy10tVTKAWJorKrs9cGB8GHt3rVh2WzRP&#x25;2FvvsS9&#x25;2BAQ&#x25;3D&#x25;3D&amp;RelayState&#x3d;https&#x25;3A&#x25;2F&#x25;2Fapp.split.io&#x25;2Finternal&#x25;2Fapi&#x25;2Fv1&#x25;2Fsaml&#x25;2Flogin&#x25;2F6135fe4b-5ac0-4f7b-9f8d-d683474092ee&amp;Signature&#x3d;XKLzSVQJr17fvkgtUw520Y994HM6MIng0W&#x25;2FUog&#x25;2BIkO7dCP&#x25;2F8e3wTRwBFiGiPM&#x25;2F4c0tIhA5dhe0uRGMEgtDxvft7FZsoHrSNUbbc&#x25;2BQoUjhTQRyt4LF5X2rpWVPtOKxJZ2UQbKWLX9RGH3rUAKOdf6LJ9dQ0P1WSneBU3HcNYdFz3Ty1veRaLkTCnDY7I&#x25;2FMD8uj&#x25;2F3zoK2KIlp8zWq2k5NVkb&#x25;2F3X6LgRQnbefpSRur9rAmlamUTy9SRwSlfbMKngy&#x25;2Fd8zoTAbVw6zJoOwN12S3hq2de9ka&#x25;2BIwiG4k92tfZHekrw1y51aFwG7GkVyixzN&#x25;2F6RM0SF5Cf95NFbUvipFX7oMg&#x25;3D&#x25;3D"/>
+</form>
+
+<div class="content">
+  <div class="applogin-banner">
+          <div class="applogin-background"></div>
+          <div class="applogin-container">
+              <h1>
+                Connecting to<div class="applogin-app-logo">
+                      <img src="https://ok6static.oktacdn.com/fs/bco/4/fs066phn0iybFtHFJ2p7" alt="Split&#x20;App&#x20;&#x28;Prod&#x29;" class="logo splitsoftwareinc_splitappprod_1"/></div>
+              </h1>
+              <p>Sign-in with your Split Software, Inc. account to access Split App (Prod)</p>
+          </div>
+      </div>
+  <style type="text/css">
+    .noscript-msg {
+        background-color: #fff;
+        border-color: #ddd #ddd #d8d8d8;
+        box-shadow:0 2px 0 rgba(175, 175, 175, 0.12);
+        text-align: center;
+        width: 398px;
+        min-width: 300px;
+        margin: 200px auto;
+        border-radius: 3px;
+        border-width: 1px;
+        border-style: solid;
+    }
+
+    .noscript-content {
+        padding: 42px;
+    }
+
+    .noscript-content h2 {
+        padding-bottom: 20px;
+    }
+
+    .noscript-content h1 {
+        padding-bottom: 25px;
+    }
+
+    .noscript-content a {
+        background: transparent;
+        box-shadow: none;
+        display: table-cell;
+        vertical-align: middle;
+        width: 314px;
+        height: 50px;
+        line-height: 36px;
+        color: #fff;
+        background: linear-gradient(#007dc1, #0073b2), #007dc1;
+        border: 1px solid;
+        border-color: #004b75;
+        border-bottom-color: #00456a;
+        box-shadow: rgba(0, 0, 0, 0.15) 0 1px 0, rgba(255, 255, 255, 0.1) 0 1px 0 0 inset;
+        -webkit-border-radius: 3px;
+        border-radius: 3px;
+    }
+
+    .noscript-content a:hover {
+        background: #007dc1;
+        cursor: hand;
+        text-decoration: none;
+    }
+</style>
+<noscript>
+    <div id="noscript-msg" class="noscript-msg">
+        <div class="noscript-content">
+            <h2>Javascript is required</h2>
+            <h1>Javascript is disabled on your browser.&nbspPlease enable Javascript and refresh this page.</h1>
+            <a href="." class="">Refresh</a>
+        </div>
+    </div>
+</noscript>
+<div id="signin-container"></div>
+  <div id="okta-sign-in" class="auth-container main-container" style="display:none">
+      <div id="unsupported-onedrive" class="unsupported-message" style="display:none">
+        <h2 class="o-form-head">Your OneDrive version is not supported</h2>
+        <p>Upgrade now by installing the OneDrive for Business Next Generation Sync Client to login to Okta</p>
+        <a class="button button-primary" target="_blank" href="https://support.okta.com/help/articles/Knowledge_Article/Upgrading-to-OneDrive-for-Business-Next-Generation-Sync-Client">
+          Learn how to upgrade</a>
+      </div>
+      <div id="unsupported-cookie" class="unsupported-message" style="display:none">
+          <h2 class="o-form-head">Cookies are required</h2>
+          <p>Cookies are disabled on your browser. Please enable Cookies and refresh this page.</p>
+          <a class="button button-primary" target="_blank" href=".">
+              Refresh</a>
+      </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="footer-container clearfix">
+    <p class="copyright">Powered by <a href="http://www.okta.com/" class="inline-block notranslate">Okta</a></p>
+        <p class="privacy-policy"><a href="/privacy" target="_blank" class="inline-block margin-l-10">Privacy Policy</a></p>
+    </div>
+</div>
+
+<script type="text/javascript">function runLoginPage (fn) {var mainScript = document.createElement('script');mainScript.src = 'https://ok6static.oktacdn.com/assets/js/mvc/loginpage/initLoginPage.pack.de2a7ed7dca23249f4ab0af3eb4c9d0a.js';mainScript.crossOrigin = 'anonymous';mainScript.integrity = 'sha384-rFHmAMzmPiClrHm3qnUr93Ysar0UtsRHn+yUfZ5AR18HqBeu6dbgfOvqiq78M/cB';document.getElementsByTagName('head')[0].appendChild(mainScript);fn && mainScript.addEventListener('load', function () { setTimeout(fn, 1) });}</script><script type="text/javascript">
+(function(){
+  var baseUrl = 'https\x3A\x2F\x2Fsplit.okta.com';
+  var suppliedRedirectUri = '';
+  var repost = false;
+  var stateToken = '';
+  var fromUri = '\x2Fapp\x2Fsplitsoftwareinc_splitappprod_1\x2Fexk42xlkbfaSswvsv2p7\x2Fsso\x2Fsaml\x3FSigAlg\x3Dhttp\x253A\x252F\x252Fwww.w3.org\x252F2000\x252F09\x252Fxmldsig\x2523rsa\x2Dsha1\x26SAMLRequest\x3DrVJNj9owFPwrke\x252FGSUj4sACJLv1AooA2bA\x252B9IGO\x252FdC0SO\x252FVzgP33NUmrbg\x252B7p17nzYzH894MRV01fNn6Z\x252FMIP1tAH93qyiDvBnPSOsOtQI3ciBqQe8mL5dcNTwcxb5z1VtqKvJK8rxCI4Ly2hkTr1Zzsth83u8\x252Fr7XEkYwApTlTkY0UzlUg6HUJCpcpGucpjSNMJib6Bw6Cdk2AVDBBbWBv0wvgAxWlC4ylNp4c05nnCk\x252FF3Eu2dvWgFbhuSzEnRVNpHhS39VTgg0Sr8VhvhO89n7xvkjOGdNLBnLwbS1kw0TQ\x252Fhb5k28tgBYRIKUMeEwe2cpbfqfCpFgdcLXtJmzBAtuxfShehq\x252BqCN0ubH\x252Bw2dehLyL4fDnu53xYFEyz\x252BtPViDbQ2uAHfREp4eN39zhziDPru2TBsPzogqoJpdki4IExLZKBnmJWQnmgsZ06wcn\x252Bi0nCiqRpNhNs7iaQpAFrM7n3cFu8X\x252Ff2DGXvvP\x252BhO8r2i92ttKy5fok3W18G83lQySDtGKlh2VQy10tVTKAWJorKrs9cGB8GHt3rVh2WzRP\x252FvvsS9\x252BAQ\x253D\x253D\x26RelayState\x3Dhttps\x253A\x252F\x252Fapp.split.io\x252Finternal\x252Fapi\x252Fv1\x252Fsaml\x252Flogin\x252F6135fe4b\x2D5ac0\x2D4f7b\x2D9f8d\x2Dd683474092ee\x26Signature\x3DXKLzSVQJr17fvkgtUw520Y994HM6MIng0W\x252FUog\x252BIkO7dCP\x252F8e3wTRwBFiGiPM\x252F4c0tIhA5dhe0uRGMEgtDxvft7FZsoHrSNUbbc\x252BQoUjhTQRyt4LF5X2rpWVPtOKxJZ2UQbKWLX9RGH3rUAKOdf6LJ9dQ0P1WSneBU3HcNYdFz3Ty1veRaLkTCnDY7I\x252FMD8uj\x252F3zoK2KIlp8zWq2k5NVkb\x252F3X6LgRQnbefpSRur9rAmlamUTy9SRwSlfbMKngy\x252Fd8zoTAbVw6zJoOwN12S3hq2de9ka\x252BIwiG4k92tfZHekrw1y51aFwG7GkVyixzN\x252F6RM0SF5Cf95NFbUvipFX7oMg\x253D\x253D';
+  var username = '';
+  var rememberMe = true;
+  var smsRecovery = false;
+  var callRecovery = false;
+  var emailRecovery = true;
+  var usernameLabel = 'Username';
+  var usernameInlineLabel = '';
+  var passwordLabel = 'Password';
+  var passwordInlineLabel = '';
+  var signinLabel = 'Sign\x20In';
+  var forgotpasswordLabel = 'Forgot\x20password\x3F';
+  var unlockaccountLabel = 'Unlock\x20account\x3F';
+  var helpLabel = 'Help';
+  var orgSupportPhoneNumber = '\x28650\x29\x20399\x2D0005';
+  var hideSignOutForMFA = false;
+  var hideBackToSignInForReset = false;
+  var footerHelpTitle = 'Need\x20help\x20signing\x20in\x3F';
+  var recoveryFlowPlaceholder = 'Email\x20or\x20Username';
+  var signOutUrl = '';
+  var authScheme = 'OAUTH2';
+  var hasPasswordlessPolicy = '';
+  var INVALID_TOKEN_ERROR_CODE = 'errors.E0000011';
+
+  var securityImage = true;
+  
+
+
+  var selfServiceUnlock = false;
+  
+
+  var redirectByFormSubmit = false;
+  
+
+  var showPasswordRequirementsAsHtmlList = false;
+  
+    showPasswordRequirementsAsHtmlList = true;
+  
+
+  var autoPush = false;
+  
+    autoPush = true;
+  
+
+  var accountChooserDiscoveryUrl = 'https://login.okta.com/discovery/iframe.html';
+
+  // In case of custom app login, the uri is already absolute, so we must not attach baseUrl
+  var redirectUri;
+  if (isAbsoluteUri(fromUri)) {
+      redirectUri = fromUri;
+  } else {
+      redirectUri = baseUrl + fromUri;
+  }
+  
+
+  var customButtons;
+  var pivProperties = {};
+
+  
+
+  var customLinks = [];
+  
+  var factorPageCustomLink = {};
+  
+
+  var linkParams;
+  
+
+  var proxyIdxResponse;
+  
+
+  var stateTokenAllFlows;
+  
+
+  var idpDiscovery;
+  var idpDiscoveryRequestContext;
+  
+
+  var showPasswordToggleOnSignInPage = false;
+  
+
+  var hasOAuth2ConsentFeature = false;
+  var consentFunc;
+  
+
+  var hasMfaAttestationFeature = false;
+  
+    hasMfaAttestationFeature = true;
+  
+
+  var rememberMyUsernameOnOIE = false;
+  
+
+  var engFastpassMultipleAccounts = false;
+  
+
+  var registration = false;
+  
+
+  var webauthn = true;
+  
+
+    var overrideExistingStateToken = false;
+    
+
+  var loginPageConfig = {
+    fromUri: fromUri,
+    repost: repost,
+    redirectUri: redirectUri,
+    isMobileClientLogin: false,
+    isMobileSSO: false,
+    disableiPadCheck: false,
+    enableiPadLoginReload: false,
+    linkParams: linkParams,
+    hasChromeOSFeature: false,
+    showLinkToAppStore: false,
+    accountChooserDiscoveryUrl: accountChooserDiscoveryUrl,
+    mfaAttestation: hasMfaAttestationFeature,
+    enrollingFactor: '',
+    stateTokenExpiresAt: '',
+    stateTokenRefreshWindowMs: '',
+    signIn: {
+      el: '#signin-container',
+      baseUrl: baseUrl,
+      brandName: 'Okta',
+      logo: 'https://ok6static.oktacdn.com/fs/bco/1/fs04dngblodNTzdUA2p7',
+      logoText: 'Split\x20Software,\x20Inc. logo',
+      helpSupportNumber: orgSupportPhoneNumber,
+      stateToken: stateToken,
+      username: username,
+      signOutLink: signOutUrl,
+      consent: consentFunc,
+      authScheme: authScheme,
+      relayState: fromUri,
+      proxyIdxResponse: proxyIdxResponse,
+      overrideExistingStateToken: overrideExistingStateToken,
+      interstitialBeforeLoginRedirect: 'DEFAULT',
+      idpDiscovery: {
+        requestContext: idpDiscoveryRequestContext
+      },
+      features: {
+        router: true,
+        securityImage: securityImage,
+        rememberMe: rememberMe,
+        autoPush: autoPush,
+        webauthn: webauthn,
+        smsRecovery: smsRecovery,
+        callRecovery: callRecovery,
+        emailRecovery: emailRecovery,
+        selfServiceUnlock: selfServiceUnlock,
+        multiOptionalFactorEnroll: true,
+        deviceFingerprinting: true,
+        useDeviceFingerprintForSecurityImage: true,
+        trackTypingPattern: false,
+        hideSignOutLinkInMFA: hideSignOutForMFA,
+        hideBackToSignInForReset: hideBackToSignInForReset,
+        rememberMyUsernameOnOIE: rememberMyUsernameOnOIE,
+        engFastpassMultipleAccounts: engFastpassMultipleAccounts,
+        customExpiredPassword: true,
+        idpDiscovery: idpDiscovery,
+        passwordlessAuth: hasPasswordlessPolicy,
+        consent: hasOAuth2ConsentFeature,
+        showPasswordToggleOnSignInPage: showPasswordToggleOnSignInPage,
+        registration: registration,
+        redirectByFormSubmit: redirectByFormSubmit,
+        restrictRedirectToForeground: true,
+        showPasswordRequirementsAsHtmlList: showPasswordRequirementsAsHtmlList
+      },
+
+      assets: {
+        baseUrl: "https\x3A\x2F\x2Fok6static.oktacdn.com\x2Fassets\x2Fjs\x2Fsdk\x2Fokta\x2Dsignin\x2Dwidget\x2F5.11.0"
+      },
+
+      language: okta.locale,
+      i18n: {},
+
+      customButtons: customButtons,
+
+      piv: pivProperties,
+
+      helpLinks: {
+        help: '',
+        forgotPassword: '',
+        unlock: '',
+        custom: customLinks,
+        factorPage: factorPageCustomLink
+      }
+    }
+  };
+
+  loginPageConfig.signIn.i18n[okta.locale] = {
+    
+    'primaryauth.username.placeholder': usernameLabel,
+    'primaryauth.username.tooltip': usernameInlineLabel,
+    'primaryauth.password.placeholder': passwordLabel,
+    'primaryauth.password.tooltip': passwordInlineLabel,
+    'mfa.challenge.password.placeholder': passwordLabel,
+    'primaryauth.title': signinLabel,
+    'forgotpassword': forgotpasswordLabel,
+    'unlockaccount': unlockaccountLabel,
+    'help': helpLabel,
+    'needhelp': footerHelpTitle,
+    'password.forgot.email.or.username.placeholder': recoveryFlowPlaceholder,
+    'password.forgot.email.or.username.tooltip': recoveryFlowPlaceholder,
+    'account.unlock.email.or.username.placeholder': recoveryFlowPlaceholder,
+    'account.unlock.email.or.username.tooltip': recoveryFlowPlaceholder
+  };
+
+  // When STAF is enabled and the token is not valid, the Widget must be reloaded to obtain a new stateToken. We're updating
+  // the error message here as it isn't applicable for non-STAF orgs. The override is behind a new eng flag
+  // See : OKTA-376620, Feature flag : ENG_CHANGE_INVALID_TOKEN_MESSAGE
+  
+
+  function isOldWebBrowserControl() {
+    // We no longer support IE7. If we see the MSIE 7.0 browser mode, it's a good signal
+    // that we're in a windows embedded browser.
+    if (navigator.userAgent.indexOf('MSIE 7.0') === -1) {
+      return false;
+    }
+
+    // Because the userAgent is the same across embedded browsers, we use feature
+    // detection to see if we're running on older versions that do not support updating
+    // the documentMode via x-ua-compatible.
+    return document.all && !window.atob;
+  }
+
+  function isAbsoluteUri(uri) {
+    var pat = /^https?:\/\//i;
+    return pat.test(uri);
+  }
+
+  var unsupportedContainer = document.getElementById('okta-sign-in');
+
+  var failIfCookiesDisabled = true;
+  
+
+  // Old versions of WebBrowser Controls (specifically, OneDrive) render in IE7 browser
+  // mode, with no way to override the documentMode. In this case, inform the user they need
+  // to upgrade.
+  if (isOldWebBrowserControl()) {
+    document.getElementById('unsupported-onedrive').removeAttribute('style');
+    unsupportedContainer.removeAttribute('style');
+  }
+  else if (failIfCookiesDisabled && !navigator.cookieEnabled) {
+    document.getElementById('unsupported-cookie').removeAttribute('style');
+    unsupportedContainer.removeAttribute('style');
+  }
+  else {
+    unsupportedContainer.parentNode.removeChild(unsupportedContainer);
+    runLoginPage(function () {
+      OktaLogin.initLoginPage(loginPageConfig);
+    });
+  }
+
+
+}());
+</script>
+
+<script>
+  window.addEventListener('load', function(event) {
+    function applyStyle(id, style) {
+      if (style) {
+        var el = document.getElementById(id);
+        if (el) {
+          el.setAttribute('style', style);
+        }
+      }
+    }
+    applyStyle('login-bg-image', "background-image: none");
+    applyStyle('login-bg-image-ie8', "");
+  });
+</script>
+
+</body>
+</html>

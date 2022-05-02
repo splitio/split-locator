@@ -1,0 +1,172 @@
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        function onSubmit() {
+            var identifier = document.getElementById("id_to_add").value;
+            console.log("onSubmit()");
+            console.log("user_id: " + identifier);
+            var user_id = identifier;
+            var data = '{"keys":["'+ user_id + '"], "comment":"' + user_id +' comment"}';
+            $.ajax({
+                url: 'https://api.split.io/internal/api/v2/segments/194da2f0-3e22-11ea-ba75-12f2f63694e5/beta_users/uploadKeys',
+                type: 'put',
+                contentType: 'application/json',
+                data: data,
+                headers: { 
+                    'Authorization' : 'Bearer t9smj0448k10agjpdvm21sq6m50bm1rpus0t',
+                    'Content-Type' : 'application/json'
+                },              
+                success: function(result) {
+                    console.log("success!");
+                },
+                error: function(result) {
+                    console.log("error! ");
+                    console.log(result);
+                }
+            });
+        }
+
+        function onDelete() {
+            var identifier = document.getElementById("id_to_add").value;
+            console.log("onDelete()");
+            console.log("user_id: " + identifier);
+            var user_id = identifier;
+            var data = '["' + user_id + '"]';
+            $.ajax({
+                url: 'https://api.split.io/internal/api/v2/segments/194da2f0-3e22-11ea-ba75-12f2f63694e5/beta_users/deleteKeys',
+                type: 'put',
+                contentType: 'application/json',
+                data: data,
+                headers: { 
+                    'Authorization' : 'Bearer t9smj0448k10agjpdvm21sq6m50bm1rpus0t',
+                    'Content-Type' : 'application/json'
+                },              
+                success: function(result) {
+                    console.log("success!");
+                },
+                error: function(result) {
+                    console.log("error! ");
+                    console.log(result);
+                }
+            });
+        }
+
+    </script>
+    <style>
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+  }
+
+  /* Hide default HTML checkbox */
+  .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+  }
+
+  /* The slider */
+  .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      -webkit-transition: .4s;
+      transition: .4s;
+  }
+
+  .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+  }
+
+  input:checked + .slider {
+      background-color: #2196F3;
+  }
+
+  input:focus + .slider {
+      box-shadow: 0 0 1px #2196F3;
+  }
+
+  input:checked + .slider:before {
+      -webkit-transform: translateX(26px);
+      -ms-transform: translateX(26px);
+      transform: translateX(26px);
+  }
+
+  /* Rounded sliders */
+  .slider.round {
+      border-radius: 34px;
+  }
+
+  .slider.round:before {
+      border-radius: 50%;
+  }        
+</style>
+</head>
+<body>
+   <div>
+    I want to join the beta...
+</div> 
+<img width="400" src="https://9to5mac.com/wp-content/uploads/sites/6/2013/06/beta.png"/>
+<div>
+    Sign up here to receive features before wide release.  
+</div>
+<div>
+    <input type="checkbox"/>I have read the <a href="">terms and conditions</a>.
+</div>
+<div>
+    <input id="id_to_add" type="text" value="username"/><input value="join" type="submit" onclick="onSubmit()" /><input value="leave" type="submit" onclick="onDelete()" />
+</div>
+<div>
+    <h2>Opt-in / Opt-out</h2>
+</div>
+<table cellpadding="10">
+    <tr>
+    <td> 
+        <p>Feature A</p>
+        <label class="switch">
+            <input type="checkbox">
+            <span class="slider round"></span>
+        </label>
+    </td>
+    <td>
+        <p>Feature B</p>
+        <label class="switch">
+            <input type="checkbox" checked>
+            <span class="slider round"></span>
+        </label>
+    </td>
+    </tr>
+    <tr>
+    <td>
+        <p>Feature C</p>
+        <label class="switch">
+            <input type="checkbox">
+            <span class="slider round"></span>
+        </label>          
+    </td>
+    <td>
+        <p>Feature D</p>
+        <label class="switch">
+            <input type="checkbox">
+            <span class="slider round"></span>
+        </label>    
+    </td>   
+    </tr>
+</table>
+</body>
+</html>

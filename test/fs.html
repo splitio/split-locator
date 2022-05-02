@@ -1,0 +1,155 @@
+<html>
+<head>
+	<title>Multivariant Demo</title>
+<style>
+	body {
+		color: white;
+	}
+
+	div.cta {
+		font-family: Impact, Charcoal, sans-serif;
+		font-size: 80px;
+		color: black;
+		text-align: center;
+		background-color: lightgray;
+		padding-top: 50px;
+  		padding-bottom: 50px;
+	}
+
+	div.cta-image {
+		text-align: center;
+	}
+
+	img {
+		width: 100%;
+	}
+
+</style>
+
+<script>
+window['_fs_debug'] = false;
+window['_fs_host'] = 'fullstory.com';
+window['_fs_script'] = 'edge.fullstory.com/s/fs.js';
+window['_fs_org'] = 'W6S47';
+window['_fs_namespace'] = 'FS';
+(function(m,n,e,t,l,o,g,y){
+    if (e in m) {if(m.console && m.console.log) { m.console.log('FullStory namespace conflict. Please set window["_fs_namespace"].');} return;}
+    g=m[e]=function(a,b,s){g.q?g.q.push([a,b,s]):g._api(a,b,s);};g.q=[];
+    o=n.createElement(t);o.async=1;o.crossOrigin='anonymous';o.src='https://'+_fs_script;
+    y=n.getElementsByTagName(t)[0];y.parentNode.insertBefore(o,y);
+    g.identify=function(i,v,s){g(l,{uid:i},s);if(v)g(l,v,s)};g.setUserVars=function(v,s){g(l,v,s)};g.event=function(i,v,s){g('event',{n:i,p:v},s)};
+    g.anonymize=function(){g.identify(!!0)};
+    g.shutdown=function(){g("rec",!1)};g.restart=function(){g("rec",!0)};
+    g.log = function(a,b){g("log",[a,b])};
+    g.consent=function(a){g("consent",!arguments.length||a)};
+    g.identifyAccount=function(i,v){o='account';v=v||{};v.acctId=i;g(o,v)};
+    g.clearUserCookie=function(){};
+    g.setVars=function(n, p){g('setVars',[n,p]);};
+    g._w={};y='XMLHttpRequest';g._w[y]=m[y];y='fetch';g._w[y]=m[y];
+    if(m[y])m[y]=function(){return g._w[y].apply(this,arguments)};
+    g._v="1.3.0";
+})(window,document,window['_fs_namespace'],'script','user');
+</script>
+
+<script src="http://cdn.split.io/sdk/split-10.15.9.min.js"></script>
+<script>
+	var start = new Date().getTime();
+
+	function uuidv4() {
+	  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+	    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+	    return v.toString(16);
+	  });
+	}
+
+	var user_id = uuidv4();
+	FS.identify(user_id);
+    var factory = splitio({
+        core: {
+            authorizationKey: '23bfvvukbm8j87hoaj3tqjurl1d6vhu4gt21',
+            key: user_id,
+            trafficType: 'user',
+            labelsEnabled: true
+        },
+        scheduler: {
+            featuresRefreshRate: 1, // 30 sec 
+            segmentsRefreshRate: 5, // 60 sec 
+            metricsRefreshRate: 60, // 60 sec
+            impressionsRefreshRate: 60, // 60 sec
+            eventsPushRate: 60, // 60 sec
+            eventsQueueSize: 500 // 500 items
+        },
+	  	impressionListener: {
+	    	logImpression: logImpression
+	  	},
+        debug: false,
+        streamingEnabled: true
+    });
+
+	// function logImpression(impressionData) {
+	//   FS.event('split_evaluation', impressionData);
+	// }
+	
+	function logImpression(impressionData) {
+	  console.log(FS);
+	  FS.log('info', 'connected to Split');
+	  FS.event('split_evaluation', impressionData);
+	  FS.event('processing_time_ms', {page_processing_time: new Date().getTime() - start});  
+	  FS.identify('truncate_session_id');
+	  console.log("sent impression to FS");
+	}
+
+	var client = factory.client();
+
+	client.on(client.Event.SDK_READY, function() {
+	  console.log("SDK_READY");
+	  var result = client.getTreatmentWithConfig("multivariant_demo");
+	  drawScreen(result);
+	});	
+
+	client.on(client.Event.SDK_UPDATE, function() {
+	  console.log("SDK_UPDATE");
+	  var result = client.getTreatmentWithConfig("multivariant_demo");
+	  drawScreen(result);
+	});
+</script>
+<script>
+	function drawScreen(splitResult) {
+		console.log("drawScreen");
+		// console.log(splitResult.treatment);
+		var configs = JSON.parse(splitResult.config);
+		console.log(configs);
+
+		document.getElementById("call-to-action").innerHTML = configs.text;
+
+		var img = document.getElementById("banner-image");
+		img.src = configs.image;
+		img.style.width = '40%';
+
+		document.getElementById("survey-link").innerHTML = "<a href=\"" + configs.survey + "\" onclick=\"registerClick()\">Survey Link</a>";
+	}
+
+	function registerClick() {
+        var regions = [ "US", "EU", "JP"];
+        var status = [ "silver", "gold", "platinum"];
+        var n = Math.floor(Math.random() * 100);
+        var m = Math.floor(Math.random() * 100);
+        var properties = {
+            region : regions[n % regions.length], 
+            status : status[m % status.length]
+        };
+        var queued = client.track('multivariant_survey_click_count', 0, properties);
+        alert("tracking a click to split: " + queued);
+	}
+</script>
+</head>
+
+<body>
+	Multivariant Demo
+	<div id="call-to-action" class="cta">Call to Action</div>
+	<div class="cta-image"><img id="banner-image"/></div>
+	<div id="survey-link" class="cta"><a href="" onclick="registerClick()">Survey Link</a></div>
+	<div><a href="two.html">Page Two</a></div>
+</body>
+
+</html>

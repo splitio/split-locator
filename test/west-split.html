@@ -1,0 +1,667 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+	<title>UHD Super Streaming US West</title>
+
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+	
+</head>
+<style>
+	body {
+		background-image: url("http://www.cortazar-split.com/oceana.png");
+	}
+   body {
+        padding: 0;
+        margin: 0;
+    }
+    html, body, #mapid {
+        height: 100%;
+        width: 100%;
+    }	
+</style>
+<body>
+	<div id="mapid"/>
+
+	<script>
+
+		var city_coords = {
+			Los_Angeles:  [34.1139, -118.4068],
+			Phoenix:  [33.5722, -112.0891],
+			Seattle:  [47.6211, -122.3244],
+			San_Francisco:  [37.7562, -122.4430],
+			San_Diego:  [32.8312, -117.1225],
+			Denver:  [39.7621, -104.8759],
+			Riverside:  [33.9381, -117.3948],
+			Las_Vegas:  [36.2333, -115.2654],
+			Portland:  [45.5372, -122.6500],
+			Sacramento:  [38.5667, -121.4683],
+			San_Jose:  [37.3019, -121.8486],
+			Salt_Lake_City:  [40.7777, -111.9306],
+			Tucson:  [32.1545, -110.8782],
+			Albuquerque:  [35.1053, -106.6464],
+			Fresno:  [36.7831, -119.7941],
+			Concord:  [37.9722, -122.0016],
+			Colorado_Springs:  [38.8674, -104.7606],
+			Mission_Viejo:  [33.6095, -117.6550],
+			Bakersfield:  [35.3529, -119.0359],
+			Ogden:  [41.2278, -111.9682],
+			Mesa:  [33.4017, -111.7180],
+			Provo:  [40.2457, -111.6457],
+			Murrieta:  [33.5720, -117.1909],
+			Long_Beach:  [33.7981, -118.1675],
+			Reno:  [39.5497, -119.8483],
+			Oakland:  [37.7903, -122.2165],
+			Indio:  [33.7346, -116.2346],
+			Spokane:  [47.6671, -117.4330],
+			Stockton:  [37.9765, -121.3109],
+			Boise:  [43.6007, -116.2312],
+			Oxnard:  [34.1963, -119.1815],
+			Modesto:  [37.6374, -121.0028],
+			Aurora:  [39.7087, -104.7273],
+			Anaheim:  [33.8390, -117.8572],
+			Victorville:  [34.5277, -117.3536],
+			Lancaster:  [34.6935, -118.1753],
+			Santa_Ana:  [33.7366, -117.8819],
+			Santa_Rosa:  [38.4458, -122.7067],
+			Henderson:  [36.0133, -115.0380],
+			Fort_Collins:  [40.5478, -105.0656],
+			Santa_Clarita:  [34.4175, -118.4964],
+			Antioch:  [37.9789, -121.7958],
+			Irvine:  [33.6772, -117.7738],
+			Chula_Vista:  [32.6281, -117.0145],
+			Eugene:  [44.0563, -123.1173],
+			Salem:  [44.9231, -123.0246],
+			Chandler:  [33.2826, -111.8516],
+			Scottsdale:  [33.6872, -111.8651],
+			Gilbert:  [33.3101, -111.7463],
+			Glendale:  [33.5791, -112.2311],
+			North_Las_Vegas:  [36.2880, -115.0901],
+			Fremont:  [37.5265, -121.9852],
+			Kennewick:  [46.1978, -119.1732],
+			Visalia:  [36.3276, -119.3269],
+			Paradise:  [36.0807, -115.1369],
+			Avondale:  [33.3858, -112.3236],
+			Bremerton:  [47.5436, -122.7122],
+			Tacoma:  [47.2431, -122.4531],
+			San_Bernardino:  [34.1417, -117.2946],
+			Thousand_Oaks:  [34.1914, -118.8755],
+			Fontana:  [34.0968, -117.4599],
+			Moreno_Valley:  [33.9244, -117.2045],
+			Spring_Valley:  [36.0987, -115.2619],
+			Santa_Barbara:  [34.4285, -119.7202],
+			Olympia:  [47.0417, -122.8959],
+			Glendale:  [34.1818, -118.2468],
+			Huntington_Beach:  [33.6960, -118.0025],
+			Tempe:  [33.3881, -111.9318],
+			Sunrise_Manor:  [36.1785, -115.0490],
+			Salinas:  [36.6884, -121.6317],
+			Ontario:  [34.0393, -117.6064],
+			Vancouver:  [45.6366, -122.5967],
+			Nampa:  [43.5845, -116.5631],
+			Rancho_Cucamonga:  [34.1248, -117.5666],
+			Hemet:  [33.7341, -116.9969],
+			Santa_Cruz:  [36.9789, -122.0346],
+			Peoria:  [33.7844, -112.2989],
+			Oceanside:  [33.2247, -117.3083],
+			Elk_Grove:  [38.4160, -121.3842],
+			Vallejo:  [38.1133, -122.2358],
+			Garden_Grove:  [33.7787, -117.9601],
+			Enterprise:  [36.0164, -115.2208],
+			Medford:  [42.3372, -122.8537],
+			Marysville:  [48.0809, -122.1561],
+			Corona:  [33.8616, -117.5649],
+			Hayward:  [37.6328, -122.0772],
+			Lakewood:  [39.6977, -105.1168],
+			Palmdale:  [34.5944, -118.1057],
+			Sunnyvale:  [37.3836, -122.0256],
+			Pomona:  [34.0585, -117.7626],
+			Escondido:  [33.1347, -117.0722],
+			Fairfield:  [38.2592, -122.0324],
+			Bellevue:  [47.5951, -122.1535],
+			Merced:  [37.3057, -120.4778],
+			Pueblo:  [38.2705, -104.6112],
+			Torrance:  [33.8346, -118.3417],
+			Yuma:  [32.5992, -114.5488],
+			Surprise:  [33.6800, -112.4524],
+			Roseville:  [38.7703, -121.3196],
+			Thornton:  [39.9197, -104.9438],
+			Pasadena:  [34.1597, -118.1390],
+			Santa_Maria:  [34.9334, -120.4432],
+			Grand_Junction:  [39.0876, -108.5673],
+			Orange:  [33.8038, -117.8218],
+			Fullerton:  [33.8841, -117.9279],
+			Greeley:  [40.4151, -104.7706],
+			Las_Cruces:  [32.3265, -106.7892],
+			West_Valley_City:  [40.6889, -112.0115],
+			Yakima:  [46.5923, -120.5496],
+			Kent:  [47.3887, -122.2129],
+			Bellingham:  [48.7543, -122.4687],
+			Santa_Clara:  [37.3645, -121.9680],
+			Simi_Valley:  [34.2663, -118.7490],
+			Boulder:  [40.0249, -105.2523],
+			Berkeley:  [37.8723, -122.2760],
+			Redding:  [40.5698, -122.3650],
+			Arvada:  [39.8321, -105.1511],
+			East_Los_Angeles:  [34.0326, -118.1691],
+			St_George:  [37.0770, -113.5770],
+			Billings:  [45.7891, -108.5524],
+			Yuba_City:  [39.1357, -121.6381],
+			Gilroy:  [37.0047, -121.5855],
+			Chico:  [39.7575, -121.8152],
+			Coeur_d_Alene:  [47.7041, -116.7935],
+			Seaside:  [36.6224, -121.8191],
+			West_Jordan:  [40.6024, -112.0008],
+			El_Monte:  [34.0739, -118.0291],
+			Carlsbad:  [33.1247, -117.2837],
+			Temecula:  [33.4928, -117.1315],
+			Clovis:  [36.8278, -119.6831],
+			Meridian:  [43.6112, -116.3968],
+			Westminster:  [39.8837, -105.0624],
+			Costa_Mesa:  [33.6667, -117.9135],
+			Everett:  [47.9525, -122.1669],
+			El_Centro:  [32.7867, -115.5586],
+			Santa_Fe:  [35.6619, -105.9819],
+			Downey:  [33.9379, -118.1312],
+			Centennial:  [39.5926, -104.8674],
+			Richmond:  [37.9477, -122.3390],
+			Bend:  [44.0562, -121.3087],
+			Jurupa_Valley:  [34.0010, -117.4705],
+			Gresham:  [45.5023, -122.4413],
+			Hillsboro:  [45.5272, -122.9361],
+			San_Buenaventura:  [34.2741, -119.2314],
+			Inglewood:  [33.9566, -118.3444],
+			Turlock:  [37.5053, -120.8588],
+			Daly_City:  [37.6862, -122.4685],
+			Highlands_Ranch:  [39.5419, -104.9708],
+			West_Covina:  [34.0555, -117.9112],
+			Sparks:  [39.5729, -119.7157],
+			San_Mateo:  [37.5521, -122.3122],
+			Norwalk:  [33.9069, -118.0829],
+			Rialto:  [34.1174, -117.3894],
+			Manteca:  [37.7927, -121.2264],
+			Arden_Arcade:  [38.6034, -121.3810],
+			El_Cajon:  [32.8017, -116.9605],
+			Burbank:  [34.1879, -118.3235],
+			Longmont:  [40.1686, -105.1005],
+			Renton:  [47.4784, -122.1919],
+			Vista:  [33.1896, -117.2386],
+			Logan:  [41.7400, -111.8419],
+			Prescott_Valley:  [34.5983, -112.3176],
+			Vacaville:  [38.3590, -121.9680],
+			Spokane_Valley:  [47.6626, -117.2346],
+			Idaho_Falls:  [43.4872, -112.0362],
+			Tracy:  [37.7269, -121.4522],
+			Lafayette:  [39.9949, -105.0997],
+			Rio_Rancho:  [35.2872, -106.6981],
+			Beaverton:  [45.4779, -122.8168],
+			Orem:  [40.2983, -111.6992],
+			San_Tan_Valley:  [33.1879, -111.5472],
+			San_Marcos:  [33.1350, -117.1744],
+			Sandy:  [40.5710, -111.8505],
+			Federal_Way:  [47.3091, -122.3358],
+			Hesperia:  [34.3975, -117.3147],
+			Compton:  [33.8930, -118.2275],
+			Menifee:  [33.6909, -117.1849],
+			Chino:  [33.9836, -117.6654],
+			Hanford:  [36.3274, -119.6549],
+			South_Gate:  [33.9448, -118.1926],
+			Kirkland:  [47.6974, -122.2054],
+			Missoula:  [46.8750, -114.0214],
+			Carson:  [33.8374, -118.2559],
+			Livermore:  [37.6862, -121.7608],
+			Westminster:  [33.7523, -117.9938],
+			Santa_Monica:  [34.0232, -118.4813],
+			San_Leandro:  [37.7071, -122.1601],
+			Citrus_Heights:  [38.6948, -121.2880],
+			Goodyear:  [33.2613, -112.3622],
+			Hawthorne:  [33.9146, -118.3476],
+			Redwood_City:  [37.5026, -122.2252],
+			Lake_Forest:  [33.6606, -117.6712],
+			Napa:  [38.2976, -122.3011],
+			Whittier:  [33.9678, -118.0188],
+			Newport_Beach:  [33.6151, -117.8669],
+			Milpitas:  [37.4339, -121.8921],
+			Madera:  [36.9631, -120.0782],
+			Chino_Hills:  [33.9508, -117.7253],
+			Alhambra:  [34.0840, -118.1355],
+			Mountain_View:  [37.4000, -122.0796],
+			Flagstaff:  [35.1872, -111.6195],
+			Buena_Park:  [33.8572, -118.0046],
+			Pleasanton:  [37.6663, -121.8805],
+			Auburn:  [47.3039, -122.2108],
+			Folsom:  [38.6668, -121.1422],
+			Buckeye:  [33.4314, -112.6429],
+			Cheyenne:  [41.1351, -104.7900],
+			Tustin:  [33.7309, -117.8106],
+			Lakewood:  [33.8471, -118.1221],
+			Perris:  [33.7899, -117.2233],
+			Loveland:  [40.4166, -105.0623],
+			Layton:  [41.0769, -111.9621],
+			Alameda:  [37.7670, -122.2672],
+			Watsonville:  [36.9206, -121.7706],
+			Porterville:  [36.0644, -119.0338],
+			Upland:  [34.1178, -117.6603],
+			Davis:  [38.5552, -121.7365],
+			Camarillo:  [34.2230, -119.0322],
+			South_Jordan:  [40.5570, -111.9782],
+			Bellflower:  [33.8880, -118.1271],
+			San_Ramon:  [37.7625, -121.9365],
+			Pasco:  [46.2506, -119.1304],
+			Baldwin_Park:  [34.0829, -117.9721],
+			Rancho_Cordova:  [38.5740, -121.2523],
+			Lodi:  [38.1218, -121.2932],
+			Union_City:  [37.6030, -122.0187],
+			Apple_Valley:  [34.5328, -117.2104],
+			Pocatello:  [42.8724, -112.4646],
+			Pittsburg:  [38.0182, -121.8964],
+			Wenatchee:  [47.4356, -120.3283],
+			Redmond:  [47.6762, -122.1169],
+			Redlands:  [34.0511, -117.1712],
+			Mount_Vernon:  [48.4202, -122.3115],
+			Broomfield:  [39.9541, -105.0527],
+			El_Paso_de_Robles:  [35.6394, -120.6560],
+			Casas_Adobes:  [32.3423, -111.0114],
+			Walnut_Creek:  [37.9024, -122.0398],
+			Lynwood:  [33.9240, -118.2017],
+			Lehi:  [40.4136, -111.8726],
+			Lake_Elsinore:  [33.6847, -117.3344],
+			Los_Lunas:  [34.8115, -106.7803],
+			Rocklin:  [38.8075, -121.2488],
+			Castle_Rock:  [39.3763, -104.8535],
+			South_San_Francisco:  [37.6536, -122.4197],
+			Yorba_Linda:  [33.8890, -117.7714],
+			Casper:  [42.8420, -106.3207],
+			Corvallis:  [44.5697, -123.2780],
+			Longview:  [46.1461, -122.9629],
+			Petaluma:  [38.2423, -122.6267],
+			Redondo_Beach:  [33.8574, -118.3766],
+			Laguna_Niguel:  [33.5275, -117.7050],
+			Sammamish:  [47.6017, -122.0416],
+			Tulare:  [36.1996, -119.3400],
+			Palo_Alto:  [37.3913, -122.1468],
+			Great_Falls:  [47.5022, -111.2995],
+			Dublin:  [37.7161, -121.8963],
+			San_Clemente:  [33.4498, -117.6103],
+			Brentwood:  [37.9355, -121.7191],
+			Carmichael:  [38.6337, -121.3230],
+			Eastvale:  [33.9617, -117.5802],
+			Springfield:  [44.0538, -122.9810],
+			Castro_Valley:  [37.7091, -122.0631],
+			Albany:  [44.6274, -123.0966],
+			Encinitas:  [33.0490, -117.2613],
+			San_Luis_Obispo:  [35.2669, -120.6691],
+			Pico_Rivera:  [33.9902, -118.0888],
+			Casa_Grande:  [32.9068, -111.7624],
+			Montebello:  [34.0155, -118.1108],
+			Millcreek:  [40.6892, -111.8291],
+			National_City:  [32.6654, -117.0983],
+			Lakewood:  [47.1628, -122.5299],
+			Woodland:  [38.6712, -121.7500],
+			La_Habra:  [33.9278, -117.9513],
+			South_Whittier:  [33.9336, -118.0311],
+			Commerce_City:  [39.8642, -104.8434],
+			South_Hill:  [47.1203, -122.2848],
+			Taylorsville:  [40.6570, -111.9493],
+			Monterey_Park:  [34.0497, -118.1326],
+			Gardena:  [33.8944, -118.3073],
+			Cupertino:  [37.3168, -122.0465],
+			La_Mesa:  [32.7703, -117.0204],
+			Carson_City:  [39.1512, -119.7474],
+			Caldwell:  [43.6453, -116.6591],
+			San_Rafael:  [37.9905, -122.5222],
+			Richland:  [46.2824, -119.2938],
+			Santee:  [32.8554, -116.9851],
+			Arcadia:  [34.1342, -118.0373],
+			Walla_Walla:  [46.0670, -118.3366],
+			Parker:  [39.5084, -104.7753],
+			Bozeman:  [45.6832, -111.0552],
+			Huntington_Park:  [33.9800, -118.2167],
+			Shoreline:  [47.7564, -122.3426],
+			Lake_Havasu_City:  [34.5006, -114.3113],
+			Grants_Pass:  [42.4333, -123.3317],
+			Diamond_Bar:  [33.9991, -117.8161],
+			Twin_Falls:  [42.5645, -114.4615],
+			Novato:  [38.0920, -122.5576],
+			Tigard:  [45.4237, -122.7845],
+			Highland:  [34.1113, -117.1654],
+			Fountain_Valley:  [33.7105, -117.9514],
+			Hacienda_Heights:  [33.9970, -117.9728],
+			Cathedral_City:  [33.8363, -116.4642],
+			Delano:  [35.7670, -119.2637],
+			Colton:  [34.0538, -117.3254],
+			Aloha:  [45.4920, -122.8726],
+			Arroyo_Grande:  [35.1241, -120.5845],
+			Rosemead:  [34.0689, -118.0823],
+			Paramount:  [33.8976, -118.1652],
+			Yucaipa:  [34.0336, -117.0429],
+			West_Sacramento:  [38.5557, -121.5504],
+			Lewiston:  [46.3934, -116.9934],
+			Palm_Desert:  [33.7378, -116.3695],
+			Helena:  [46.5965, -112.0202],
+			Lacey:  [47.0460, -122.7934],
+			Maricopa:  [33.0404, -112.0006],
+			Lompoc:  [34.6618, -120.4714],
+			Sierra_Vista:  [31.5630, -110.3153],
+			Glendora:  [34.1449, -117.8468],
+			Burien:  [47.4762, -122.3394],
+			Herriman:  [40.4899, -112.0171],
+			Farmington:  [36.7555, -108.1823],
+			Placentia:  [33.8807, -117.8553],
+			Beaumont:  [33.9076, -116.9766],
+			Queen_Creek:  [33.2386, -111.6343],
+			Aliso_Viejo:  [33.5792, -117.7289],
+			Sahuarita:  [31.9323, -110.9654],
+			Catalina_Foothills:  [32.3041, -110.8835],
+			Rowland_Heights:  [33.9716, -117.8911],
+			Bullhead_City:  [35.1205, -114.5460],
+			Azusa:  [34.1386, -117.9124],
+			Cerritos:  [33.8677, -118.0686],
+			Oroville:  [39.4999, -121.5634],
+			Poway:  [32.9871, -117.0201],
+			San_Jacinto:  [33.7970, -116.9916],
+			Newark:  [37.5204, -122.0312],
+			Reedley:  [36.5987, -119.4473],
+			Marana:  [32.4355, -111.1558],
+			Cypress:  [33.8171, -118.0386],
+			Hollister:  [36.8563, -121.3981],
+			Murray:  [40.6498, -111.8874],
+			Roswell:  [33.3730, -104.5294],
+			Ceres:  [37.5953, -120.9625],
+			Draper:  [40.4957, -111.8605],
+			Palm_Springs:  [33.8017, -116.5382],
+			Antelope:  [38.7153, -121.3610],
+			Lincoln:  [38.8759, -121.2916],
+			La_Mirada:  [33.9025, -118.0093],
+			Littleton:  [39.5915, -105.0188],
+			Rancho_Santa_Margarita:  [33.6318, -117.5989],
+			North_Highlands:  [38.6713, -121.3721],
+			Florin:  [38.4832, -121.4042],
+			Covina:  [34.0903, -117.8817],
+			Bothell:  [47.7735, -122.2044],
+			El_Dorado_Hills:  [38.6750, -121.0490],
+			Kingman:  [35.2170, -114.0105],
+			Roseburg:  [43.2232, -123.3518],
+			Oro_Valley:  [32.4208, -110.9768],
+			Morgan_Hill:  [37.1326, -121.6417],
+			Coachella:  [33.6905, -116.1430],
+			Altadena:  [34.1928, -118.1345],
+			Selma:  [36.5715, -119.6143],
+			Danville:  [37.8121, -121.9698],
+			Riverton:  [40.5177, -111.9635],
+			Prescott:  [34.5850, -112.4475],
+			Eureka:  [40.7942, -124.1568],
+			Bountiful:  [40.8722, -111.8647],
+			Desert_Hot_Springs:  [33.9551, -116.5430],
+			Rohnert_Park:  [38.3480, -122.6964],
+			Brea:  [33.9254, -117.8656],
+			Klamath_Falls:  [42.2191, -121.7754],
+			Whitney:  [36.1005, -115.0380],
+			Centralia:  [46.7226, -122.9696],
+			San_Bruno:  [37.6254, -122.4313],
+			Edmonds:  [47.8115, -122.3533],
+			Apache_Junction:  [33.3985, -111.5351],
+			Oakley:  [37.9929, -121.6951],
+			Puyallup:  [47.1794, -122.2902],
+			Clovis:  [34.4376, -103.1923],
+			Hobbs:  [32.7282, -103.1600],
+			McMinnville:  [45.2110, -123.1918],
+			Bell_Gardens:  [33.9663, -118.1550],
+			Campbell:  [37.2802, -121.9538],
+			La_Quinta:  [33.6536, -116.2785],
+			Brighton:  [39.9716, -104.7964],
+			Rancho_Palos_Verdes:  [33.7554, -118.3637],
+			Los_Banos:  [37.0630, -120.8406],
+			Spanish_Fork:  [40.1101, -111.6406],
+			Montclair:  [34.0714, -117.6980],
+			South_Valley:  [35.0092, -106.6819],
+			Cedar_City:  [37.6834, -113.0956],
+			San_Gabriel:  [34.0948, -118.0990],
+			Calexico:  [32.6849, -115.4944],
+			Lake_Oswego:  [45.4130, -122.7003],
+			Keizer:  [45.0029, -123.0241],
+			La_Puente:  [34.0323, -117.9533],
+			Roy:  [41.1715, -112.0485],
+			Issaquah:  [47.5440, -122.0471],
+			Culver_City:  [34.0058, -118.3968],
+			Kalispell:  [48.2156, -114.3262],
+			Lynnwood:  [47.8284, -122.3033],
+			Moses_Lake:  [47.1280, -119.2761],
+			Sun_City:  [33.6165, -112.2819],
+			Northglenn:  [39.9108, -104.9783],
+			Pacifica:  [37.6112, -122.4781],
+			Eagle_Mountain:  [40.3137, -112.0114],
+			Martinez:  [37.9985, -122.1160],
+			Pleasant_Grove:  [40.3716, -111.7412],
+			La_Presa:  [32.7110, -117.0027],
+			Stanton:  [33.8002, -117.9935],
+			Oregon_City:  [45.3415, -122.5927],
+			Parkland:  [47.1417, -122.4376],
+			Pahrump:  [36.2411, -116.0176],
+			Wildomar:  [33.6173, -117.2582],
+			West_Hollywood:  [34.0882, -118.3718],
+			Moorpark:  [34.2855, -118.8770],
+			Monrovia:  [34.1650, -117.9921],
+			Kearns:  [40.6520, -112.0093],
+			Claremont:  [34.1259, -117.7153],
+			Post_Falls:  [47.7213, -116.9385],
+			French_Valley:  [33.5998, -117.1069],
+			Gillette:  [44.2752, -105.4983],
+			Tooele:  [40.5393, -112.3082],
+			Woodburn:  [45.1473, -122.8603],
+			San_Juan_Capistrano:  [33.5009, -117.6544],
+			Foothill_Farms:  [38.6867, -121.3475],
+			Temple_City:  [34.1021, -118.0579],
+			El_Mirage:  [33.5905, -112.3271],
+			Bell:  [33.9801, -118.1798],
+			Auburn:  [38.8950, -121.0778],
+			Westmont:  [33.9417, -118.3018],
+			Oak_Harbor:  [48.2965, -122.6333],
+			Manhattan_Beach:  [33.8895, -118.3972],
+			Englewood:  [39.6468, -104.9942],
+			Pleasant_Hill:  [37.9540, -122.0759],
+			Orangevale:  [38.6881, -121.2209],
+			San_Luis:  [32.4911, -114.7089],
+			Oildale:  [35.4249, -119.0279],
+			Menlo_Park:  [37.4686, -122.1672],
+			Dakota_Ridge:  [39.6192, -105.1344],
+			Arcata:  [40.8615, -124.0757],
+			Pullman:  [46.7340, -117.1669],
+			Redmond:  [44.2631, -121.1798],
+			Firestone:  [40.1563, -104.9494],
+			Butte:  [45.9020, -112.6571],
+			Grass_Valley:  [39.2237, -121.0521],
+			Midvale:  [40.6148, -111.8928],
+			Adelanto:  [34.5815, -117.4397],
+			Ken_Caryl:  [39.5770, -105.1144],
+			Carlsbad:  [32.4011, -104.2389],
+			University_Place:  [47.2147, -122.5461],
+			Laramie:  [41.3099, -105.6085],
+			Lake_Stevens:  [48.0028, -122.0960],
+			Foster_City:  [37.5553, -122.2659],
+			Cottonwood_Heights:  [40.6137, -111.8144],
+			Sonoma:  [38.2902, -122.4598],
+			Beverly_Hills:  [34.0786, -118.4021],
+			San_Dimas:  [34.1082, -117.8090],
+			Dana_Point:  [33.4733, -117.6968],
+			Alamogordo:  [32.8837, -105.9624],
+			Springville:  [40.1638, -111.6206],
+			Saratoga_Springs:  [40.3449, -111.9152],
+			American_Fork:  [40.3792, -111.7952],
+			Ridgecrest:  [35.6308, -117.6621],
+			Spanaway:  [47.0979, -122.4233],
+			Kaysville:  [41.0290, -111.9456],
+			Lawndale:  [33.8884, -118.3531],
+			Des_Moines:  [47.3915, -122.3157],
+			Coos_Bay:  [43.3789, -124.2330],
+			Clearfield:  [41.1030, -112.0237],
+			La_Verne:  [34.1208, -117.7702],
+			Placerville:  [38.7308, -120.7978],
+			Pueblo_West:  [38.3551, -104.7266],
+			Fallbrook:  [33.3693, -117.2259],
+			Spring_Valley:  [32.7316, -116.9766],
+			Syracuse:  [41.0860, -112.0698],
+			Wheat_Ridge:  [39.7728, -105.1029],
+			Banning:  [33.9460, -116.8992],
+			Laguna_Hills:  [33.5920, -117.6992],
+			Orcutt:  [34.8668, -120.4269],
+			Fair_Oaks:  [38.6504, -121.2497],
+			San_Pablo:  [37.9628, -122.3425],
+			Rexburg:  [43.8224, -111.7920],
+			Nogales:  [31.3624, -110.9336],
+			Goleta:  [34.4360, -119.8596],
+			Burlingame:  [37.5860, -122.3669],
+			Fountain:  [38.6886, -104.6829],
+			Barstow:  [34.8661, -117.0472],
+			Windsor:  [40.4693, -104.9213],
+			Holladay:  [40.6599, -111.8226],
+			Santa_Paula:  [34.3521, -119.0698],
+			Los_Gatos:  [37.2303, -121.9560],
+			South_Lake_Tahoe:  [38.9393, -119.9828],
+			San_Carlos:  [37.4982, -122.2680],
+			Saratoga:  [37.2684, -122.0263],
+			Los_Altos:  [37.3685, -122.0966],
+			Atascadero:  [35.4827, -120.6858],
+			Fortuna_Foothills:  [32.6616, -114.3973],
+			Eagle:  [43.7223, -116.3862]
+		}
+
+	</script>
+   <script src="http://cdn.split.io/sdk/split-10.15.7.min.js"></script>
+
+    <script>
+    	const clientSideKey = "ku60jampgeh7jtrrgrnrm7in1nb9csl7keg8";
+
+    	var factory = splitio({
+    		startup: {
+    			readyTimeout: 5
+    		},
+    		core: {
+    			authorizationKey: clientSideKey,
+    			key: 'dmartin',
+    			trafficType: 'user',
+    			labelsEnabled: true
+    		},
+    		scheduler: {
+            featuresRefreshRate: 1, // 30 sec 
+            segmentsRefreshRate: 60, // 60 sec 
+            metricsRefreshRate: 60, // 60 sec
+            impressionsRefreshRate: 15, // 60 sec
+            eventsPushRate: 60, // 60 sec
+            eventsQueueSize: 500 // 500 items
+        },
+        // storage: {
+        //     type: 'LOCALSTORAGE',
+        //     prefix: 'PLANE'
+        // },
+        debug: false,
+        streamingEnabled: true
+    });
+
+	var mymap = L.map('mapid').setView([39,-114], 5);
+
+	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+		maxZoom: 18,
+		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+		'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+		// id: 'mapbox/streets-v11',
+		id: 'mapbox/dark-v10',
+		tileSize: 512,
+		zoomOffset: -1
+	}).addTo(mymap);
+
+    var client = factory.client('Tokyo');
+
+    client.on(client.Event.SDK_READY, function() {
+    	console.log('DBM factory SDK_READY');
+    	drawMap();
+    });
+
+       client.on(client.Event.SDK_UPDATE, function() {
+    	console.log('DBM factory SDK_UPDATE');
+    	setTimeout(() => {  drawMap(); }, 1500);
+    });
+
+</script>
+
+	<script>
+
+	// SF 37.7562, -122.4430
+	function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+	  var lat2 = 37.7562;
+	  var lon2 = -122.4430;
+	  var R = 6371; // Radius of the earth in km
+	  var dLat = deg2rad(lat2-lat1);  // deg2rad below
+	  var dLon = deg2rad(lon2-lon1); 
+	  var a = 
+	    Math.sin(dLat/2) * Math.sin(dLat/2) +
+	    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+	    Math.sin(dLon/2) * Math.sin(dLon/2)
+	    ; 
+	  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+	  var d = R * c; // Distance in km
+	  return Math.round(d);
+	}
+
+	function deg2rad(deg) {
+	  return deg * (Math.PI/180)
+	}
+
+	function drawMap() {
+	   	const cities = Object.keys(city_coords);
+		cities.forEach((city, index) => {
+			console.log(`${city}: ${city_coords[city]}`);
+			coords = `${city_coords[city]}`.split(',');
+			var lat = coords[0];
+			var long = coords[1];
+			var radius = 7500;
+			var r = getDistanceFromLatLonInKm(lat, long);
+			console.log(r);
+			$.ajax({
+                    url: 
+                    	'https://split-evaluator.darkbloom.org/client/get-treatments-with-config?key=' + city
+                    +   '&split-names=uhd_super_streaming'
+                    +	'&attributes=\{"radius":' + r + '\}',
+                    type: 'GET',
+                    success: function(result) {
+                    	treatment = result.uhd_super_streaming.treatment;
+                    	if(treatment === 'on') {
+                    		L.circle([lat, long], radius, {
+                    			color: 'rgb(0, 124, 156)',
+                    			//fillColor: '#30f',
+                    			//fillOpacity: 0.1
+                    		}).addTo(mymap).bindPopup(city);
+                    	} else if (treatment === 'off') {
+                    		L.circle([lat, long], radius, {
+                    			color: 'rgb(255, 70, 82)',
+                    			//fillColor: '#f03',
+                    			//fillOpacity: 0.1
+                    		}).addTo(mymap).bindPopup(city);
+                    	} else {
+                    		L.circle([lat, long], radius, {
+                    			color: 'black',
+                    			//fillColor: '#fff',
+                    			//fillOpacity: 0.1
+                    		}).addTo(mymap).bindPopup(city);
+                    	}                       
+                    },
+                    error: function(result) {
+                    	console.log("error! " + result);
+                    }
+                });
+		});
+		// setInterval(function() { console.log('redraw'); mymap.invalidateSize();}, 5000);
+	}
+	</script>
+
+</body>
+</html>
+

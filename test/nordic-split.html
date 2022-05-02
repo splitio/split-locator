@@ -1,0 +1,589 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+	<title>UHD Super Streaming - Nordic++ Edition</title>
+
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+	
+</head>
+<style>
+   body {
+ 		background-image: url("http://www.cortazar-split.com/oceana.png");
+   }
+   body {
+        padding: 0;
+        margin: 0;
+    }
+    html, body, #mapid {
+        height: 100%;
+        width: 100%;
+    }
+</style>
+<body>
+	<div id="mapid"/>
+
+	<script>
+
+	var city_coords = {
+Akrahamn: [59.15, 5.10],
+Alesund: [62.28, 6.12],
+Algard: [58.46, 5.53],
+Alsten: [65.58, 12.40],
+Alta: [69.57, 23.10],
+Altaelva: [69.54, 23.17],
+Altafjorden: [7.05, 23.05],
+Amot: [59.57, 9.54],
+Andalsnes: [62.35, 7.43],
+Andenes: [69.19, 16.18],
+Andfjorden: [69.10, 16.20],
+Andoya: [69.10, 15.50],
+Andselv: [69.04, 18.34],
+Arendal: [56.28, 8.46],
+Arnoy: [7.09, 2.40],
+Askim: [59.35, 11.10],
+Askoy: [6.29, 5.10],
+Austra: [65.08, 11.55],
+Austvagoy: [68.20, 14.40],
+Batsfjord: [7.38, 29.39],
+Bergen: [6.20, 5.20],
+Bjornevatn: [69.40, 30.00],
+Bodo: [67.17, 14.24],
+Boknafijorden: [59.14, 5.40],
+Bomlo: [59.37, 5.13],
+Borgefjellet: [65.20, 13.45],
+Bronnoysund: [65.28, 12.14],
+Brumunddal: [6.53, 10.56],
+Bryne: [58.44, 5.38],
+Dombas: [62.04, 9.08],
+Donna: [66.06, 12.30],
+Dovrefjell: [62.15, 9.33],
+Drammen: [59.42, 10.12],
+Drobak: [59.39, 10.39],
+Egersund: [58.26, 6.01],
+Eidsvoll: [6.19, 11.14],
+Elverum: [6.53, 11.34],
+Evje: [58.36, 7.51],
+Farsund: [58.05, 6.55],
+Fauske : [67.17, 15.25],
+Femunden: [62.10, 11.53],
+Finnmark: [69.37, 23.57],
+Finnsnes: [69.14, 18.00],
+Flam: [6.50, 7.07],
+Flekkefjord: [58.18, 6.39],
+Floro: [61.35, 5.01],
+Folgefonni: [6.03, 6.23],
+Forde: [61.27, 5.53],
+Fosna: [63.50, 10.20],
+Fosnavag: [62.22, 5.38],
+Fredrikstad: [59.13, 10.57],
+Frohavet: [64.00, 9.30],
+Frostisen: [68.14, 17.10],
+Froya: [63.43, 8.40],
+Galdhopiggen: [61.38, 8.18],
+Gaula: [63.21, 10.14],
+Gausta: [59.48, 8.40],
+Gjovik: [6.47, 10.43],
+Glomma: [59.12, 10.57],
+Grimstad: [58.20, 8.35],
+Grong: [64.25, 12.08],
+Gudbrandsdalen: [61.33, 10.10],
+Halden: [59.09, 11.23],
+Hallingdalselvi: [6.23, 9.35],
+Hamar: [6.48, 11.07],
+Hammerfest: [7.39, 23.41],
+Hardangerfjorden: [6.05, 6.00],
+Hardangervidda: [6.07, 7.20],
+Hareid: [62.22, 6.01],
+Harstad: [68.48, 16.30],
+Haugesund: [59.23, 5.13],
+Helgeland: [66.07, 13.29],
+Hinnoya: [68.35, 15.50],
+Hitra: [63.30, 8.45],
+Honefoss: [6.10, 10.18],
+Honningsvag: [7.59, 25.59],
+Horten: [59.25, 10.32],
+Hoyanger: [61.13, 6.04],
+Hustadvika: [63.00, 7.00],
+Jevnaker: [6.15, 10.26],
+Jorpeland: [59.03, 6.01],
+Jostedalsbreen: [61.40, 6.59],
+Jotunheimen: [61.35, 8.25],
+Karasjok: [69.27, 25.30],
+Kautokeino: [69.00, 23.04],
+Kinnarodden: [71.08, 27.40],
+Kirkenes: [69.40, 30.05],
+Kongsberg: [59.39, 9.39],
+Kongsvinger: [6.12, 12.02],
+Kopervik: [59.17, 5.17],
+Kragero: [58.52, 9.25],
+Kristiansand: [58.08, 8.01],
+Kristiansund: [63.07, 7.45],
+Kvaenangen: [7.05, 21.15],
+Kvaloy: [69.40, 18.30],
+Laksefjorden: [7.45, 26.50],
+Lakselv: [7.02, 25.00],
+Langoya: [68.45, 14.50],
+Larvik: [59.04, 10.02],
+Liervik: [59.47, 5.28],
+Leka: [65.05, 11.35],
+Levanger: [63.45, 11.19],
+Lillehammer: [61.08, 10.30],
+Lillesand: [58.15, 8.23],
+Limingen: [64.48, 13.35],
+Lindesnes: [57.58, 7.03],
+Lista: [58.07, 6.39],
+Lofoten: [68.30, 14.0],
+Lopphavet: [7.27, 21.15],
+Lyngen: [69.45, 20.30],
+Mageroya : [71.03, 25.40],
+Malangen: [69.24, 18.37],
+Melhus: [63.17, 10.18],
+Mjosa: [6.40, 11.0],
+Molde: [62.45, 7.09],
+Mosjoen : [65.51, 13.12],
+Moskenesoya: [67.58, 13.0],
+Moskenstraumen: [67.47, 12.45],
+Moss: [59.27, 10.40],
+Narbo: [58.40, 5.39],
+Namsen : [64.28, 11.37],
+Namsos: [64.29, 11.30],
+Narvik : [68.28, 17.26],
+Nasa: [66.29, 15.23],
+Nordfjord: [61.55, 5.30],
+Nordkapp: [71.10, 25.50],
+Notodden : [59.35, 9.17],
+Odda: [6.03, 6.35],
+Ofotfjorden: [68.27, 17.0],
+Oppdal : [62.35, 9.41],
+Orkanger: [63.18, 9.51],
+Orkla: [63.18, 9.51],
+Oslo: [59.55, 10.45],
+Oslofjorden: [59.20, 10.35],
+Osoyro: [6.09, 5.30],
+osterdalen: [61.40, 10.50],
+Otra: [58.09, 8.01],
+Porsangen : [7.40, 25.40],
+Porsgrunn: [59.10, 9.40],
+Raufoss: [6.44, 10.37],
+Risor : [58.43, 9.13],
+Rjukan: [59.54, 8.33],
+Romsdalen : [62.25, 7.52],
+Rondane: [61.57, 9.50],
+Roros : [62.35, 11.23],
+Rost : [67.32, 12.0],
+Saktfjekket: [66.40, 15.15],
+Sandefjord: [59.10, 10.15],
+Sandnes: [58.50, 5.45],
+Sauda: [59.40, 6.20],
+Seiland: [7.25, 23.15],
+Senja: [69.25, 17.30],
+Sira: [58.23, 6.34],
+Ski : [59.43, 10.52],
+Skien: [59.12, 9.35],
+Sogne: [58.5, 7.48],
+Soroya: [7.0, 22.30],
+Soroysundet: [7.25, 23.0],
+Sortland: [68.42, 15.25],
+Svartisen: [66.40, 13.50],
+Svolvaer: [68.15, 14.34],
+Telemark: [59.15, 7.40],
+Tonsberg: [59.19, 10.25],
+Trollheimen: [62.46, 9.1],
+Trondheim: [63.36, 10.25],
+Tunnsjoen: [64.45, 13.25],
+Tyrifjorden: [6.2, 10.8],
+Tysfjorden: [68.7, 16.25],
+Vadso: [7.3, 29.50],
+Vaeroy: [67.40, 12.40],
+Valdres: [61.5, 9.5],
+Vanna: [7.6, 19.50],
+Vardo : [7.23, 31.5],
+Vefsna: [65.48, 13.10],
+Vega: [65.40, 11.55],
+Vennesla: [58.15, 7.59],
+Verdalsora: [63.48, 11.30],
+Vesteralen: [68.45, 15.0],
+Vestfjorden: [67.55, 14.0],
+Vestvagoy: [68.18, 13.50],
+Vikna: [64.55, 10.58],
+Volda : [62.9, 6.5],
+Voss: [6.38, 6.26],
+	Sarpsborg: [59.284073,11.109403],
+   	Tromsdalen: [69.650253,18.995115],
+   	Stavanger: [58.969975,5.733107],
+   	Oslo: [59.911491,10.757933],
+   	Trondheim: [63.446827,10.421906],
+   	Sarpsborg: [59.284073,11.1094031],
+ 		Luleå: [65.584816,22.156704],
+  		Trollhättan: [58.283489,12.285821],
+  		Västerås: [59.611366,16.545025],
+  		Umeå: [63.825848,20.263035],
+  		Norrköping: [58.588455,16.188313],
+  		Stockholm: [59.334591,18.063240],
+  		Uddevalla: [58.351307,11.885834],
+  		Västervik: [57.751442,16.628838],
+  		Gothenburg: [57.708870,11.974560],
+  		Visby: [57.634800,18.294840],
+ 		Kajaani: [64.222176,27.727850],
+ 		Naantali: [60.466087,22.025087],
+ 		Oulu: [65.021545,25.469885],
+ 		Espoo: [60.205490,24.655899],
+ 		Turku: [60.454510,22.264824],
+ 		Helsinki: [60.192059,24.945831],
+ 		Hanko: [59.832394,22.970695],
+ 		Tarnow: [50.012100,20.985842],
+Sosnowiec: [50.286263,19.104078],
+Tarnowskie_Gory: [50.435947,18.846025],
+Poznań: [52.406376,16.925167],
+Torun: [53.013790,18.598444],
+Zielona_Gora: [51.935619,15.506186],
+Szczecin: [53.428543,14.552812],
+Rzeszow: [50.041187,21.999121],
+Kraków: [50.049683,19.944544],
+Olsztyn: [53.770226,20.490189],
+Bydgoszcz: [53.123482,18.008438],
+Poznań: [52.409538,16.931992],
+Wrocław: [51.107883,17.038538],
+Rybnik: [50.096798,18.542936],
+Opole: [50.671062,17.926126],
+Elblag: [54.156059,19.404490],
+Łódź: [51.759445,19.457216],
+Starogard_Gdański: [53.966187,18.531017],
+Kolobrzeg: [54.175919,15.583267],
+Lublin: [51.246452,22.568445],
+Chelm: [51.143124,23.471199],
+Warsaw: [52.237049,21.017532],
+Katowice: [50.270908,19.039993],
+Tychy: [50.124981,19.009438],
+Gdańsk: [54.372158,18.638306],
+ 		North_Yorkshire: [53.958332,-1.080278],
+		Worcestershire: [52.192001,-2.220000],
+		Hampshire: [51.063202,-1.308000],
+		South_West_England: [51.209000,-2.647000],
+		West_Yorkshire: [53.680000,-1.490000],
+		Cornwall: [50.259998,-5.051000],
+		North_East: [54.906101,-1.381130],
+		South_Yorkshire: [53.383331,-1.466667],
+		North_West: [53.483002,-2.293100],
+		Wales: [51.882000,-5.269000],
+		Hertfordshire: [51.755001,-0.336000],
+		North_Yorkshire: [54.138000,-1.524000],
+		Hampshire: [50.805832,-1.087222],
+		Scotland: [56.396999,-3.437000],
+		Nottingham: [52.950001,-1.150000],
+		Northern_Ireland: [54.175999,-6.349000],
+		Newcastle_Upon_Tyne: [54.966667,-1.600000],
+		Merseyside: [53.400002,-2.983333],
+		Lincolnshire: [53.234444,-0.538611],
+		Staffordshire: [52.683498,-1.826530],
+		the_East_Midlands: [52.633331,-1.133333],
+		Lancashire: [54.047001,-2.801000],
+		Herefordshire: [52.056499,-2.716000],
+		Gloucestershire: [51.864445,-2.244444],
+		Glasgow: [55.860916,-4.251433],
+		Exeter: [50.716667,-3.533333],
+		Cambridgeshire: [52.398056,0.262222],
+		Durham: [54.776100,-1.573300],
+		Scotland: [56.462002,-2.970700],
+		Northern_Ireland: [54.995800,-7.307400],
+		Derbyshire: [52.916668,-1.466667],
+		West_Midlands: [52.408054,-1.510556],
+		West_Sussex: [50.836498,-0.779200],
+		Chesire: [53.189999,-2.890000],
+		Essex: [51.736099,0.479800],
+		North_West: [54.890999,-2.944000],
+		Kent: [51.279999,1.080000],
+		Cambridgeshire: [52.205276,0.119167],
+		East_Sussex: [50.827778,-0.152778],
+		West_Yorkshire: [53.799999,-1.750000],
+		Somerset: [51.380001,-2.360000],
+		Cambridgeshire: [52.573921,-0.250830],
+		Scotland: [57.653484,-3.335724],
+		Staffordshire: [53.002666,-2.179404],
+		Birmingham: [52.412811,-1.778197],
+		Wales: [51.481583,-3.179090],
+		East_Sussex: [50.768036,0.290472],
+		Oxford: [51.752022,-1.257677],
+		London: [51.509865,-0.118092],
+		Swindon: [51.568535,-1.772232],
+		Kent: [51.441883,0.370759],
+		Northamptonshire: [52.240479,-0.902656],
+		Warwickshire: [52.370876,-1.265032],
+		West_Midlands: [52.570385,-1.824042],
+		Essex: [51.772938,0.102310],
+		Aberdeen: [57.149651,-2.099075],
+		Swansea: [51.621441,-3.943646],
+		Derbyshire: [53.235046,-1.421629],
+		Ireland: [54.509720,-6.037400],
+		Derry: [55.006763,-7.318268],
+		Wiltshire: [51.068787,-1.794472],
+		Manchester: [53.483959,-2.244644],
+		Bristol: [51.454514,-2.587910],
+		West_Midlands: [52.591370,-2.110748],
+		Lancashire: [53.765762,-2.692337],
+		South_Ayrshire: [55.458565,-4.629179],
+		East_Sussex: [50.854259,0.573453],
+		Bedford: [52.136436,-0.460739],
+		Essex: [51.572376,0.470009],
+		Wiltshire: [51.458057,-2.116074],
+		West_Midlands: [52.489471,-1.898575],
+		Kent: [51.081398,1.169456],
+		Scotland: [55.953251,-3.188267],
+		Southampton: [50.909698,-1.404351],
+		Northern_Ireland: [54.607868,-5.926437],
+		East_Sussex: [50.967941,0.085831],
+		West_Sussex: [50.825024,-0.383835],
+		West_Yorkshire: [53.801277,-1.548567],
+		Cumbria: [54.328506,-2.743870],
+		Hull: [53.767750,-0.335827],
+		Plymouth: [50.376289,-4.143841],
+		Suffolk: [52.080875,0.444517],
+		Warwickshire: [52.328415,-1.377561],
+		Inverness: [57.477772,-4.224721],
+		Waterford: [52.2500, -7.1250],
+		Cork: [51.8985, -8.4756],
+		Limerick: [52.6638, -8.6267],
+		Galway: [53.2707, -9.0568],
+		Dublin: [53.3498, -6.26],
+		Inisheer: [53.0573, -9.5318],
+Stockholm: [59.3294, 18.0686],
+Gothenburg: [57.6717, 11.9810],
+Malmö: [55.5932, 13.0214],
+Uppsala: [59.8498, 17.6389],
+Uppsala: [59.8601, 17.6400],
+Västerås: [59.6173, 16.5422],
+Örebro: [59.2669, 15.1965],
+Linköping: [58.4094, 15.6257],
+Helsingborg: [56.0424, 12.7210],
+Jönköping: [57.7713, 14.1650],
+Umeå: [63.8285, 20.2706],
+Norrköping: [58.5954, 16.1787],
+Karlstad: [59.3671, 13.4999],
+Sundsvall: [62.4001, 17.3167],
+Gävle: [60.6670, 17.1666],
+Borås: [57.7304, 12.9200],
+Växjö: [56.8837, 14.8167],
+Halmstad: [56.6718, 12.8556],
+Luleå: [65.5838, 22.1915],
+Östersund: [63.1833, 14.6500],
+Trollhättan: [58.2671, 12.3000],
+Kalmar: [56.6694, 16.3218],
+Borlänge: [60.4833, 15.4167],
+Mölndal: [57.6542, 12.0139],
+Falun: [60.6130, 15.6470],
+Karlskrona: [56.2030, 15.2960],
+Nyköping: [58.7582, 17.0185],
+Kristianstad: [56.0337, 14.1333],
+Skellefteå: [64.7721, 20.9500],
+Örnsköldsvik: [63.3180, 18.7167],
+Visby: [57.6290, 18.3071],
+Huskvarna: [57.7919, 14.2756],
+Vänersborg: [58.3630, 12.3300],
+Härnösand: [62.6323, 17.9379],
+Kiruna: [67.8500, 20.2166],
+Höganäs: [56.1960, 12.5769],
+Kinna: [57.4954, 12.6805],
+Mariestad: [58.7050, 13.8280],
+Mjölby: [58.3321, 15.1312],
+Bollnäs: [61.3520, 16.3666],
+Mora: [61.0096, 14.5635],
+Ulricehamn: [57.7917, 13.4186],
+Tibro: [58.4190, 14.1580],
+Habo: [57.9066, 14.0856],
+Tidaholm: [58.1794, 13.9599],
+Strömstad: [58.9441, 11.1864],
+Haparanda: [65.8342, 24.1170],
+Hjo: [58.3044, 14.2786],
+Kungsör: [59.4227, 16.1059],
+Vårgårda: [58.0341, 12.8083],
+Hjärup: [55.6707, 13.1410],
+Töreboda: [58.7020, 14.1184],
+Herrljunga: [58.0752, 13.0238],
+Kisa: [57.9857, 15.6305],
+Karlsborg: [58.5268, 14.5231],
+Svenljunga: [57.4960, 13.1102],
+Tranemo: [57.4838, 13.3587],
+Åre: [63.3938, 12.9351],
+Glumslöv: [55.9425, 12.8079],
+Övertorneå: [66.3881, 23.6436],
+Gullspång: [58.9862, 14.0956],
+Hortlax: [65.2819, 21.4054],
+Sparreholm: [59.0736, 16.8234],
+Grangärde: [60.2667, 14.9833],
+Sundbyberg: [59.3667, 17.9667],
+Solna: [59.3667, 18.0167],
+Lund: [55.7000, 13.1833],
+Trelleborg: [55.3667, 13.1667],
+Kungsbacka: [57.4833, 12.0667],
+Lidingö: [59.3667, 18.1333],
+Jakobsberg: [59.4167, 17.8333],
+
+Helsinki: [60.1756, 24.9342],
+Espoo: [60.2100, 24.6600],
+Tampere: [61.4981, 23.7608],
+Vantaa: [60.3000, 25.0333],
+Oulu: [65.0142, 25.4719],
+Turku: [60.4517, 22.2700],
+Jyväskylä: [62.2333, 25.7333],
+Lahti: [60.9833, 25.6556],
+Kuopio: [62.8925, 27.6783],
+Kouvola: [60.8681, 26.7042],
+Pori: [61.4847, 21.7972],
+Joensuu: [62.6000, 29.7639],
+Lappeenranta: [61.0583, 28.1861],
+Hämeenlinna: [61.0000, 24.4414],
+Vaasa: [63.1000, 21.6167],
+Rovaniemi: [66.5014, 25.7347],
+Seinäjoki: [62.7903, 22.8403],
+Mikkeli: [61.6875, 27.2736],
+Kotka: [60.4667, 26.9458],
+Salo: [60.3831, 23.1331],
+Porvoo: [60.3931, 25.6639],
+Kokkola: [63.8333, 23.1333],
+Lohja: [60.2500, 24.0667],
+Hyvinkää: [60.6306, 24.8597],
+Nurmijärvi: [60.4667, 24.8083],
+Järvenpää: [60.4722, 25.0889],
+Rauma: [61.1167, 21.5000],
+Kajaani: [64.2250, 27.7333],
+Savonlinna: [61.8667, 28.8831],
+Kerava: [60.4028, 25.1000],
+Nokia: [61.4778, 23.5097],
+Ylöjärvi: [61.5500, 23.5833],
+Kaarina: [60.4069, 22.3722],
+Riihimäki: [60.7333, 24.7667],
+Imatra: [61.1931, 28.7764],
+Sastamala: [61.3417, 22.9083],
+Raahe: [64.6847, 24.4792],
+Raisio: [60.4861, 22.1694],
+Iisalmi: [63.5611, 27.1889],
+Tornio: [65.8486, 24.1472],
+Kemi: [65.7361, 24.5639],
+Kurikka: [62.6167, 22.4000],
+Jämsä: [61.8639, 25.1903],
+Valkeakoski: [61.2667, 24.0306],
+Varkaus: [62.3167, 27.8833],
+Hamina: [60.5697, 27.1981],
+Äänekoski: [62.6042, 25.7264],
+Heinola: [61.2028, 26.0319],
+Jakobstad: [63.6667, 22.7000],
+Naantali: [60.4681, 22.0264],
+Pieksämäki: [62.3000, 27.1583],
+Forssa: [60.8167, 23.6167]
+	}
+
+	</script>
+   <script src="http://cdn.split.io/sdk/split-10.15.7.min.js"></script>
+
+    <script>
+    	const clientSideKey = "ku60jampgeh7jtrrgrnrm7in1nb9csl7keg8";
+
+    	var factory = splitio({
+    		startup: {
+    			readyTimeout: 5
+    		},
+    		core: {
+    			authorizationKey: clientSideKey,
+    			key: 'dmartin',
+    			trafficType: 'user',
+    			labelsEnabled: true
+    		},
+    		scheduler: {
+            featuresRefreshRate: 1, // 30 sec 
+            segmentsRefreshRate: 60, // 60 sec 
+            metricsRefreshRate: 60, // 60 sec
+            impressionsRefreshRate: 15, // 60 sec
+            eventsPushRate: 60, // 60 sec
+            eventsQueueSize: 500 // 500 items
+        },
+        // storage: {
+        //     type: 'LOCALSTORAGE',
+        //     prefix: 'PLANE'
+        // },
+        debug: false,
+        streamingEnabled: true
+    });
+
+	// var mymap = L.map('mapid').setView([37.6897,136.6922], 6);
+	var mymap = L.map('mapid').setView([53.3781, 12.4360], 4);
+
+	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+		maxZoom: 18,
+		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+		'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+		id: 'mapbox/streets-v11',
+		tileSize: 512,
+		zoomOffset: -1
+	}).addTo(mymap);
+
+    var client = factory.client('Helsinki');
+
+    client.on(client.Event.SDK_READY, function() {
+    	console.log('DBM factory SDK_READY');
+    	drawMap();
+    });
+
+       client.on(client.Event.SDK_UPDATE, function() {
+    	console.log('DBM factory SDK_UPDATE');
+    	setTimeout(() => {  drawMap(); }, 1500);
+    });
+
+</script>
+
+	<script>
+	function drawMap() {
+
+		const cities = Object.keys(city_coords);
+
+		cities.forEach((city, index) => {
+			// console.log(`${city}: ${city_coords[city]}`);
+			coords = `${city_coords[city]}`.split(',');
+			var lat = coords[0];
+			var long = coords[1];
+			var radius = 15000;
+			$.ajax({
+                    url: 'https://split-evaluator.darkbloom.org/client/get-treatments-with-config?key=' + city +'&split-names=uhd_super_streaming',
+                    type: 'GET',
+                    success: function(result) {
+                    	treatment = result.uhd_super_streaming.treatment;
+                    	console.log(city + ': ' + treatment + ' lat: ' + lat + ' long: ' + long);
+                    	if(treatment === 'on') {
+                    		L.circle([lat, long], radius, {
+                    			color: 'rgb(0, 124, 156)',
+                    			//fillColor: '#30f',
+                    			//fillOpacity: 0.1
+                    		}).addTo(mymap).bindPopup(city);
+                    	} else if (treatment === 'off') {
+                    		L.circle([lat, long], radius, {
+                    			color: 'rgb(255, 70, 82)',
+                    			//fillColor: '#f03',
+                    			//fillOpacity: 0.1
+                    		}).addTo(mymap).bindPopup(city);
+                    	} else {
+                    		L.circle([lat, long], radius, {
+                    			color: 'black',
+                    			//fillColor: '#fff',
+                    			//fillOpacity: 0.1
+                    		}).addTo(mymap).bindPopup(city);
+                    	}                       
+                    },
+                    error: function(result) {
+                    	console.log("error! " + result);
+                    }
+                });
+		});
+	}
+	</script>
+
+</body>
+</html>
+

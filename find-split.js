@@ -5,6 +5,8 @@ import * as fs from 'fs';
 
 async function run() {
 	try {
+		let fileCount = 0;
+
 		const srcDir = core.getInput('srcDir');
 
 		const splitMatch = 'getTreatment';
@@ -17,6 +19,7 @@ async function run() {
 		const splits = [];
 		for await (const file of globber.globGenerator()) {
 	  		console.log(file)
+	  		fileCount++;
 
 	  		let lineNo = 0;
 			fs.readFile(file, (err, fi) => {
@@ -62,7 +65,7 @@ async function run() {
 			core.setOutput('splits', s);
 		} else {
 			console.log('no splits found');
-			core.setOutput('splits', 'no splits found');
+			core.setOutput('splits', fileCount + ' files found; no splits found');
 		}
 	} catch (error) {
 		core.setFailed(error.message);

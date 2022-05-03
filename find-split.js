@@ -72,6 +72,10 @@ async function run() {
 
 			for(const s of splits) {
 				console.log(s);
+				if(s.seen) {
+					console.log('aggregated.. skipping...');
+					continue;
+				}
 				const getSplitUrl = 'https://api.split.io/internal/api/v2/splits/ws/'+ wsId + '/' + s.name;
 
 				await axios.get(getSplitUrl, { headers: 

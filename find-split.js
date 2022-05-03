@@ -8,7 +8,8 @@ async function run() {
 	try {
 		let fileCount = 0;
 
-		const srcDir = core.getInput('srcDir');
+		const adminApiToken = core.getInput('adminApiToken');
+		const wsId = core.getInput('wsId');
 
 		const splitMatch = 'getTreatment';
 		const regex = new RegExp(splitMatch);
@@ -69,10 +70,8 @@ async function run() {
 
 			splits.sort( compare );	
 
-			const adminApiToken = 'cm91tdg2r3pu3s3gbbe04ba06pmus66bpngq';
 			for(const s of splits) {
 				console.log(s);
-				const wsId = '194c1c50-3e22-11ea-ba75-12f2f63694e5';
 				const getSplitUrl = 'https://api.split.io/internal/api/v2/splits/ws/'+ wsId + '/' + s.name;
 
 				await axios.get(getSplitUrl, { headers: 

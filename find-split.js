@@ -113,6 +113,7 @@ async function run() {
 				})
 				.catch(function(err) {
 				  console.log('split not found: ' + s.name);
+				  console.log('err.response.status: ' + err.response.status);
 				  // console.log(err);
 				});
 

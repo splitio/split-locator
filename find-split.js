@@ -77,7 +77,7 @@ async function run() {
 				await axios.get(getSplitUrl, { headers: 
 					{'Authorization': 'Bearer ' + adminApiToken}})
 				.then(async function(response) {
-					await wait(500);
+					await wait(750);
 
 					let oldDesc = response.data.description;
 					console.log('oldDesc: ' + oldDesc);

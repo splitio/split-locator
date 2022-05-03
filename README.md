@@ -12,7 +12,7 @@ Workspace ID, which can usually be copied from the URL when viewing a split in y
 The filename, and line number of each reference to a split is inserted in the Split's description in the Split console.
 
 ## Example Usage
-
+```
 name: split-locator
 
 on: [push]
@@ -33,3 +33,4 @@ jobs:
           adminApiToken: '<your split admin api key>'
           wsId: '<your split workspace id>'
           
+```

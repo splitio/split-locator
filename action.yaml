@@ -1,6 +1,5 @@
 name: 'Split Locator'
 description: 'Locate Split feature flags by name, filename, and line number in your repository'
-inputs:
 outputs:
   splits: 
     description: 'splits found'

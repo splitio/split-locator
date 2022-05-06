@@ -72,7 +72,7 @@ async function run() {
 
 			const splitsFound = new Map();
 
-			for (const location of locations) {
+			for (const location of splits) {
 				let locationsSeen = splitsFound.get(location.name);
 				if(!locationsSeen) {
 					locationsSeen = new Set();

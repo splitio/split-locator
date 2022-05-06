@@ -1,12 +1,6 @@
 name: 'Split Locator'
 description: 'Locate Split feature flags by name, filename, and line number in your repository'
 inputs:
-  adminApiToken:
-    description: 'admin api token from Split console (Admin Settings)'
-    required: true
-  wsId: 
-    description: 'workspace that includes splits of interest'
-    required: true
 outputs:
   splits: 
     description: 'splits found'

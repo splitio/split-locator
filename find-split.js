@@ -81,6 +81,7 @@ async function run() {
 			}
 
 			let results = '<html>\n<head><title>Split Locations</title></head>\n<body bgcolor="white">\n'
+			results += '<!-- timestamp: ' + new Date().getTime() + '-->\n';
 			results += '<table border="1">\n';
 
 			splitsFound.forEach((value, key, map) => {

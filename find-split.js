@@ -70,61 +70,36 @@ async function run() {
 
 			splits.sort( compare );	
 
-			for(const s of splits) {
-				console.log(s);
-				if(s.seen) {
-					console.log('aggregated.. skipping...');
-					continue;
+			const splitsFound = new Map();
+
+			for (const location of locations) {
+				let locationsSeen = splitsFound.get(location.name);
+				if(!locationsSeen) {
+					locationsSeen = new Set();
+					splitsFound.set(location.name, locationsSeen);
 				}
-				const getSplitUrl = 'https://api.split.io/internal/api/v2/splits/ws/'+ wsId + '/' + s.name;
-
-				await axios.get(getSplitUrl, { headers: 
-					{'Authorization': 'Bearer ' + adminApiToken}})
-				.then(async function(response) {
-					await wait(750);
-
-					let oldDesc = response.data.description;
-					console.log('oldDesc: ' + oldDesc);
-					const descIndex = oldDesc.indexOf('{"name":');
-					if(descIndex != -1) {
-						// ASSUMES the location info is appended
-						// Drops any suffix
-						oldDesc = oldDesc.substring(0, descIndex);
-					}
-					console.log('oldDesc minus desc: ' + oldDesc);
-
-					// create new full location description
-					const newDesc = JSON.stringify(s);
-					// const newDesc = '';
-
-					console.log('newDesc: ' + newDesc);
-
-					// update split with new full location description
-					const updateDescriptionUrl = 'https://api.split.io/internal/api/v2/splits/ws/' + wsId + '/' + s.name + '/updateDescription';
-					await axios.put(updateDescriptionUrl, newDesc, 
-						{ headers: 
-							{'Authorization': 'Bearer ' + adminApiToken,
-							 'Content-Type': 'application/json'
-					}})
-					.then(function (response) {
-						console.log('updated!');
-						console.log('response.data');
-					})
-					.catch(function(err) {
-						console.log('FAILED to update');
-						console.log(err);
-					});
-				})
-				.catch(function(err) {
-				  console.log('split not found: ' + s.name);
-				  console.log('err.response.status: ' + err.response.status);
-				  // console.log(err);
-				});
-
+				for(const reference of location.locations) {
+					locationsSeen.add(reference);
+				}
 			}
-			core.setOutput('splits', splits);
 
+			let results = '<html>\n<head><title>Split Locations</title></head>\n<body bgcolor="white">\n'
+			results += '<table border="1">\n';
 
+			splitsFound.forEach((value, key, map) => {
+				results += '  <tr><td>' + key + '<td>';
+				results += '<td>'
+				for(const reference of value) {
+					results += reference + '</br>';
+				}
+				results += '</td></tr>\n';
+			});
+			results += '</table>\n</body>\n</html>'
+			fs.writeFile('locations.html', results, function(err) {
+				if(err) return console.log(err);
+			});
+
+			core.setOutput('splits', results);
 		} else {
 			console.log('no splits found');
 			core.setOutput('splits', fileCount + ' files found; no splits found. cwd: ' + process.cwd());

@@ -8,9 +8,6 @@ async function run() {
 	try {
 		let fileCount = 0;
 
-		const adminApiToken = core.getInput('adminApiToken');
-		const wsId = core.getInput('wsId');
-
 		const splitMatch = 'getTreatment';
 		const regex = new RegExp(splitMatch);
 

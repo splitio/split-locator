@@ -22,6 +22,7 @@ async function run() {
 			const splits = [];
 			for await (const file of globber.globGenerator()) {
 		  		fileCount++;
+		  		console.log(file);
 		  		searchFile(splits, file, pattern.regexp);
 			}
 			if(splits.length > 0) {
@@ -119,10 +120,8 @@ function createResults(splitsFound) {
 		results += '</td></tr>\n';
 	});
 	results += '</table>\n</body>\n</html>'
-	fs.writeFile('locations.html', results, function(err) {
-		if(err) return console.log(err);
-	});
 
+	return results;
 }
 
 function wait(ms) {

@@ -25,7 +25,7 @@ async function run() {
 		  		searchFile(file, pattern.regexp);
 			}
 			if(splits.length > 0) {
-				const splitsFound = sortAndAggregate(splits, splitsFound);
+				const splitsFound = sortAndAggregate(splits);
 				const results = createResults();
 
 				core.setOutput('splits', results);
@@ -77,7 +77,7 @@ function searchFile(file, regexp) {
 	});	
 }
 
-function sortAndAggregate(splits, splitsFound) {
+function sortAndAggregate(splits) {
 	function compare( a, b ) {
 		if ( a.name < b.name ){
 			return -1;

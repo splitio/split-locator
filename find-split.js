@@ -6,8 +6,14 @@ import {default as axios} from 'axios';
 
 let patterns = [
 	{
-		extension: ['**/*.html', '**/*.js'],
-		regexp: 'getTreatment.*\((.*)\)'
+		extension: ['**/*.html', '**/*.js', '**/*.java'],
+		regexp: 'getTreatment.*\((.*)\)',
+		group: 1
+	},
+	{
+		extension: ['**/*.js', '**/*.java'],
+		regexp: 'getTreatment.*\(["\'].*["\']\),((.|\n)*)["\'](.*)[\'"]',
+		group: 1
 	}
 ]
 
@@ -15,6 +21,7 @@ async function run() {
 	try {
 		let fileCount = 0;
 
+		let splitsFound = new Map();
 		for(const pattern of patterns) {
 			const patterns = pattern.extension;
 			const globber = await glob.create(patterns.join('\n'))
@@ -23,25 +30,25 @@ async function run() {
 			for await (const file of globber.globGenerator()) {
 		  		fileCount++;
 		  		console.log(file);
-		  		searchFile(splits, file, pattern.regexp);
+		  		searchFile(splits, file, pattern.regexp, pattern.group);
 			}
 			if(splits.length > 0) {
-				const splitsFound = sortAndAggregate(splits);
-				const results = createResults(splitsFound);
-
-				core.setOutput('splits', results);
+				const found = sortAndAggregate(splits);
+				found.forEach((value, key) => splitsFound.set(key, value));
 			} else {
 				console.log('no splits found');
 				core.setOutput('splits', fileCount + ' files found; no splits found. cwd: ' + process.cwd());
 			}
 		}
+		const results = createResults(splitsFound);
+		core.setOutput('splits', results);
 	} catch (error) {
 		console.log(error);
 		core.setFailed(error.message);
 	}
 }
 
-function searchFile(splits, file, regexp) {
+function searchFile(splits, file, regexp, group) {
 	let lineNo = 0;
 	fs.readFile(file, (err, fi) => {
 		if (err) throw err;
@@ -58,7 +65,7 @@ function searchFile(splits, file, regexp) {
 				let found2 = splitNameFilter.exec(found);
 				if(found2) {
 					const s = {
-						name: found2[1],
+						name: found2[group],
 						locations: [],
 						seen: false
 					}

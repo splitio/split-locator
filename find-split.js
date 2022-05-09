@@ -26,7 +26,7 @@ async function run() {
 			}
 			if(splits.length > 0) {
 				const splitsFound = sortAndAggregate(splits);
-				const results = createResults();
+				const results = createResults(splitsFound);
 
 				core.setOutput('splits', results);
 			} else {

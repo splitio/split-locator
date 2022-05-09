@@ -48,7 +48,7 @@ function searchFile(file, regexp) {
 		// no support for windows line endings
 		fi.toString().split('\n').forEach(line => {
 			lineNo++;
-			if(regex.test(line)) {
+			if(regexp.test(line)) {
 				const splitNameMatch = new RegExp(regexp);
 				let found = splitNameMatch.exec(line);
 

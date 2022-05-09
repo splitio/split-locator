@@ -21,7 +21,7 @@ public class MultivariantName {
 		split.blockUntilReady();
 
 		SplitResult result = split.getTreatmentWithConfig("user_id", // unique identifier for your user
-				"on_another_line");
+				"z_on_another_line");
 
 		JSONObject configObj = new JSONObject(result.config());
 		JSONArray namesArray = configObj.getJSONArray("names");

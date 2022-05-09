@@ -6,14 +6,14 @@ import {default as axios} from 'axios';
 
 let patterns = [
 	{
-		extension: ['**/*.html', '**/*.js', '**/*.java'],
-		regexp: 'getTreatment.*\((.*)\)',
-		group: 1
+		extension: ['**/*.html'],
+		regexp: 'getTreatment.*\(["\'](.*)["\'].*\)',
+		group: 2
 	},
 	{
-		extension: ['**/*.js', '**/*.java'],
-		regexp: 'getTreatment.*\(["\'].*["\']\),((.|\n)*)["\'](.*)[\'"]',
-		group: 1
+		extension: ['**/*.java'],
+		regexp: 'getTreatment.*\(["\']([a-zA-Z0-9][-_\.a-zA-Z0-9]+)["\'],((.|\n)*)["\']([a-zA-Z0-9][-_\.a-zA-Z0-9]+)[\'"])',
+		group: 5
 	}
 ]
 
@@ -22,14 +22,14 @@ async function run() {
 		let fileCount = 0;
 
 		let splitsFound = new Map();
+		let splits = [];
 		for(const pattern of patterns) {
 			const patterns = pattern.extension;
 			const globber = await glob.create(patterns.join('\n'))
 
-			const splits = [];
 			for await (const file of globber.globGenerator()) {
 		  		fileCount++;
-		  		console.log(file);
+		  		// console.log(file);
 		  		searchFile(splits, file, pattern.regexp, pattern.group);
 			}
 			if(splits.length > 0) {
@@ -48,37 +48,68 @@ async function run() {
 	}
 }
 
+//const isItASplitName = new RegExp('[az][-_azAZ09]+');
+const isItASplitName = new RegExp('[a-z][-+a-zA-Z0-9]+');
 function searchFile(splits, file, regexp, group) {
+	console.log('searchFile: ' + file);
+
 	let lineNo = 0;
 	fs.readFile(file, (err, fi) => {
 		if (err) throw err;
 
+		let lastLine = '';
+		let thisLine = '';
 		// no support for windows line endings
 		fi.toString().split('\n').forEach(line => {
 			lineNo++;
-			const splitNameMatch = new RegExp(regexp);
-			if(splitNameMatch.test(line)) {
-				let found = splitNameMatch.exec(line);
+			lastLine = thisLine;
+			thisLine = line;
+			let twoLines = lastLine + '\n' + thisLine;
 
+			const splitNameMatch = new RegExp(regexp);
+			// console.log(lineNo + ': ' + twoLines);
+			if(splitNameMatch.test(twoLines)) {
+				// let found = splitNameMatch.exec(twoLines);
+				// console.log('regexp: ' + regexp);
+				let found = twoLines.match(regexp);
+				// console.log('found in file: ' + file);
+				// console.log(found);
+				// console.log('found[5]: ' + found[5]);
 				// extract from single or double quotes
-				const splitNameFilter = new RegExp('[\'\"]+(.*)[\'\"]')
-				let found2 = splitNameFilter.exec(found);
-				if(found2) {
+				// const splitNameFilter = new RegExp('.*[\'\"]+(.*)[\'\"].*')
+				const splitName = found[group];
+				// console.log('splitName: ' + splitName);
+				const isIt = isItASplitName.test(splitName);
+				// console.log('is it a split name? ' + splitName + ' ' + isIt);
+				if(isIt) {
 					const s = {
-						name: found2[group],
+						name: splitName,
 						locations: [],
 						seen: false
 					}
-					s.locations.push(file + ':' + lineNo);
-					for(const t of splits) {
-						if(s.name === t.name && !t.seen) {
-							for(const loc of t.locations) {
-								s.locations.push(loc);
+					let matched = false;
+					const theHit = file + ':' + lineNo;
+					for(const v of splits) {
+						for(const w of v.locations) {
+							if(w === theHit) {
+								matched = true;
+								console.log('skipping already matched: ' + theHit);
 							}
-							t.seen = true;
 						}
 					}
-					splits.push(s);
+					if(!matched) {
+						s.locations.push(theHit);
+						for(const t of splits) {
+							if(s.name === t.name && !t.seen) {
+								for(const loc of t.locations) {
+									s.locations.push(loc);
+								}
+								t.seen = true;
+							}
+						}
+						// console.log(s);
+						splits.push(s);
+					}
 				}
 			}
 		});

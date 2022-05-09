@@ -22,7 +22,7 @@ async function run() {
 			const splits = [];
 			for await (const file of globber.globGenerator()) {
 		  		fileCount++;
-		  		searchFile(file, pattern.regexp);
+		  		searchFile(splits, file, pattern.regexp);
 			}
 			if(splits.length > 0) {
 				const splitsFound = sortAndAggregate(splits);
@@ -40,7 +40,7 @@ async function run() {
 	}
 }
 
-function searchFile(file, regexp) {
+function searchFile(splits, file, regexp) {
 	let lineNo = 0;
 	fs.readFile(file, (err, fi) => {
 		if (err) throw err;

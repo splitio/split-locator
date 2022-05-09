@@ -48,8 +48,8 @@ function searchFile(file, regexp) {
 		// no support for windows line endings
 		fi.toString().split('\n').forEach(line => {
 			lineNo++;
-			if(regexp.test(line)) {
-				const splitNameMatch = new RegExp(regexp);
+			const splitNameMatch = new RegExp(regexp);
+			if(splitNameMatch.test(line)) {
 				let found = splitNameMatch.exec(line);
 
 				// extract from single or double quotes

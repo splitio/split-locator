@@ -8,12 +8,14 @@ let patterns = [
 	{
 		extension: ['**/*.html'],
 		regexp: 'getTreatment.*\(["\'](.*)["\'].*\)',
-		group: 2
+		group: 2,
+		multiline: false
 	},
 	{
 		extension: ['**/*.java'],
 		regexp: 'getTreatment.*\(["\']([a-zA-Z0-9][-_\.a-zA-Z0-9]+)["\'],((.|\n)*)["\']([a-zA-Z0-9][-_\.a-zA-Z0-9]+)[\'"])',
-		group: 5
+		group: 5,
+		multiline: true
 	}
 ]
 
@@ -30,7 +32,7 @@ async function run() {
 			for await (const file of globber.globGenerator()) {
 		  		fileCount++;
 		  		// console.log(file);
-		  		searchFile(splits, file, pattern.regexp, pattern.group);
+		  		searchFile(splits, file, pattern.regexp, pattern.group, pattern.multiline);
 			}
 			if(splits.length > 0) {
 				const found = sortAndAggregate(splits);
@@ -50,7 +52,7 @@ async function run() {
 
 //const isItASplitName = new RegExp('[az][-_azAZ09]+');
 const isItASplitName = new RegExp('[a-z][-+a-zA-Z0-9]+');
-function searchFile(splits, file, regexp, group) {
+function searchFile(splits, file, regexp, group, multiline) {
 	console.log('searchFile: ' + file);
 
 	let lineNo = 0;
@@ -65,7 +67,9 @@ function searchFile(splits, file, regexp, group) {
 			lastLine = thisLine;
 			thisLine = line;
 			let twoLines = lastLine + '\n' + thisLine;
-
+			if(!multiline) {
+				twoLines = thisLine;
+			}
 			const splitNameMatch = new RegExp(regexp);
 			// console.log(lineNo + ': ' + twoLines);
 			if(splitNameMatch.test(twoLines)) {

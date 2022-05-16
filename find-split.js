@@ -9,13 +9,19 @@ let patterns = [
 		extension: ['**/*.html'],
 		regexp: 'getTreatment.*\(["\'](.*)["\'].*\)',
 		group: 2,
-		multiline: false
+		multiline: 1
 	},
 	{
 		extension: ['**/*.java'],
 		regexp: 'getTreatment.*\(["\']([a-zA-Z0-9][-_\.a-zA-Z0-9]+)["\'],((.|\n)*)["\']([a-zA-Z0-9][-_\.a-zA-Z0-9]+)[\'"])',
 		group: 5,
-		multiline: true
+		multiline: 2
+	},
+	{
+		extension: ['**/*.go'],
+		regexp: '(Treatment.*)[(]+(\n|.)(.*)(\n|.)["\']*(.*)["\']*,',
+		group: 5,
+		multiline: 3
 	}
 ]
 
@@ -50,41 +56,31 @@ async function run() {
 	}
 }
 
-//const isItASplitName = new RegExp('[az][-_azAZ09]+');
 const isItASplitName = new RegExp('[a-z][-+a-zA-Z0-9]+');
 function searchFile(splits, file, regexp, group, multiline) {
 	console.log('searchFile: ' + file);
 
+	let buffer = [];
 	let lineNo = 0;
 	fs.readFile(file, (err, fi) => {
 		if (err) throw err;
 
-		let lastLine = '';
-		let thisLine = '';
-		// no support for windows line endings
+		// FIXME no support for windows line endings
 		fi.toString().split('\n').forEach(line => {
 			lineNo++;
-			lastLine = thisLine;
-			thisLine = line;
-			let twoLines = lastLine + '\n' + thisLine;
-			if(!multiline) {
-				twoLines = thisLine;
+			buffer.push(line);
+
+			while(buffer.length > multiline) {
+				buffer.shift();
 			}
+			line = buffer.join('\n');
+
 			const splitNameMatch = new RegExp(regexp);
-			// console.log(lineNo + ': ' + twoLines);
-			if(splitNameMatch.test(twoLines)) {
-				// let found = splitNameMatch.exec(twoLines);
-				// console.log('regexp: ' + regexp);
-				let found = twoLines.match(regexp);
-				// console.log('found in file: ' + file);
-				// console.log(found);
-				// console.log('found[5]: ' + found[5]);
-				// extract from single or double quotes
-				// const splitNameFilter = new RegExp('.*[\'\"]+(.*)[\'\"].*')
-				const splitName = found[group];
-				// console.log('splitName: ' + splitName);
+			if(splitNameMatch.test(line)) {
+				let found = line.match(regexp);
+				let splitName = found[group];
 				const isIt = isItASplitName.test(splitName);
-				// console.log('is it a split name? ' + splitName + ' ' + isIt);
+				splitName = splitName.replace(/['"]+/g, '');
 				if(isIt) {
 					const s = {
 						name: splitName,

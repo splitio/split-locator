@@ -2,14 +2,9 @@
 
 Currently works with HTML/js code only.
 
-## Inputs
-
-Split Admin API Token, necessary for Split API use
-Workspace ID, which can usually be copied from the URL when viewing a split in your workspace of choice
-
 ## Outputs
 
-The filename, and line number of each reference to a split is inserted in the Split's description in the Split console.
+The filename, and line number of each reference to a split is pushed into a report.html (you have control over output, as shown below).
 
 ## Example Usage
 ```
